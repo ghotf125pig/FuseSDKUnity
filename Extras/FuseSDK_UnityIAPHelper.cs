@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Purchasing;
+using System.Collections.Generic;
 
 public partial class FuseSDK
 {
@@ -59,17 +60,20 @@ public partial class FuseSDK
 
 		Product[] products = unityProducts.all;
 
-		FuseMisc.Product[] fuseProducts = new FuseMisc.Product[products.Length];
-		for(int i = 0; i < products.Length; i++)
+		var fuseProducts = new List<FuseMisc.Product>();
+		foreach(var p in products)
 		{
-			fuseProducts[i] = new FuseMisc.Product()
+			if(p.availableToPurchase)
 			{
-				ProductId = products[i].definition.storeSpecificId,
-				Price = (float)products[i].metadata.localizedPrice,
-				PriceLocale = products[i].metadata.isoCurrencyCode
-			};
+				fuseProducts.Add(new FuseMisc.Product()
+				{
+					ProductId = p.definition.storeSpecificId,
+					Price = (float)p.metadata.localizedPrice,
+					PriceLocale = p.metadata.isoCurrencyCode
+				});
+			}
 		}
 
-		RegisterIOSInAppPurchaseList(fuseProducts);
+		RegisterIOSInAppPurchaseList(fuseProducts.ToArray());
 	}
 }

@@ -1,4 +1,4 @@
-//#define FUSE_USE_SSL
+#define FUSE_USE_SSL
 #if UNITY_EDITOR
 using System.IO;
 using System.Text;
@@ -33,6 +33,7 @@ public static class FusePostProcess
 	const string WEBKIT_ID = "CDECA1A21B02531000CAA921";
     const string GAMEKIT_ID = "CDECA1A21B02531000CAA931";
 	const string LIBZ_ID = "CDECA1A21B02531000CAA941";
+	const string UIKIT_ID = "CDECA1A21B02531000CAA951";
 
 
 	const string CORETELEPHONY_FW = "3F3EE17B1757FB570038DED8";
@@ -50,6 +51,7 @@ public static class FusePostProcess
 	const string WEBKIT_FW = "CDECA1A11B02531000CAA922";
     const string GAMEKIT_FW = "CDECA1A11B02531000CAA932";
 	const string LIBZ_FW = "CDECA1A11B02531000CAA942";
+	const string UIKIT_FW = "CDECA1A11B02531000CAA952";
 
 	// List of all the frameworks to be added to the project
 	public struct framework
@@ -94,117 +96,30 @@ public static class FusePostProcess
 										 new framework("libz.tbd", LIBZ_FW, LIBZ_ID),
 										 new framework("WebKit.framework", WEBKIT_FW, WEBKIT_ID),
                                          new framework("GameKit.framework", GAMEKIT_FW, GAMEKIT_ID),
-                                        };
+										 new framework("UIKit.framework", UIKIT_FW, UIKIT_ID),
+										};
 
 			string xcodeprojPath = path + "/Unity-iPhone.xcodeproj";
 			UnityEngine.Debug.Log("XcodeprojPath should be : " + xcodeprojPath);
 
 			updateXcodeProject(xcodeprojPath, myFrameworks);
-		}
 
-		if(target == BuildTarget.Android)
-		{
+			//Warn about versions with known problems
 			var ver = Application.unityVersion;
-
-			if((ver.Contains("4.6.1") && !ver.Contains("p5"))
-				|| ver.Contains("4.6.2f1")
-				|| ver.Contains("4.6.2p1"))
-			{
-				UnityEngine.Debug.LogError("There are known bugs in this version of Unity. This app will not run on Android 5.0.");
-				UnityEngine.Debug.LogError("Please update your version of Unity to 4.6.1p5, 4.6.2p2 or higher. Visit http://unity3d.com/unity/qa/patch-releases for more detail (Bug 668393).");
-			}
-		}
-
-#if UNITY_5
-		if(target == BuildTarget.iOS)
-		{
-			var ver = Application.unityVersion;
-
 			if(ver.Contains("5.1.1") || ver.Contains("5.1.2"))
 			{
 				UnityEngine.Debug.LogError("There are known bugs in this version of Unity. The app will not function properly on iOS 7.");
 				UnityEngine.Debug.LogError("Please use Unity version 5.0.*");
 			}
 		}
-#endif
 
-		//Clean up old Fuse files
-		try
+		//Old android file cleanup moved to FuseSDKEditor.UpdateAllSettings
+		if(Application.platform == RuntimePlatform.Android)
 		{
-			AssetDatabase.DeleteAsset("Assets/Plugins/FuseNativeAPI.dll");
-
-			if(File.Exists(Application.dataPath + "/Plugins/FuseSDK.NET-Stub.dll"))
-				AssetDatabase.DeleteAsset("Assets/Plugins/FuseSDK.NET-Stub.dll");
-
-			if(File.Exists(Application.dataPath + "/Plugins/FuseSDK.NET.dll"))
-				AssetDatabase.DeleteAsset("Assets/Plugins/FuseSDK.NET.dll");
-
-			if(File.Exists(Application.dataPath + "/FuseSDK/FuseSDK_UnityEditor.cs"))
-				AssetDatabase.DeleteAsset("Assets/FuseSDK/FuseSDK_UnityEditor.cs");
-
-			if(Directory.Exists(Application.dataPath + "/Plugins/Android/libs"))
-			{
-				if(Directory.Exists(Application.dataPath + "/Plugins/Android/libs/x86"))
-				{
-					if(File.Exists(Application.dataPath + "/Plugins/Android/libs/x86/libFuseCommonCore.so"))
-					{
-						AssetDatabase.DeleteAsset("Plugins/Android/libs/x86/libFuseCommonCore.so");
-					}
-
-					if(Directory.GetFiles(Application.dataPath + "/Plugins/Android/libs/x86").Length == 0 && Directory.GetDirectories(Application.dataPath + "/Plugins/Android/libs/x86").Length == 0)
-					{
-						Directory.Delete(Application.dataPath + "/Plugins/Android/libs/x86");
-						if(File.Exists(Application.dataPath + "/Plugins/Android/libs/x86.meta"))
-							File.Delete(Application.dataPath + "/Plugins/Android/libs/x86.meta");
-					}
-				}
-
-				if(Directory.Exists(Application.dataPath + "/Plugins/Android/libs/armeabi-v7a"))
-				{
-					if(File.Exists(Application.dataPath + "/Plugins/Android/libs/armeabi-v7a/libFuseCommonCore.so"))
-					{
-						AssetDatabase.DeleteAsset("Plugins/Android/libs/armeabi-v7a/libFuseCommonCore.so");
-					}
-
-					if(Directory.GetFiles(Application.dataPath + "/Plugins/Android/libs/armeabi-v7a").Length == 0 && Directory.GetDirectories(Application.dataPath + "/Plugins/Android/libs/armeabi-v7a").Length == 0)
-					{
-						Directory.Delete(Application.dataPath + "/Plugins/Android/libs/armeabi-v7a");
-						if(File.Exists(Application.dataPath + "/Plugins/Android/libs/armeabi-v7a.meta"))
-							File.Delete(Application.dataPath + "/Plugins/Android/libs/armeabi-v7a.meta");
-					}
-				}
-
-				if(Directory.GetFiles(Application.dataPath + "/Plugins/Android/libs").Length == 0 && Directory.GetDirectories(Application.dataPath + "/Plugins/Android/libs").Length == 0)
-				{
-					Directory.Delete(Application.dataPath + "/Plugins/Android/libs");
-					if(File.Exists(Application.dataPath + "/Plugins/Android/libs.meta"))
-						File.Delete(Application.dataPath + "/Plugins/Android/libs.meta");
-				}
-			}
-
-			if(Application.platform == RuntimePlatform.Android)
-			{
-				EditorApplication.ExecuteMenuItem("FuseSDK/Update Android Manifest");
-			}
+			EditorApplication.ExecuteMenuItem("FuseSDK/Update Android Manifest");
 		}
-		catch
-		{ }
 
 		UnityEngine.Debug.Log("FusePostProcess - STOP");
-	}
-
-	[PostProcessScene] // <- should happen after every scene is processed at build time
-	public static void OnPostProcessScene()
-	{
-		try
-		{
-			if(Application.platform == RuntimePlatform.Android)
-			{
-				EditorApplication.ExecuteMenuItem("FuseSDK/Update Android Manifest");
-			}
-		}
-		catch
-		{ }
 	}
 
 	// MAIN FUNCTION
@@ -225,6 +140,7 @@ public static class FusePostProcess
 	static bool bFoundLibZ = false;
 	static bool bFoundWebKit = false;
     static bool bFoundGameKit = false;
+	static bool bFoundUIKit = false;
 	public static void updateXcodeProject(string xcodeprojPath, framework[] listeFrameworks)
 	{
 		//Modify Info.plist
@@ -381,8 +297,12 @@ public static class FusePostProcess
             else if (lines[i].Contains("GameKit.framework"))
             {
                 bFoundGameKit = true;
-            }
-            else if(lines[i].Contains("libsqlite3.tbd"))
+			}
+			else if(lines[i].Contains("UIKit.framework"))
+			{
+				bFoundUIKit = true;
+			}
+			else if(lines[i].Contains("libsqlite3.tbd"))
 			{
 				bFoundSQLite = true;
 			}
@@ -496,6 +416,15 @@ public static class FusePostProcess
 				{
 					// rewrite the line to set the library as weak linked
 					UnityEngine.Debug.Log("Setting Foundation.framkework to weak link.");
+					string[] splitstring = line.Split(';');
+					string output = splitstring[0] + ";" + splitstring[1] + "; " + "settings = {ATTRIBUTES = (Weak, ); }; };";
+					fCurrentXcodeProjFile.WriteLine(output);
+				}
+				// set UIKit.framework to weak linked
+				else if(line.Contains("/* UIKit.framework in Frameworks */ = {isa = PBXBuildFile;") && !line.Contains("settings = {ATTRIBUTES = (Weak, ); };"))
+				{
+					// rewrite the line to set the library as weak linked
+					UnityEngine.Debug.Log("Setting UIKit.framkework to weak link.");
 					string[] splitstring = line.Split(';');
 					string output = splitstring[0] + ";" + splitstring[1] + "; " + "settings = {ATTRIBUTES = (Weak, ); }; };";
 					fCurrentXcodeProjFile.WriteLine(output);
@@ -640,10 +569,11 @@ public static class FusePostProcess
 			|| (bFoundSecurity && name.Equals("Security.framework"))
 			|| (bFoundWebKit && name.Equals("WebKit.framework"))
             || (bFoundGameKit && name.Equals("GameKit.framework"))
-            || (bFoundSQLite && name.Equals("libsqlite3.tbd"))
+			|| (bFoundUIKit && name.Equals("UIKit.framework"))
+			|| (bFoundSQLite && name.Equals("libsqlite3.tbd"))
 			|| (bFoundLibXML && name.Equals("libxml2.tbd"))
 			|| (bFoundLibZ && name.Equals("libz.tbd"))
-			|| (bFoundMCS && name.Equals("mobileCoreServices.framework")))
+			|| (bFoundMCS && name.Equals("MobileCoreServices.framework")))
 		{
 			// framework is already in the xcode project - do no process it
 			return false;
@@ -721,9 +651,11 @@ public static class FusePostProcess
 		UnityEngine.Debug.Log("OnPostProcessBuild - Adding framework file reference (xml) - " + name);
 
 		string path = "System/Library/Frameworks"; // all the frameworks come from here
+		string type = "wrapper.framework";
 		if(name.EndsWith(".tbd"))           // except for tbds
 		{
 			path = "usr/lib";
+			type = "\"compiled.mach-o.tbd\"";
 		}
 
 		XmlDocument doc = innerDict.OwnerDocument;
@@ -745,7 +677,7 @@ public static class FusePostProcess
 			XmlNode fileTypeKeyNode = doc.CreateElement("key");
 			fileTypeKeyNode.InnerText = "lastKnownFileType";
 			XmlNode fileTypeNode = doc.CreateElement("string");
-			fileTypeNode.InnerText = "wrapper.framework";
+			fileTypeNode.InnerText = type;
 
 			newChildDict.AppendChild(fileTypeKeyNode);
 			newChildDict.AppendChild(fileTypeNode);

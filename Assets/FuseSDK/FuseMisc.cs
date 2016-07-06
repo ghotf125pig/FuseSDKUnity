@@ -106,6 +106,9 @@ namespace FuseMisc
 
 		public RewardedInfo(string infoString) : this()
 		{
+			if(string.IsNullOrEmpty(infoString))
+				return;
+
 			try
 			{
 				var pars = infoString.Split(',');
@@ -166,6 +169,9 @@ namespace FuseMisc
 
 		public IAPOfferInfo(string infoString) : this()
 		{
+			if(string.IsNullOrEmpty(infoString))
+				return;
+
 			try
 			{
 				var pars = infoString.Split(',');
@@ -239,6 +245,9 @@ namespace FuseMisc
 
 		public VGOfferInfo(string infoString) : this()
 		{
+			if(string.IsNullOrEmpty(infoString))
+				return;
+
 			try
 			{
 				var pars = infoString.Split(',');

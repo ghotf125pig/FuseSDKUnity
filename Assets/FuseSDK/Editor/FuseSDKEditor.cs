@@ -9,16 +9,13 @@ using System.IO;
 using System.Text;
 using System.Net;
 using System;
-using Ionic.Zip;
 
 [CustomEditor(typeof(FuseSDK))]
 public class FuseSDKEditor : Editor
 {
 	public static readonly string ANNOUNCEMENT_KEY = "FuseSDKAnnouncement";
-	public static readonly string ICON_PATH = "/Plugins/Android/res/drawable/ic_launcher.png";
-	public static readonly string AAR_ICON_COPY = "/FuseSDK/Editor/ic_launcher.png";
-	public static readonly string MANIFEST_COPY = "/FuseSDK/Editor/AndroidManifest.xml";
-	public static readonly string AAR_PATH = "/Plugins/Android/FuseSDK.aar";
+	public static readonly string ICON_PATH = "/Plugins/Android/FuseUnityBridge/res/drawable/ic_launcher.png";
+	public static readonly string MANIFEST_PATH = "/Plugins/Android/FuseUnityBridge/AndroidManifest.xml";
 	public static readonly string VERSION_PATH = "Assets/FuseSDK/version";
 	public static readonly int ICON_HEIGHT = 72;
 	public static readonly int ICON_WIDTH = 72;
@@ -26,6 +23,7 @@ public class FuseSDKEditor : Editor
 	private static readonly string API_KEY_PATTERN = @"^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$"; //8-4-4-4-12
 	private static readonly string API_STRIP_PATTERN = @"[^\da-f\-]"; //8-4-4-4-12
 
+#if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7)
 	private static readonly string IOS_PLUGIN_M_FLAGS = "-fno-objc-arc";
 	private static readonly string IOS_PLUGIN_A_FLAGS = "-ObjC";
 	private static readonly string[] IOS_PLUGIN_A_FRAMEWORKS = new string[] {
@@ -42,6 +40,25 @@ public class FuseSDKEditor : Editor
 		"EventKitUI",
 		"MessageUI"
 	};
+#endif
+
+	private static readonly string[] ANDROID_DELETED_FILES = new string[] {
+		"/Plugins/FuseSDK.NET-Stub.dll",
+		"/Plugins/FuseSDK.NET.dll",
+		"/Plugins/Android/FuseSDK.jar",
+		"/Plugins/Android/FuseUnitySDK.jar",
+		"/Plugins/Android/android-support-v4.jar",
+		"/Plugins/Android/google-play-services.jar",
+		"/FuseSDK/FuseSDK_UnityEditor.cs",
+		"/FuseSDK/FuseSDK_UnityEditor.cs",
+		"/FuseSDK/Editor/Ionic.Zip.dll",
+	};
+
+	private static readonly string MANIFEST_PERMISSION_COARSE_LOCATION = "    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />";
+	private static readonly string MANIFEST_PERMISSION_FINE_LOCATION = "    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />";
+
+	private static readonly string MANIFEST_PERMISSION_COARSE_LOCATION_REGEX = @"\s*(?<comment><!--\s*)?<\s*uses-permission\s+android:name\s*=\s*""android.permission.ACCESS_COARSE_LOCATION""\s*/>.*";
+	private static readonly string MANIFEST_PERMISSION_FINE_LOCATION_REGEX = @"\s*(?<comment><!--\s*)?<\s*uses-permission\s+android:name\s*=\s*""android.permission.ACCESS_FINE_LOCATION""\s*/>.*";
 
 	private static readonly string[] MANIFEST_GCM_RECEIVER_ENTRY = new string[] { "\t\t<meta-data android:name=\"com.fusepowered.replace.gcmReceiver\" android:value=\"{{timestamp}}\" />",
 					"\t\t<!-- GCM -->",
@@ -69,9 +86,6 @@ public class FuseSDKEditor : Editor
 
 	private static readonly string[] MANIFEST_GCM_PERMISSIONS_ENTRY = new string[] { "\t<meta-data android:name=\"com.fusepowered.replace.gcmPermissions\" android:value=\"{{timestamp}}\" />",
 					"\t<!-- Permissions for GCM -->",
-					"\t<!-- GCM requires a Google account. -->",
-					"\t<uses-permission android:name=\"android.permission.GET_ACCOUNTS\" />",
-					"\t",
 					"\t<!-- Keeps the processor from sleeping when a message is received. -->",
 					"\t<uses-permission android:name=\"android.permission.WAKE_LOCK\" />",
 					"\t",
@@ -86,7 +100,9 @@ public class FuseSDKEditor : Editor
 					"\t<uses-permission android:name=\"com.google.android.c2dm.permission.RECEIVE\" />",
 	};
 
-	private static bool _iconFoldout = false;
+	private static bool iconFoldout = false;
+	private static bool androidPermissionCoarseLocation = true;
+	private static bool androidPermissionFineLocation = true;
 
 	private FuseSDK _self;
 	private Texture2D _logo, _icon;
@@ -127,6 +143,38 @@ public class FuseSDKEditor : Editor
 		_self.GCM_SenderID = string.IsNullOrEmpty(_self.GCM_SenderID) ? string.Empty : _self.GCM_SenderID;
 
 		_needReimport = DoSettingsNeedUpdate();
+		
+		//Read Manifest permissions
+		if(!File.Exists(Application.dataPath + MANIFEST_PATH))
+		{
+			Debug.LogError("Fuse SDK: Fuse AndroidManifest.xml does not exist.");
+			return;
+		}
+
+		Regex coarseLocPermissionsRegex = new Regex(MANIFEST_PERMISSION_COARSE_LOCATION_REGEX, RegexOptions.Singleline);
+		Regex fineLocPermissionsRegex = new Regex(MANIFEST_PERMISSION_FINE_LOCATION_REGEX, RegexOptions.Singleline);
+		string[] manifest = File.ReadAllLines(Application.dataPath + MANIFEST_PATH);
+
+		if(manifest.Length > 0)
+		{
+			foreach(string manifestLine in manifest)
+			{
+				Match match;
+				if((match = coarseLocPermissionsRegex.Match(manifestLine)).Success)
+				{
+					androidPermissionCoarseLocation = !match.Groups["comment"].Success;
+				}
+				else if((match = fineLocPermissionsRegex.Match(manifestLine)).Success)
+				{
+					androidPermissionFineLocation = !match.Groups["comment"].Success;
+				}
+			}
+		}
+		else
+		{
+			Debug.LogError("Fuse SDK: Unable to read AndroidManifest.xml");
+			return;
+		}
 	}
 
 	private void OnDisable()
@@ -284,12 +332,12 @@ public class FuseSDKEditor : Editor
 
 		GUILayout.Space(4);
 
-		if(_iconFoldout = EditorGUILayout.Foldout(_iconFoldout, "Android notification icon"))
+		if(iconFoldout = EditorGUILayout.Foldout(iconFoldout, "Android notification icon"))
 		{
 			if(_icon == null)
 			{
 				_icon = new Texture2D(ICON_WIDTH, ICON_HEIGHT);
-				_icon.LoadImage(File.ReadAllBytes(LoadIcon()));
+				_icon.LoadImage(File.ReadAllBytes(Application.dataPath + ICON_PATH));
 			}
 
 			GUILayout.Space(10);
@@ -326,16 +374,52 @@ public class FuseSDKEditor : Editor
 		{
 			DestroyImmediate(_icon);
 			_icon = null;
-#if UNITY_5
-			string path = LoadIcon(true);
-			if(File.Exists(path))
-				File.Delete(path);
-
-			path += ".meta";
-			if(File.Exists(path))
-				File.Delete(path);
-#endif
 		}
+
+		GUILayout.Space(8);
+		
+		bool oldCoarse = androidPermissionCoarseLocation;
+		bool oldFine = androidPermissionFineLocation;
+
+		Color oldColor = GUI.color;
+		EditorGUILayout.LabelField("Android Permissions:");
+
+		if(!androidPermissionCoarseLocation || !androidPermissionFineLocation)
+		{
+			EditorGUILayout.HelpBox("Location permissions are HIGHLY RECOMMENDED for optimal revenue.", MessageType.Warning);
+		}
+
+		EditorGUILayout.BeginHorizontal();
+		GUILayout.Space(12);
+		GUI.color = androidPermissionCoarseLocation ? oldColor : Color.red;
+		androidPermissionCoarseLocation = EditorGUILayout.Toggle("Coarse Location", androidPermissionCoarseLocation);
+		GUI.color = androidPermissionFineLocation ? oldColor : Color.red;
+		androidPermissionFineLocation = EditorGUILayout.Toggle("Fine Location", androidPermissionFineLocation);
+		EditorGUILayout.EndHorizontal();
+
+		GUILayout.Space(6);
+		GUI.color = oldColor;
+
+		EditorGUILayout.BeginHorizontal();
+		GUILayout.Space(12);
+#if UNITY_5
+		EditorGUILayout.LabelField("Required Permissions", EditorStyles.helpBox);
+#else
+		EditorGUILayout.LabelField("Required Permissions");
+#endif
+		EditorGUILayout.EndHorizontal();
+
+		EditorGUILayout.BeginHorizontal();
+		GUI.enabled = false;
+		GUILayout.Space(12);
+		EditorGUILayout.Toggle("Write External Storage", true);
+		EditorGUILayout.Toggle("Internet Access", true);
+		GUI.enabled = true;
+		EditorGUILayout.EndHorizontal();
+
+		GUI.color = oldColor;
+
+		GUILayout.Space(4);
 
 		GUILayout.BeginVertical();
 
@@ -348,49 +432,17 @@ public class FuseSDKEditor : Editor
 		GUILayout.FlexibleSpace();
 		GUILayout.EndHorizontal();
 
-		//GUILayout.BeginHorizontal();
-		//GUILayout.FlexibleSpace();
-		//Color oldColor = GUI.color;
-		//GUI.color = Color.green;
-		//GUILayout.Label("Ready to build!", EditorStyles.boldLabel);
-		//GUI.color = oldColor;
-		//GUILayout.FlexibleSpace();
-		//GUILayout.EndHorizontal();
-
 		GUILayout.EndVertical();
 
 		if(GUI.changed)
 		{
 			EditorUtility.SetDirty(target);
 		}
-	}
 
-	private string LoadIcon(bool getOnly = false)
-	{
-#if UNITY_5
-		string path = Application.dataPath + AAR_ICON_COPY;
-		if(!getOnly && File.GetLastWriteTime(path) < File.GetLastWriteTime(Application.dataPath + AAR_PATH))
+		if(oldCoarse != androidPermissionCoarseLocation || oldFine != androidPermissionFineLocation)
 		{
-			try
-			{
-				string tempPath = "/FuseSDK/Editor/.fusetemp/";
-				Directory.CreateDirectory(Application.dataPath + tempPath);
-				using(var aar = ZipFile.Read(Application.dataPath + AAR_PATH))
-				{
-					aar.ExtractSelectedEntries("ic_launcher.png", "res/drawable", Application.dataPath + tempPath, ExtractExistingFileAction.OverwriteSilently);
-				}
-				File.Copy(Application.dataPath + tempPath + "res/drawable/ic_launcher.png", path, true);
-				Directory.Delete(Application.dataPath + tempPath, true);
-			}
-			catch(Exception e)
-			{
-				_error = "Error extracting icon: " + e.Message;
-			}
+			UpdateAndroidManifest();
 		}
-		return path;
-#else
-		return Application.dataPath + ICON_PATH;
-#endif
 	}
 
 	private void UpdateIcon()
@@ -404,25 +456,7 @@ public class FuseSDKEditor : Editor
 			{
 				if(_icon.height == ICON_HEIGHT && _icon.width == ICON_WIDTH)
 				{
-#if UNITY_5
-					string path = Application.dataPath + AAR_ICON_COPY;
-					File.WriteAllBytes(path, _icon.EncodeToPNG());
-					try
-					{
-						using(var aar = ZipFile.Read(Application.dataPath + AAR_PATH))
-						{
-							aar.UpdateFile(path, "res/drawable");
-							aar.Save();
-						}
-					}
-					catch(Exception e)
-					{
-						_error = "Error writing to FuseSDK.aar: " + e.Message;
-					}
-					File.Delete(path);
-#else
 					File.WriteAllBytes(Application.dataPath + ICON_PATH, _icon.EncodeToPNG());
-#endif
 					_newIconPath = null;
 					_error = null;
 				}
@@ -480,12 +514,12 @@ public class FuseSDKEditor : Editor
 
 	private bool DoSettingsNeedUpdate()
 	{
-		if(File.Exists(Application.dataPath + "/FuseSDK/FuseSDK_UnityEditor.cs")
-			|| File.Exists(Application.dataPath + "/Plugins/FuseSDK.NET-Stub.dll")
-			|| File.Exists(Application.dataPath + "/Plugins/FuseSDK.NET.dll"))
-		{
+		foreach(var file in ANDROID_DELETED_FILES)
+			if(File.Exists(Application.dataPath + file))
+				return true;
+
+		if(!PlayerSettings.Android.forceSDCardPermission || !PlayerSettings.Android.forceInternetPermission)
 			return true;
-		}
 
 #if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7)
 		string currentVersion, metaVersion, bundleId;
@@ -529,22 +563,6 @@ public class FuseSDKEditor : Editor
 					return true;
 			}
 		}
-
-		List<PluginImporter> androidPlugins =
-			Directory.GetFiles(Application.dataPath + "/Plugins/Android")
-			.Union(Directory.GetDirectories(Application.dataPath + "/Plugins/Android", "res"))
-			.Select(file => file.Substring(file.LastIndexOfAny(new char[] { '\\', '/' }) + 1))
-			.Where(file => !file.EndsWith(".meta"))
-			.Where(file => file.Contains("FuseSDK") || file.Contains("FuseUnity") || file.Contains("android-support-v4.jar") || file.Contains("google-play-services.jar") || file == "res")
-			.Select(file => PluginImporter.GetAtPath("Assets/Plugins/Android/" + file) as PluginImporter)
-			.Where(plugin => plugin != null)
-			.ToList();
-
-		foreach(var plugin in androidPlugins)
-		{
-			if(!plugin.GetCompatibleWithPlatform(BuildTarget.Android))
-				return true;
-		}
 #endif
 
 		return false;
@@ -552,14 +570,19 @@ public class FuseSDKEditor : Editor
 
 	private void UpdateAllSettings()
 	{
-		if(File.Exists(Application.dataPath + "/Plugins/FuseSDK.NET-Stub.dll"))
-			AssetDatabase.DeleteAsset("Assets/Plugins/FuseSDK.NET-Stub.dll");
+		foreach(var file in ANDROID_DELETED_FILES)
+		{
+			try
+			{
+				if(File.Exists(Application.dataPath + file))
+					AssetDatabase.DeleteAsset("Assets" + file);
+			}
+			catch
+			{ }
+		}
 
-		if(File.Exists(Application.dataPath + "/Plugins/FuseSDK.NET.dll"))
-			AssetDatabase.DeleteAsset("Assets/Plugins/FuseSDK.NET.dll");
-
-		if(File.Exists(Application.dataPath + "/FuseSDK/FuseSDK_UnityEditor.cs"))
-			AssetDatabase.DeleteAsset("Assets/FuseSDK/FuseSDK_UnityEditor.cs");
+		PlayerSettings.Android.forceSDCardPermission = true;
+		PlayerSettings.Android.forceInternetPermission = true;
 
 #if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7)
 		string currentVersion, _;
@@ -607,23 +630,6 @@ public class FuseSDKEditor : Editor
 #if !UNITY_5_0 && !UNITY_5_1
 		PlayerSettings.iOS.allowHTTPDownload = true;
 #endif
-
-		List<PluginImporter> androidPlugins =
-			Directory.GetFiles(Application.dataPath + "/Plugins/Android")
-			.Union(Directory.GetDirectories(Application.dataPath + "/Plugins/Android", "res"))
-			.Select(file => file.Substring(file.LastIndexOfAny(new char[] { '\\', '/' }) + 1))
-			.Where(file => !file.EndsWith(".meta"))
-			.Where(file => file.Contains("FuseSDK") || file.Contains("FuseUnity") || file.Contains("android-support-v4.jar") || file.Contains("google-play-services.jar") || file == "res")
-			.Select(file => PluginImporter.GetAtPath("Assets/Plugins/Android/" + file) as PluginImporter)
-			.Where(plugin => plugin != null)
-			.ToList();
-
-		foreach(var plugin in androidPlugins)
-		{
-			plugin.SetCompatibleWithAnyPlatform(false);
-			plugin.SetCompatibleWithPlatform(BuildTarget.Android, true);
-			plugin.SaveAndReimport();
-		}
 
 		UpdateAndroidManifest();
 
@@ -798,35 +804,23 @@ public class FuseSDKEditor : Editor
 	public static void UpdateAndroidManifest()
 	{
 		string packageName = PlayerSettings.bundleIdentifier;
-		string path = Application.dataPath + "/Plugins/Android/AndroidManifest.xml";
+		string path = Application.dataPath + MANIFEST_PATH;
 
 		if(string.IsNullOrEmpty(packageName))
 			return;
 
-#if UNITY_5
-		path = Application.dataPath + MANIFEST_COPY;
-		try
+		if(!File.Exists(path))
 		{
-			string tempPath = "/FuseSDK/Editor/.fusetemp/";
-			Directory.CreateDirectory(Application.dataPath + tempPath);
-			using(var aar = ZipFile.Read(Application.dataPath + AAR_PATH))
-			{
-				aar.ExtractSelectedEntries("AndroidManifest.xml", "", Application.dataPath + tempPath, ExtractExistingFileAction.OverwriteSilently);
-			}
-			File.Copy(Application.dataPath + tempPath + "AndroidManifest.xml", path, true);
-			Directory.Delete(Application.dataPath + tempPath, true);
-		}
-		catch(Exception e)
-		{
-			Debug.LogError("Error extracting AndroidManifest.xml. Unable to set package ID: " + e.Message);
-			File.Delete(path);
+			Debug.LogError("Fuse SDK: Fuse AndroidManifest.xml does not exist. Unable to update.");
 			return;
 		}
-#endif
 
+		Regex multiLineMetaDataRegex = new Regex(@"\s*<\s*meta-data\s*", RegexOptions.Singleline);
 		Regex packageIdRegex = new Regex(@"\s*<\s*meta-data\s+android:name\s*=\s*""com.fusepowered.replace.packageId""\s*android:value\s*=\s*""(?<id>\S+)""\s*/>.*", RegexOptions.Singleline);
 		Regex gcmReceiverRegex = new Regex(@"\s*<\s*meta-data\s+android:name\s*=\s*""com.fusepowered.replace.gcmReceiver""\s*android:value\s*=\s*""(?<time>\S+)""\s*/>.*", RegexOptions.Singleline);
 		Regex gcmPermissionsRegex = new Regex(@"\s*<\s*meta-data\s+android:name\s*=\s*""com.fusepowered.replace.gcmPermissions""\s*android:value\s*=\s*""(?<time>\S+)""\s*/>.*", RegexOptions.Singleline);
+		Regex coarseLocPermissionsRegex = new Regex(MANIFEST_PERMISSION_COARSE_LOCATION_REGEX, RegexOptions.Singleline);
+		Regex fineLocPermissionsRegex = new Regex(MANIFEST_PERMISSION_FINE_LOCATION_REGEX, RegexOptions.Singleline);
 		string[] manifest = File.ReadAllLines(path);
 		List<string> newManifest = new List<string>();
 
@@ -839,6 +833,21 @@ public class FuseSDKEditor : Editor
 				Match match;
 				string captured;
 				long time;
+
+				//Make all meta-data tags single-line
+				if((match = multiLineMetaDataRegex.Match(manifest[i])).Success && !manifest[i].Contains("/>"))
+				{
+					string metaLine = manifest[i].TrimEnd();
+					for(i++; i < manifest.Length; i++)
+					{
+						metaLine += " " + manifest[i].Trim();
+						if(manifest[i].Contains("/>"))
+							break;
+					}
+
+					manifest[i] = metaLine;
+				}
+
 				if((match = gcmReceiverRegex.Match(manifest[i])).Success && !string.IsNullOrEmpty(captured = match.Groups["time"].Value) && long.TryParse(captured, out time))
 				{
 					if(time == 0)
@@ -880,6 +889,20 @@ public class FuseSDKEditor : Editor
 						Debug.LogWarning("Fuse SDK: Android Manifest has been changed manually. Unable to set package ID.");
 					}
 				}
+				else if((match = coarseLocPermissionsRegex.Match(manifest[i])).Success)
+				{
+					if(androidPermissionCoarseLocation)
+						newManifest.Add(MANIFEST_PERMISSION_COARSE_LOCATION);
+					else
+						newManifest.Add("<!-- " + MANIFEST_PERMISSION_COARSE_LOCATION + " -->");
+				}
+				else if((match = fineLocPermissionsRegex.Match(manifest[i])).Success)
+				{
+					if(androidPermissionFineLocation)
+						newManifest.Add(MANIFEST_PERMISSION_FINE_LOCATION);
+					else
+						newManifest.Add("<!-- " + MANIFEST_PERMISSION_FINE_LOCATION + " -->");
+				}
 				else
 				{
 					//Line doesn't match anything special, just copy it over
@@ -894,23 +917,6 @@ public class FuseSDKEditor : Editor
 		}
 
 		File.WriteAllLines(path, newManifest.ToArray());
-
-#if UNITY_5
-		try
-		{
-			using(var aar = ZipFile.Read(Application.dataPath + AAR_PATH))
-			{
-				aar.UpdateFile(path, "");
-				aar.UpdateFile(path, "aapt");
-				aar.Save();
-			}
-		}
-		catch(Exception e)
-		{
-			Debug.LogError("Error writing AndroidManifest.xml to aar. Unable to set package ID: " + e.Message);
-		}
-		File.Delete(path);
-#endif
 	}
 
 	[MenuItem("FuseSDK/Open Documentation", false, 20)]

@@ -188,7 +188,7 @@ public partial class FuseSDK
 		}
 		else
 		{
-#if UNITY_4
+#if UNITY_4 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
 			foreach(var n in NotificationServices.remoteNotifications)
 				if(n.userInfo.Contains("notification_id"))
 					Native_ReceivedRemoteNotification(n.userInfo["notification_id"].ToString());
@@ -811,7 +811,7 @@ public partial class FuseSDK
 	{
 		FuseLog("SetupPushNotifications()");
 		
-#if UNITY_4
+#if UNITY_4 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
 		NotificationServices.RegisterForRemoteNotificationTypes(RemoteNotificationType.Alert | RemoteNotificationType.Badge | RemoteNotificationType.Sound);
 #else
 		UnityEngine.iOS.NotificationServices.RegisterForNotifications(UnityEngine.iOS.NotificationType.Alert | UnityEngine.iOS.NotificationType.Badge | UnityEngine.iOS.NotificationType.Sound, true);
@@ -822,7 +822,7 @@ public partial class FuseSDK
 			byte[] token = null;
 			string error = null;
 
-#if UNITY_4
+#if UNITY_4 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
 			token = NotificationServices.deviceToken;
 			error = NotificationServices.registrationError;
 #else
