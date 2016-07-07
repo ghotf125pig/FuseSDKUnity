@@ -18,25 +18,39 @@ extern NSString * kFuseErrorDomain;
 /// Enumeration of Gender types that can be registered
 enum EFuseGender
 {
-    FUSE_GENDER_UNKNOWN = 0,        /// gender unknown
-    FUSE_GENDER_MALE,               /// gender male
-    FUSE_GENDER_FEMALE,             /// gender female
-    FUSE_GENDER_UNDECIDED,          /// gender undecided
-    FUSE_GENDER_WITHHELD            /// gender withheld
+    /// gender unknown
+    FUSE_GENDER_UNKNOWN = 0,
+    /// gender male
+    FUSE_GENDER_MALE,
+    /// gender female
+    FUSE_GENDER_FEMALE,
+    /// gender undecided
+    FUSE_GENDER_UNDECIDED,
+    /// gender withheld
+    FUSE_GENDER_WITHHELD
 };
 
 /// Enumeration of Fuse errors that may be reported to the Application
 enum EFuseError
 {
-    FUSE_ERROR_NO_ERROR = 0,        /// No error has occurred.
-    FUSE_ERROR_NOT_CONNECTED,       /// The user is not connected to the internet.
-    FUSE_ERROR_REQUEST_FAILED,      /// There was an error in establishing a connection with the server.
-    FUSE_ERROR_SERVER_ERROR,        /// The request was processed, but an error occured during processing.
-    FUSE_ERROR_BAD_DATA,            /// The server has indicated the data it received was not valid.
-    FUSE_ERROR_SESSION_FAILURE,     /// The session has recieved an error and the operation did not complete due to this error.
-    FUSE_ERROR_INVALID_REQUEST,     /// The request was not valid, and no action will be performed.
-    FUSE_ERROR_CONFIG,              /// The request failed due to the current app configuration.
-    FUSE_ERROR_UNDEFINED            /// An Error occured, but there is no information about it
+    /// No error has occurred.
+    FUSE_ERROR_NO_ERROR = 0,
+    /// The user is not connected to the internet.
+    FUSE_ERROR_NOT_CONNECTED,
+    /// There was an error in fufilling the request.
+    FUSE_ERROR_REQUEST_FAILED,
+    /// The request was processed, but an error occured during processing.
+    FUSE_ERROR_SERVER_ERROR,
+    /// The server has indicated the data it received was not valid.
+    FUSE_ERROR_BAD_DATA,
+    /// The session has recieved an error and the operation did not complete due to this error.
+    FUSE_ERROR_SESSION_FAILURE,
+    /// The request was not valid, and no action will be performed.
+    FUSE_ERROR_INVALID_REQUEST,
+    /// The request failed due to the current app configuration.
+    FUSE_ERROR_CONFIG,
+    /// An Error occured, but there is no information about it
+    FUSE_ERROR_UNDEFINED
 };
 
 /// Enumeration of Ad media types reported back in adDidShow:mediaType:
@@ -52,13 +66,12 @@ enum EFuseAdType
 
 #pragma mark SDK Options
 
-/// (NSNumber*) register for push option: default @YES
+/// (NSNumber*) register for push option: Default @YES
 extern NSString* const kFuseSDKOptionKey_RegisterForPush;
-/// (NSNumber*) Disable crash reporting: default @NO
+/// (NSNumber*) Disable crash reporting: Default @NO
 extern NSString* const kFuseSDKOptionKey_DisableCrashReporting;
-/// (NSNumber*) Optional Flag when the application requires to decide whether to open urls, including store kit urls. Useful for implementing Age Gating default @NO
+/// (NSNumber*) Optional Flag when the application requires to decide whether to open urls, including store kit urls. Useful for implementing Age Gating. Default: @NO
 extern NSString* const kFuseSDKOptionKey_HandleAdURLs;
-
 
 //Show Ad Options
 

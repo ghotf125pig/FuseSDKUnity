@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.fusepowered.ads.adapters.AppLovin"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="23" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+         Note: If android:maxSdkVersion attribute leads to problems when merging manifests, you can
+         remove maxSdkVersion attribute.
+    -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application>
+        <activity android:name="com.fusepowered.al.adview.ALInterstitialActivity" />
+        <activity android:name="com.fusepowered.al.adview.ALConfirmationActivity" />
+        <activity
+            android:name="com.fusepowered.ads.adapters.ALActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+    </application>
+
+</manifest>

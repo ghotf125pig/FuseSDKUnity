@@ -18,6 +18,7 @@ public class FuseSDK_Prime31_IAB : MonoBehaviour
 	public static bool debugOutput = false;
 	
 	private GooglePurchase savedPurchase = null;
+	private int retryQueryAmount = 5;
 	
 	void Start () 
 	{
@@ -47,17 +48,47 @@ public class FuseSDK_Prime31_IAB : MonoBehaviour
 		GoogleIABManager.purchaseSucceededEvent -= PurchaseSucceeded;
 		GoogleIABManager.purchaseFailedEvent -= PurchaseFailed;
 	}
-	
+
+	void PurchaseSucceeded(GooglePurchase purchase)
+	{
+		// cache the purchase to use when the skuInfo is discovered
+		savedPurchase = purchase;
+
+		// get the sku info in order to complete logging the transaction
+		GoogleIABManager.queryInventorySucceededEvent += GetSkuInfo;
+		GoogleIABManager.queryInventoryFailedEvent += GetSkuFailed;
+		StartCoroutine(GetProductInfo(0.5f)); //delay call to give developers time to do processing themselves
+	}
+
+	void PurchaseFailed(string error, int response)
+	{
+		//FuseSDK.RegisterAndroidInAppPurchase(FuseSDK.PurchaseState.CANCELED, "", "", "", System.DateTime.Now, "");			
+	}
+
+	private IEnumerator GetProductInfo(float delay)
+	{
+		yield return new WaitForSeconds(delay);
+
+		GoogleIAB.queryInventory(new string[] { savedPurchase.productId });
+
+		yield break;
+	}
+
 	private void GetSkuInfo( List<GooglePurchase> purchaseInfo, List<GoogleSkuInfo> skuInfo)
-	{		
-		GoogleIABManager.queryInventorySucceededEvent -= GetSkuInfo;
-		if( savedPurchase == null )
+	{
+		int idx = 0;
+		while(idx < purchaseInfo.Count && savedPurchase != purchaseInfo[idx]) idx++;
+
+		if(savedPurchase == null || idx >= purchaseInfo.Count || idx >= skuInfo.Count)
 		{
-			//Debug.LogError("FuseSDK_Prime31_IAB::GetSkuInfo - savedPurchase was null!");
+			GetSkuFailed("GetSkuInfo succeeded but productId " + savedPurchase.productId + " was not in the list of products.");
 			return;
 		}
 
-		string priceString = skuInfo[0].price;
+		GoogleIABManager.queryInventorySucceededEvent -= GetSkuInfo;
+		GoogleIABManager.queryInventoryFailedEvent -= GetSkuFailed;
+
+		string priceString = skuInfo[idx].price;
 		double price = 0;
 		try
 		{
@@ -100,25 +131,25 @@ public class FuseSDK_Prime31_IAB : MonoBehaviour
 		
 		savedPurchase = null;
 	}
-	
-	void PurchaseSucceeded( GooglePurchase purchase )
+
+	private void GetSkuFailed(string error)
 	{
-		// get the sku info in order to complete logging the transaction
-		string[] skus = { purchase.productId };		
-		GoogleIABManager.queryInventorySucceededEvent += GetSkuInfo;
-		GoogleIAB.queryInventory(skus);
-		
-		// cache the purchase to use when the skuInfo is discovered
-		savedPurchase = purchase;				
-	}
-	
-	void PurchaseFailed(string error, int response)
-	{
-		//FuseSDK.RegisterAndroidInAppPurchase(FuseSDK.PurchaseState.CANCELED, "", "", "", System.DateTime.Now, "");			
+		retryQueryAmount--;
+		if(retryQueryAmount > 0)
+		{
+			StartCoroutine(GetProductInfo(0.5f));
+		}
+		else
+		{
+			GoogleIABManager.queryInventorySucceededEvent -= GetSkuInfo;
+			GoogleIABManager.queryInventoryFailedEvent -= GetSkuFailed;
+			Debug.LogError("FuseSDK_Prime31_IAB: GoogleIAB.queryInventory failed with message: " + error);
+		}
 	}
 
 
-	
+
+
 	public static void FuseLog(string str)
 	{
 		if(debugOutput)

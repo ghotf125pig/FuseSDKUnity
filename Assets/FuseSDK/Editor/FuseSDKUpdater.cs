@@ -349,6 +349,16 @@ public static class FuseSDKUpdater
 			catch
 			{
 				Debug.LogError("Fuse SDK: Error while importing package.");
+				string path = System.IO.Path.GetFullPath(Application.dataPath + "/.." + SAVED_PACKAGE_NAME);
+				try
+				{
+					System.IO.File.Copy(Application.temporaryCachePath + TEMP_PACKAGE_NAME, path, true);
+					Debug.Log("Fuse SDK: New SDK package saved to " + path);
+				}
+				catch
+				{
+					Debug.LogError("Fuse SDK: Error while copying package to " + path);
+				}
 			}
 		}
 

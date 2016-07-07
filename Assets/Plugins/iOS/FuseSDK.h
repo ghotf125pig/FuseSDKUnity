@@ -150,7 +150,8 @@
  @see FuseSDK::addFriend: for more information on adding a friend
  @since Fuse SDK version 1.22
  */
--(void) friendAdded:(NSString*)_fuse_id Error:(NSError*)_error;
+-(void) friendAdded:(NSString*)_fuse_id error:(NSError*)_error;
+-(void) friendAdded:(NSString*)_fuse_id Error:(NSError*)_error __attribute__((deprecated));
 
 /*!
  * @brief This method indicates the result of a removal of a friend to the Fuse friends list system
@@ -178,7 +179,8 @@
  @see FuseSDK::removeFriend: for more information on removing a friend
  @since Fuse SDK version 1.22
  */
--(void) friendRemoved:(NSString*)_fuse_id Error:(NSError*)_error;
+-(void) friendRemoved:(NSString*)_fuse_id error:(NSError*)_error;
+-(void) friendRemoved:(NSString*)_fuse_id Error:(NSError*)_error __attribute__((deprecated));
 
 /*!
  * @brief This method indicates the result of a acceptance of a friend to the Fuse friends list system
@@ -206,7 +208,8 @@
  @see FuseSDK::acceptFriend: for more information on accepting a friend
  @since Fuse SDK version 1.22
  */
--(void) friendAccepted:(NSString*)_fuse_id Error:(NSError*)_error;
+-(void) friendAccepted:(NSString*)_fuse_id error:(NSError*)_error;
+-(void) friendAccepted:(NSString*)_fuse_id Error:(NSError*)_error __attribute__((deprecated));
 
 /*!
  * @brief This method indicates the result of a rejection of a friend to the Fuse friends list system
@@ -234,7 +237,8 @@
  @see FuseSDK::rejectFriend: for more information on rejecting a friend
  @since Fuse SDK version 1.22
  */
--(void) friendRejected:(NSString*)_fuse_id Error:(NSError*)_error;
+-(void) friendRejected:(NSString*)_fuse_id error:(NSError*)_error;
+-(void) friendRejected:(NSString*)_fuse_id Error:(NSError*)_error __attribute__((deprecated));
 
 /*!
  * @brief This method indicates the result of a rejection of a request to migrate friends from one account to another
@@ -262,7 +266,8 @@
  @see FuseSDK::migrateFriends: for more information on migrating friends
  @since Fuse SDK version 1.34.1
  */
--(void) friendsMigrated:(NSString*)_fuse_id Error:(NSError*)_error;
+-(void) friendsMigrated:(NSString*)_fuse_id error:(NSError*)_error;
+-(void) friendsMigrated:(NSString*)_fuse_id Error:(NSError*)_error __attribute__((deprecated));
 
 /*!
  * @brief This method indicates when the friends list on the client has been updated from the server
@@ -351,7 +356,8 @@
  @see https://developer.apple.com/library/ios/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateRemotely.html For information how to collect Receipt when registering in app purchases
  * @see FuseSDK::registerInAppPurchase: for more information on how to invoke this process
  */
--(void) purchaseVerification:(NSNumber*)_verified TransactionID:(NSString*)_tx_id OriginalTransactionID:(NSString*)_o_tx_id;
+-(void) purchaseVerification:(NSNumber*)_verified TransactionID:(NSString*)_tx_id OriginalTransactionID:(NSString*)_o_tx_id __attribute__((deprecated));
+-(void) purchaseVerification:(NSNumber*)_verified transactionID:(NSString*)_tx_id originalTransactionID:(NSString*)_o_tx_id;
 
 /*!
  * @brief Callback response to a request to load for an ad in the Fuse system
@@ -388,7 +394,8 @@
  * @see preloadAdForZoneID for more information on how to invoke the process of loading an ad zone.
  * @since Fuse SDK version 1.26
  */
--(void) adAvailabilityResponse:(NSNumber*)_available Error:(NSError*)_error;
+-(void) adAvailabilityResponse:(NSNumber*)_available Error:(NSError*)_error __attribute__((deprecated));
+-(void) adAvailabilityResponse:(NSNumber*)_available forZone:(NSString*)_zoneName withError:(NSError*)_error;
 
 
 /*!
@@ -1093,12 +1100,12 @@
  * @brief Get a List of All active ad zones
  * @details This returns a list of adzones currently setup for displaying ads. It's primary function is developer side debugging in nature, as disabled or empty Adzones should be omitted.
  @code
- NSArray* adZoneList = [[FuseSDK get] GetAdZoneList]
+ NSArray* adZoneList = [FuseSDK GetAdZoneList]
  @endcode
  
  * @since Fuse SDK version 2.0.0
  */
--(NSArray*) GetAdZoneList;
++(NSArray*) GetAdZoneList;
 
 
 #pragma mark Notifications
@@ -2181,12 +2188,7 @@
 
 +(NSMutableDictionary*) getGameConfiguration;
 
-#pragma mark Public Methods
-/*!
- * @brief Singleton accessor for the FuseSDK class
- * @retval [FuseSDK*] The Fuse SDK singleton instance
- */
-+(instancetype) get;
+
 
 @end
 
