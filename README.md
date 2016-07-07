@@ -10,7 +10,7 @@ Released: July 7th, 2016
 Before updating, please remove all Fuse files from Assets/Plugins/Android and any Fuse entries from your AndroidManifest.xml.  
 The FuseSDK now uses the [JarResolver](https://github.com/googlesamples/unity-jar-resolver) library to manage Google Play Services dependencies.
 If your project has any play services or support jars that you included manually you could encounter some conflicts.  
-[See here](https://wiki.fusepowered.com/index.php?title=Unity#Jar_Resolver) for more information.  
+[See here](https://wiki.fusepowered.com/index.php?title=Unity#Using_JarResolver) for more information.  
 Please use the links below to download the FuseSDK.
 
 
@@ -32,7 +32,7 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 
 ### 2.6.1.0
 July 7th, 2016
-* Added [JarResolver](https://wiki.fusepowered.com/index.php?title=Unity#Jar_Resolver) library to manage Google Play Services dependencies.
+* Added [JarResolver](https://wiki.fusepowered.com/index.php?title=Unity#Using_JarResolver) library to manage Google Play Services dependencies.
 * Removed Ionic.Zip.dll
 * Ad provider updates
 * Lots and lots of bug fixes
