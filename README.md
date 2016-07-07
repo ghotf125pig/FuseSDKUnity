@@ -2,18 +2,21 @@
 
 ## Current Version
 
-Version: 2.5.5.0
+Version: 2.6.1.0
 
-Released: April 1st, 2016
+Released: July 7th, 2016
 
 ## Update Instructions
-The location of our Unity packages has changed. The 2 packages in this repository simply contain a Updater that will fetch the package from Unity.  
+Before updating, please remove all Fuse files from Assets/Plugins/Android and any Fuse entries from your AndroidManifest.xml.  
+The FuseSDK now uses the [JarResolver](https://github.com/googlesamples/unity-jar-resolver) library to manage Google Play Services dependencies.
+If your project has any play services or support jars that you included manually you could encounter some conflicts.  
+[See here](https://wiki.fusepowered.com/index.php?title=Unity#Jar_Resolver) for more information.  
 Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity 4 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.5.5.0/FuseUnitySDK.unitypackage)  
-[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.5.5.0/FuseUnitySDK-Unity5.unitypackage)  
+[Unity 4 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.1.0/FuseUnitySDK.unitypackage)  
+[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.1.0/FuseUnitySDK-Unity5.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
@@ -25,10 +28,22 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Integration Instructions](https://wiki.fusepowered.com/index.php?title=Unity)
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
-## Need an Account?
-Please visit [http://www.fusepowered.com](http://www.fusepowered.com) for an account to get started!
-
 ## Release Notes
+
+### 2.6.1.0
+July 7th, 2016
+* Added [JarResolver](https://wiki.fusepowered.com/index.php?title=Unity#Jar_Resolver) library to manage Google Play Services dependencies.
+* Removed Ionic.Zip.dll
+* Ad provider updates
+* Lots and lots of bug fixes
+* Android:
+  * Complete rewrite of Android SDK
+  * Added toggles for Android premissions to FuseSDK object
+  * Native libraries now distributed as AARs in Unity 5 and exploded AARs in Unity 4
+  * AndroidManifest.xml and res folder moved into an android library folder
+  * Minimum API version increased to API 15 (Android 4.0.3)
+* iOS
+  * Refactor of IOS SDK
 
 ### 2.5.5.0
 April 1st, 2016
