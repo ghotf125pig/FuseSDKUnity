@@ -8,7 +8,7 @@ var searchData=
   ['registergender',['RegisterGender',['../class_fuse_s_d_k.html#af3a11b8b9af31c6d6a5903fbfd2bfba1',1,'FuseSDK']]],
   ['registeriosinapppurchase',['RegisterIOSInAppPurchase',['../class_fuse_s_d_k.html#a4244b574b9616db2cce582e8111d2da6',1,'FuseSDK']]],
   ['registeriosinapppurchaselist',['RegisterIOSInAppPurchaseList',['../class_fuse_s_d_k.html#a9b954a49fe0941543ec8b05a1e5b75dd',1,'FuseSDK']]],
-  ['registerlevel',['RegisterLevel',['../class_fuse_s_d_k.html#aa1f3dba7a3c77654f392a8d46b7d9d57',1,'FuseSDK']]],
+  ['registerlevel',['RegisterLevel',['../class_fuse_s_d_k.html#a59678de9e3c3a4bb4849acd1aaa2dad5',1,'FuseSDK']]],
   ['registerparentalconsent',['RegisterParentalConsent',['../class_fuse_s_d_k.html#a015b536fe41f834a80a8a2a5a4d02238',1,'FuseSDK']]],
   ['registerunibillpurchase',['RegisterUnibillPurchase',['../class_fuse_s_d_k.html#ad61a1466c30aa812ab4b05e31e53a44e',1,'FuseSDK']]],
   ['registervirtualgoodspurchase',['RegisterVirtualGoodsPurchase',['../class_fuse_s_d_k.html#a8f03166a3759637df6965dbb3cc02768',1,'FuseSDK']]],
