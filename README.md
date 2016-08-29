@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.6.1.0
+Version: 2.6.3.0
 
-Released: July 7th, 2016
+Released: August 29th, 2016
 
 ## Update Instructions
 Before updating, please remove all Fuse files from Assets/Plugins/Android and any Fuse entries from your AndroidManifest.xml.  
@@ -15,8 +15,8 @@ Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity 4 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.1.0/FuseUnitySDK.unitypackage)  
-[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.1.0/FuseUnitySDK-Unity5.unitypackage)  
+[Unity 4 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.3.0/FuseUnitySDK.unitypackage)  
+[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.3.0/FuseUnitySDK-Unity5.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
@@ -29,6 +29,12 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.6.3.0
+August 29th, 2016
+* Add support for Android 7.0
+* Ad provider updates and optimizations
+* Bug fixes
 
 ### 2.6.1.0
 July 7th, 2016
@@ -107,46 +113,6 @@ August 13th, 2015
 * Added CurrencyID, VirtualGoodID, StartTime and EndTime to the VGOfferInfo struct
 * Fix for game data get/set
 * Bug fixes
-
-### 2.1.4.0
-June 24th, 2015
-* Fixed warning caused by FuseSDK.NET-Stub.dll
-* Bug fixes for Ad providers
-
-### 2.1.1.0
-June 4th, 2015
-* Bug fixes for game configurations and ad adapters
-
-### 2.1.0.0
-May 28th, 2015
-* Added new segmentation functionality
-* Added parental consent toggle
-* Added new gender enums
-* Bug fixes 
-
-### 2.0.5.1
-May 20th, 2015
-* Bug fixes for registering iOS IAPs
-
-### 2.0.5.0
-May 12th, 2015
-* Bug fixes for Android rewarded callbacks and push notifications
-* Optimizations for iOS game configurations and friends lists
-
-### 2.0.4.0
-April 29th, 2015
-* Bug fixes for rewarded ads
-
-### 2.0.3.1
-April 23rd, 2015
-* Bug fixes for external adapters, game configuration, and friends list
-
-### 2.0.2.0
-April 17th, 2015
-* IAP and Virtual Good offers
-* Rewarded video enhancements
-* Interface updates
-* FuseAPI class renamed - please use FuseSDK
 
 
 ## Legal Requirements
