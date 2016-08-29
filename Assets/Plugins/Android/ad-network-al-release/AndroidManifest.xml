@@ -16,13 +16,19 @@
          remove maxSdkVersion attribute.
     -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <!-- minSdkVersion 15 -->
+    <!-- sdkVersion 6.3.0 -->
+    <!--
+ AppLovin jar modified:
+        com.applovin.sdk.AppLovinSdkUtils.class removed and replaced with
+        com.fusepowered.al.sdk.AppLovinSdkUtils.java
+    -->
     <application>
         <activity android:name="com.fusepowered.al.adview.ALInterstitialActivity" />
         <activity android:name="com.fusepowered.al.adview.ALConfirmationActivity" />
         <activity
             android:name="com.fusepowered.ads.adapters.ALActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
     </application>
 
