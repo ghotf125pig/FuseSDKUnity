@@ -27,18 +27,20 @@ public class FuseSDKEditor : Editor
 	private static readonly string IOS_PLUGIN_M_FLAGS = "-fno-objc-arc";
 	private static readonly string IOS_PLUGIN_A_FLAGS = "-ObjC";
 	private static readonly string[] IOS_PLUGIN_A_FRAMEWORKS = new string[] {
-		"AdSupport",
-		"CoreFoundation",
 		"CoreTelephony",
-		"GameKit",
-		"MobileCoreServices",
-		"Security",
-		"Social",
+		"AdSupport",
 		"StoreKit",
-		"Twitter",
+		"MessageUI",
 		"EventKit",
 		"EventKitUI",
-		"MessageUI"
+		"Twitter",
+		"Social",
+		"Security",
+		"MobileCoreServices",
+		"WebKit",
+		"GameKit",
+		"UIKit",
+		"GLKit",
 	};
 #endif
 

@@ -3,23 +3,36 @@
     package="com.fusepowered.ads.adapters.LoopMe"
     android:versionCode="1"
     android:versionName="1.0" >
-
+    <!--
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    -->
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="23" />
 
+    <!-- minSdkVersion 14 -->
+    <!-- sdkVersion 5.0.0 -->
+    <!-- aar modified: permissions moved into this manifest -->
+    <!--
+    MANIFEST ENTRIES STORED IN .aar
+    <application>
+        <activity
+            android:name="com.loopme.AdActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout"
+            android:hardwareAccelerated="true" />
+        <activity android:name="com.loopme.AdBrowserActivity" />
+
+        <receiver android:name="com.loopme.data.LoopMeReceiver" />
+    </application>
+    -->
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <application>
-        <activity
-            android:name="com.fusepowered.l1.AdActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.Translucent" />
-        <activity android:name="com.fusepowered.l1.AdBrowserActivity" />
-    </application>
 
 </manifest>

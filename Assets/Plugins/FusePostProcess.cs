@@ -27,13 +27,14 @@ public static class FusePostProcess
 	const string TWITTER_ID = "3FBCE7861816DD570057C060";
 	const string SOCIAL_ID = "3FBCE7861816DD570057C062";
 	const string SECURITY_ID = "3FBCE7861816DD570057C065";
-	const string SQLITE_ID = "3FBCE7861816DD570057C069";
 	const string MCORESERVICES_ID = "3FD2BD0F1A253866002566B8";
+	const string SQLITE_ID = "3FBCE7861816DD570057C069";
 	const string LIBXML_ID = "3FD2BD0F1A253866002566B9";
+	const string LIBZ_ID = "CDECA1A21B02531000CAA941";
 	const string WEBKIT_ID = "CDECA1A21B02531000CAA921";
     const string GAMEKIT_ID = "CDECA1A21B02531000CAA931";
-	const string LIBZ_ID = "CDECA1A21B02531000CAA941";
 	const string UIKIT_ID = "CDECA1A21B02531000CAA951";
+	const string GLKIT_ID = "CDECA1A21B02531000CAA971";
 
 
 	const string CORETELEPHONY_FW = "3F3EE17B1757FB570038DED8";
@@ -45,13 +46,14 @@ public static class FusePostProcess
 	const string TWITTER_FW = "3F3EE17B1757FB570038DED9";
 	const string SOCIAL_FW = "3F3EE17B1757FB570038DEEE";
 	const string SECURITY_FW = "3F3EE17B1757FB570038DEED";
-	const string SQLITE_FW = "3F3EE17B1757FB570038FEED";
 	const string MCORESERVICES_FW = "A4FBC40B1A23EC33004D9A01";
+	const string SQLITE_FW = "3F3EE17B1757FB570038FEED";
 	const string LIBXML_FW = "A4FBC40B1A23EC33004D9A02";
+	const string LIBZ_FW = "CDECA1A11B02531000CAA942";
 	const string WEBKIT_FW = "CDECA1A11B02531000CAA922";
     const string GAMEKIT_FW = "CDECA1A11B02531000CAA932";
-	const string LIBZ_FW = "CDECA1A11B02531000CAA942";
 	const string UIKIT_FW = "CDECA1A11B02531000CAA952";
+	const string GLKIT_FW = "CDECA1A11B02531000CAA972";
 
 	// List of all the frameworks to be added to the project
 	public struct framework
@@ -97,6 +99,7 @@ public static class FusePostProcess
 										 new framework("WebKit.framework", WEBKIT_FW, WEBKIT_ID),
                                          new framework("GameKit.framework", GAMEKIT_FW, GAMEKIT_ID),
 										 new framework("UIKit.framework", UIKIT_FW, UIKIT_ID),
+										 new framework("GLKit.framework", GLKIT_FW, GLKIT_ID),
 										};
 
 			string xcodeprojPath = path + "/Unity-iPhone.xcodeproj";
@@ -141,6 +144,7 @@ public static class FusePostProcess
 	static bool bFoundWebKit = false;
     static bool bFoundGameKit = false;
 	static bool bFoundUIKit = false;
+	static bool bFoundGLKit = false;
 	public static void updateXcodeProject(string xcodeprojPath, framework[] listeFrameworks)
 	{
 		//Modify Info.plist
@@ -301,6 +305,10 @@ public static class FusePostProcess
 			else if(lines[i].Contains("UIKit.framework"))
 			{
 				bFoundUIKit = true;
+			}
+			else if(lines[i].Contains("GLKit.framework"))
+			{
+				bFoundGLKit = true;
 			}
 			else if(lines[i].Contains("libsqlite3.tbd"))
 			{
@@ -570,6 +578,7 @@ public static class FusePostProcess
 			|| (bFoundWebKit && name.Equals("WebKit.framework"))
             || (bFoundGameKit && name.Equals("GameKit.framework"))
 			|| (bFoundUIKit && name.Equals("UIKit.framework"))
+			|| (bFoundGLKit && name.Equals("GLKit.framework"))
 			|| (bFoundSQLite && name.Equals("libsqlite3.tbd"))
 			|| (bFoundLibXML && name.Equals("libxml2.tbd"))
 			|| (bFoundLibZ && name.Equals("libz.tbd"))
