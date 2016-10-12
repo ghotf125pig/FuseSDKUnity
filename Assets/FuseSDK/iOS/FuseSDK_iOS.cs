@@ -930,6 +930,12 @@ public partial class FuseSDK
 		OnVirtualGoodsOfferAccepted(new VGOfferInfo(param));
 	}
 
+	private void _CB_AdDeclined(string param)
+	{
+		FuseLog("AdDeclined(" + param + ")");
+		OnAdDeclined();
+	}
+
 	private void _CB_HandleAdClickWithURL(string url)
 	{
 		FuseLog("OnAdClickedWithURL(" + url + ")");

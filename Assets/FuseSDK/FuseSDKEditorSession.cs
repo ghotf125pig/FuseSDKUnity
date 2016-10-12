@@ -50,6 +50,7 @@ public class FuseSDKEditorSession
 	public static event Action<RewardedInfo> RewardedAdCompletedWithObject;
 	public static event Action<IAPOfferInfo> IAPOfferAcceptedWithObject;
 	public static event Action<VGOfferInfo> VirtualGoodsOfferAcceptedWithObject;
+	public static event Action AdDeclined;
 
 	//Misc
 	public static event Action<DateTime> TimeUpdated;
