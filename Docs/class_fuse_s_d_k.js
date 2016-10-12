@@ -67,6 +67,7 @@ var class_fuse_s_d_k =
     [ "AccountLoginComplete", "class_fuse_s_d_k.html#aada1b265065a0f94007f2277257fdb22", null ],
     [ "AccountLoginError", "class_fuse_s_d_k.html#a26cd0d32857aedec2c14a0c83a2a914b", null ],
     [ "AdAvailabilityResponse", "class_fuse_s_d_k.html#acab59f827bec3d0c091b3febbbb02056", null ],
+    [ "AdDeclined", "class_fuse_s_d_k.html#a82d76f1a3c30fecfd5da9cfdc25eea4d", null ],
     [ "AdDidShow", "class_fuse_s_d_k.html#a5995fbd7a57ad57075b3fe05169e7708", null ],
     [ "AdFailedToDisplay", "class_fuse_s_d_k.html#adbd122a81e66dddff738cda8c6b85939", null ],
     [ "AdWillClose", "class_fuse_s_d_k.html#a8f3d4680bbc1911b8749a8a6c7786779", null ],
