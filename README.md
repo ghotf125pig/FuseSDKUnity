@@ -2,12 +2,13 @@
 
 ## Current Version
 
-Version: 2.6.4.0
+Version: 2.6.6.0
 
-Released: September 20th, 2016
+Released: October 12th, 2016
 
 ## Update Instructions
-Before updating, please remove all Fuse files from Assets/Plugins/Android and any Fuse entries from your AndroidManifest.xml.  
+Before updating, please remove all Fuse files from Assets/Plugins/Android, Assets/Plugins/iOS and any Fuse entries from your AndroidManifest.xml.  
+We have removed several 3rd party dependencies, these files will remain in your project unless manually removed.  
 The FuseSDK now uses the [JarResolver](https://github.com/googlesamples/unity-jar-resolver) library to manage Google Play Services dependencies.
 If your project has any play services or support jars that you included manually you could encounter some conflicts.  
 [See here](https://wiki.fusepowered.com/index.php?title=Unity#Using_JarResolver) for more information.  
@@ -15,8 +16,8 @@ Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity 4 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.4.0/FuseUnitySDK.unitypackage)  
-[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.4.0/FuseUnitySDK-Unity5.unitypackage)  
+[Unity 4 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.6.0/FuseUnitySDK.unitypackage)  
+[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.6.0/FuseUnitySDK-Unity5.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
@@ -29,6 +30,13 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.6.6.0
+October 12th, 2016
+* Added event: FuseSDK.AdDeclined (trigerred after a user declines to view an ad from a preroll)
+* Major Ad provider optimizations
+  * There is no longer any difference between our Core and Full variants of the SDK
+* Significant reduction in the number of dex method references on Android
 
 ### 2.6.4.0
 September 20th, 2016
@@ -95,27 +103,6 @@ November 23rd, 2015
 * Ad Provider updates
 * VAST Improvements
 * Custom End Cards
-* Bug fixes
-
-### 2.3.2.0
-October 14th, 2015
-* Custom Offer meta-data
-* Custom Call to Action on campaign videos
-* Ad provider updates
-* Bug fixes
-* Android 6.0 and iOS 9 compatibility
-* Unity 5 package now uses a single .aar file for Android
-
-### 2.2.1.0
-August 13th, 2015
-* Added new ad providers
-* Added VAST support
-* Added rewarded video authentication 
-  * Added method FuseSDK.SetRewardedVideoUserID(string userID) to identify the user
-  * The RewardedInfo struct now contains RewardItemId
-* Added StartTime and EndTime to the IAPOfferInfo struct
-* Added CurrencyID, VirtualGoodID, StartTime and EndTime to the VGOfferInfo struct
-* Fix for game data get/set
 * Bug fixes
 
 
