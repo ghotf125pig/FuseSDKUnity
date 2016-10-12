@@ -972,22 +972,14 @@ public class FuseSDKPrefs : EditorWindow
 	{
 		AdColony = 1 << 0,
 		AppLovin = 1 << 1,
-		HyprMX = 1 << 2,
-		LeadBolt = 1 << 3,
 		NativeX = 1 << 4,
-		AerServ = 1 << 5,
-		SuperAwesome = 1 << 6,
 	}
 
 	private static readonly string[] AdapterFilenames = new string[]
 	{
 		"libFuseAdapterAdcolony.a",
 		"libFuseAdapterAppLovin.a",
-		"libFuseAdapterHyprMx.a",
-		"libFuseAdapterLeadBolt.a",
 		"libFuseAdapterNativeX.a",
-		"libFuseAdapterAerServ.a",
-		"libFuseAdapterSuperAwesome.a",
 	};
 
 	private static readonly string ADAPTERS_KEY = "FuseSDKActiveAdapters";

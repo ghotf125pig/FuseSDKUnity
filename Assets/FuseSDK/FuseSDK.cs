@@ -152,6 +152,12 @@ public partial class FuseSDK : MonoBehaviour
 	/// </summary>
 	public static event Action<VGOfferInfo> VirtualGoodsOfferAcceptedWithObject;
 
+	/// <summary>
+	/// Called after <see cref="ShowAdForZoneID(String zoneId)"/> if the user declined to view the ad on the preroll
+	/// Listener signature: void AdDeclined()
+	/// </summary>
+	public static event Action AdDeclined;
+
 	//--------------------------------------------------------Misc
 
 	/// <summary>
@@ -1022,6 +1028,7 @@ public partial class FuseSDK : MonoBehaviour
 		FuseSDKEditorSession.RewardedAdCompletedWithObject += r => OnRewardedAdCompleted(r);
 		FuseSDKEditorSession.IAPOfferAcceptedWithObject += o => OnIAPOfferAccepted(o);
 		FuseSDKEditorSession.VirtualGoodsOfferAcceptedWithObject += o => OnVirtualGoodsOfferAccepted(o);
+		FuseSDKEditorSession.AdDeclined += OnAdDeclined;
 
 		//Misc
 		FuseSDKEditorSession.TimeUpdated += OnTimeUpdated;
@@ -1139,6 +1146,14 @@ public partial class FuseSDK : MonoBehaviour
 		if(VirtualGoodsOfferAcceptedWithObject != null)
 		{
 			VirtualGoodsOfferAcceptedWithObject(offerInfo);
+		}
+	}
+
+	static private void OnAdDeclined()
+	{
+		if(AdDeclined != null)
+		{
+			AdDeclined();
 		}
 	}
 

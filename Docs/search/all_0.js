@@ -6,6 +6,7 @@ var searchData=
   ['accountloginerror',['AccountLoginError',['../class_fuse_s_d_k.html#a26cd0d32857aedec2c14a0c83a2a914b',1,'FuseSDK']]],
   ['accounttype',['AccountType',['../namespace_fuse_misc.html#ad19b8d0d00683835cb494d66d7007f7e',1,'FuseMisc']]],
   ['adavailabilityresponse',['AdAvailabilityResponse',['../class_fuse_s_d_k.html#acab59f827bec3d0c091b3febbbb02056',1,'FuseSDK']]],
+  ['addeclined',['AdDeclined',['../class_fuse_s_d_k.html#a82d76f1a3c30fecfd5da9cfdc25eea4d',1,'FuseSDK']]],
   ['addfriend',['AddFriend',['../class_fuse_s_d_k.html#a08902e6667fc47c5b4301cca501cca71',1,'FuseSDK']]],
   ['addidshow',['AdDidShow',['../class_fuse_s_d_k.html#a5995fbd7a57ad57075b3fe05169e7708',1,'FuseSDK']]],
   ['adfailedtodisplay',['AdFailedToDisplay',['../class_fuse_s_d_k.html#adbd122a81e66dddff738cda8c6b85939',1,'FuseSDK']]],

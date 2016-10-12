@@ -374,6 +374,9 @@ Events</h2></td></tr>
 <tr class="memitem:a17e9dd3bbac1402a8dc6f26c31745c1c"><td class="memItemLeft" align="right" valign="top">static Action&lt; <a class="el" href="struct_fuse_misc_1_1_v_g_offer_info.html">VGOfferInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#a17e9dd3bbac1402a8dc6f26c31745c1c">VirtualGoodsOfferAcceptedWithObject</a></td></tr>
 <tr class="memdesc:a17e9dd3bbac1402a8dc6f26c31745c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after an virtual goods offer is accepted by the user Listener signature: void VirtualGoodsOfferAccepted(VGOfferInfo offerInfo)  <a href="#a17e9dd3bbac1402a8dc6f26c31745c1c">More...</a><br /></td></tr>
 <tr class="separator:a17e9dd3bbac1402a8dc6f26c31745c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82d76f1a3c30fecfd5da9cfdc25eea4d"><td class="memItemLeft" align="right" valign="top">static Action&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#a82d76f1a3c30fecfd5da9cfdc25eea4d">AdDeclined</a></td></tr>
+<tr class="memdesc:a82d76f1a3c30fecfd5da9cfdc25eea4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after ShowAdForZoneID(String zoneId) if the user declined to view the ad on the preroll Listener signature: void <a class="el" href="class_fuse_s_d_k.html#a82d76f1a3c30fecfd5da9cfdc25eea4d" title="Called after ShowAdForZoneID(String zoneId) if the user declined to view the ad on the preroll Listen...">AdDeclined()</a>  <a href="#a82d76f1a3c30fecfd5da9cfdc25eea4d">More...</a><br /></td></tr>
+<tr class="separator:a82d76f1a3c30fecfd5da9cfdc25eea4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0c3842fca49d31ab6868cdee3f437cd"><td class="memItemLeft" align="right" valign="top">static Action&lt; DateTime &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#ad0c3842fca49d31ab6868cdee3f437cd">TimeUpdated</a></td></tr>
 <tr class="memdesc:ad0c3842fca49d31ab6868cdee3f437cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after the current UTC timestamp is received from the server Listener signature: void TimeUpdated(System.DateTime time)  <a href="#ad0c3842fca49d31ab6868cdee3f437cd">More...</a><br /></td></tr>
 <tr class="separator:ad0c3842fca49d31ab6868cdee3f437cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2546,6 +2549,28 @@ static Action&lt; int, string, string, Dictionary&lt; string, string &gt; &gt;&#
 
 </div>
 </div>
+<a class="anchor" id="a82d76f1a3c30fecfd5da9cfdc25eea4d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Action FuseSDK.AdDeclined</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called after ShowAdForZoneID(String zoneId) if the user declined to view the ad on the preroll Listener signature: void <a class="el" href="class_fuse_s_d_k.html#a82d76f1a3c30fecfd5da9cfdc25eea4d" title="Called after ShowAdForZoneID(String zoneId) if the user declined to view the ad on the preroll Listen...">AdDeclined()</a> </p>
+
+</div>
+</div>
 <a class="anchor" id="a5995fbd7a57ad57075b3fe05169e7708"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2995,7 +3020,7 @@ static Action&lt; int, string, string, Dictionary&lt; string, string &gt; &gt;&#
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_fuse_s_d_k.html">FuseSDK</a></li>
-    <li class="footer">Generated on Tue Sep 20 2016 11:24:12 for FuseUnitySDK by
+    <li class="footer">Generated on Wed Oct 12 2016 15:17:02 for FuseUnitySDK by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

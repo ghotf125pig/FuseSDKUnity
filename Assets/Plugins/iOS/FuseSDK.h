@@ -431,11 +431,18 @@
  * @brief Callback to inform no ad was displayed from showAdForZoneID:withOptions: call.
 
  
- * @see FshowAdForZoneID:withOptions:
+ * @see showAdForZoneID:withOptions:
  * @since Fuse SDK version 2.0.0
  */
 -(void) adFailedToDisplay;
 
+/*!
+ * @brief Callback to inform that an ad was rejected by user action before being displayed.
+ 
+ * @since Fuse SDK version 2.7.0
+ */
+ 
+-(void) adRejected;
 
 /*!
  * @brief If implemented, AdRally ads will pass this callback including the click-through URL back to the application.

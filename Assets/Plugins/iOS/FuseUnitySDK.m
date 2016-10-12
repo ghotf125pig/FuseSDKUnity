@@ -1004,6 +1004,11 @@ bool Native_RegisterCustomEventInt(int eventNumber, int value)
 	CallUnity("_CB_AdFailedToDisplay", NULL);
 }
 
+-(void) adRejected
+{
+	CallUnity("_CB_AdDeclined", NULL);
+}
+
 #pragma mark Game Configuration Data
 
 - (void)gameConfigurationReceived
