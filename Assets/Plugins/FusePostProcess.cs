@@ -183,6 +183,7 @@ public static class FusePostProcess
 				newPlist.Insert(insertLine + 1, @"    <true/>");
 			}
 #endif
+
 			//Add the NSAppTransportSecurity entry if it doesnt exist
 			insertLine = -1;
 			len = newPlist.Count - 1;
@@ -208,6 +209,98 @@ public static class FusePostProcess
 				newPlist.Insert(insertLine + 2, @"        <key>NSAllowsArbitraryLoads</key>");
 				newPlist.Insert(insertLine + 3, @"        <true/>");
 				newPlist.Insert(insertLine + 4, @"    </dict>");
+			}
+
+
+			//Add the entries with Calendar permission strings
+			insertLine = -1;
+			len = newPlist.Count - 1;
+			for(int l = 0; l < len; l++)
+			{
+				if(newPlist[l].Contains("plist") && newPlist[l + 1].Contains("dict"))
+				{
+					insertLine = l + 2;
+				}
+
+				if(newPlist[l].Contains("NSCalendarsUsageDescription"))
+				{
+					insertLine = -1;
+					break;
+				}
+			}
+			if(insertLine != -1)
+			{
+				newPlist.Insert(insertLine, @"    <key>NSCalendarsUsageDescription</key>");
+				newPlist.Insert(insertLine + 1, @"    <string>Advertisement would like to create a calendar event.</string>");
+			}
+
+
+			//Add the entries with Photo Library permission strings
+			insertLine = -1;
+			len = newPlist.Count - 1;
+			for(int l = 0; l < len; l++)
+			{
+				if(newPlist[l].Contains("plist") && newPlist[l + 1].Contains("dict"))
+				{
+					insertLine = l + 2;
+				}
+
+				if(newPlist[l].Contains("NSPhotoLibraryUsageDescription"))
+				{
+					insertLine = -1;
+					break;
+				}
+			}
+			if(insertLine != -1)
+			{
+				newPlist.Insert(insertLine, @"    <key>NSPhotoLibraryUsageDescription</key>");
+				newPlist.Insert(insertLine + 1, @"    <string>Advertisement would like to store a photo.</string>");
+			}
+
+
+			//Add the entries with Camera permission strings
+			insertLine = -1;
+			len = newPlist.Count - 1;
+			for(int l = 0; l < len; l++)
+			{
+				if(newPlist[l].Contains("plist") && newPlist[l + 1].Contains("dict"))
+				{
+					insertLine = l + 2;
+				}
+
+				if(newPlist[l].Contains("NSCameraUsageDescription"))
+				{
+					insertLine = -1;
+					break;
+				}
+			}
+			if(insertLine != -1)
+			{
+				newPlist.Insert(insertLine, @"    <key>NSCameraUsageDescription</key>");
+				newPlist.Insert(insertLine + 1, @"    <string>Advertisement would like to use your camera.</string>");
+			}
+
+
+			//Add the entries with Motion permission strings
+			insertLine = -1;
+			len = newPlist.Count - 1;
+			for(int l = 0; l < len; l++)
+			{
+				if(newPlist[l].Contains("plist") && newPlist[l + 1].Contains("dict"))
+				{
+					insertLine = l + 2;
+				}
+
+				if(newPlist[l].Contains("NSMotionUsageDescription"))
+				{
+					insertLine = -1;
+					break;
+				}
+			}
+			if(insertLine != -1)
+			{
+				newPlist.Insert(insertLine, @"    <key>NSMotionUsageDescription</key>");
+				newPlist.Insert(insertLine + 1, @"    <string>Advertisement would like to use motion for interactive ad controls</string>");
 			}
 
 
