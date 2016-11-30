@@ -81,18 +81,19 @@ public class FuseSDK_Prime31StoreKit : MonoBehaviour
 		}
 		transactionIDPurchasing = transaction.transactionIdentifier;
 		currentTransaction = transaction;
-		byte[] reciept = Convert.FromBase64String(transaction.base64EncodedTransactionReceipt);
-		FuseSDK.RegisterIOSInAppPurchase(transaction.productIdentifier, transaction.transactionIdentifier, reciept, FuseMisc.IAPState.PURCHASING);		
+		byte[] receipt = readReceiptData();
+		FuseSDK.RegisterIOSInAppPurchase(transaction.productIdentifier, transaction.transactionIdentifier, receipt, FuseMisc.IAPState.PURCHASING);		
 	}
-	
+
+
 	void purchaseFailed( string error )
 	{
 		//FuseLog( "purchase failed with error: " + error );
 		
 		if( currentTransaction != null )
 		{
-			byte[] reciept = Convert.FromBase64String(currentTransaction.base64EncodedTransactionReceipt);
-			FuseSDK.RegisterIOSInAppPurchase(currentTransaction.productIdentifier, currentTransaction.transactionIdentifier, reciept, FuseMisc.IAPState.FAILED);			
+			byte[] receipt = readReceiptData();
+			FuseSDK.RegisterIOSInAppPurchase(currentTransaction.productIdentifier, currentTransaction.transactionIdentifier, receipt, FuseMisc.IAPState.FAILED);			
 			currentTransaction = null;
 		}
 	}	
@@ -102,8 +103,8 @@ public class FuseSDK_Prime31StoreKit : MonoBehaviour
 		//FuseLog( "purchase cancelled with error: " + error );
 		if( currentTransaction != null )
 		{
-			byte[] reciept = Convert.FromBase64String(currentTransaction.base64EncodedTransactionReceipt);
-			FuseSDK.RegisterIOSInAppPurchase(currentTransaction.productIdentifier, currentTransaction.transactionIdentifier, reciept, FuseMisc.IAPState.FAILED);			
+			byte[] receipt = readReceiptData();
+			FuseSDK.RegisterIOSInAppPurchase(currentTransaction.productIdentifier, currentTransaction.transactionIdentifier, receipt, FuseMisc.IAPState.FAILED);			
 			currentTransaction = null;			
 		}
 	}
@@ -120,8 +121,23 @@ public class FuseSDK_Prime31StoreKit : MonoBehaviour
 		//FuseLog( "purchased product: " + transaction );
 		
 		currentTransaction = null;
-		byte[] reciept = Convert.FromBase64String(transaction.base64EncodedTransactionReceipt);
-		FuseSDK.RegisterIOSInAppPurchase(transaction.productIdentifier, transaction.transactionIdentifier, reciept, FuseMisc.IAPState.PURCHASED);		
+		byte[] receipt = readReceiptData();
+		FuseSDK.RegisterIOSInAppPurchase(transaction.productIdentifier, transaction.transactionIdentifier, receipt, FuseMisc.IAPState.PURCHASED);		
+	}
+
+	byte[] readReceiptData()
+	{
+		var receiptPath = StoreKitBinding.getAppStoreReceiptLocation().Replace("file://", string.Empty);
+
+		try
+		{
+			if(System.IO.File.Exists(receiptPath))
+				return System.IO.File.ReadAllBytes(receiptPath);
+		}
+		catch
+		{}
+
+		return new byte[] { 0 };
 	}
 	
 	void OnDestroy()

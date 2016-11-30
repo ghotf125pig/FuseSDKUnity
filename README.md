@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.6.6.1
+Version: 2.6.7.0
 
-Released: October 14th, 2016
+Released: November 30th, 2016
 
 ## Update Instructions
 Before updating, please remove all Fuse files from Assets/Plugins/Android, Assets/Plugins/iOS and any Fuse entries from your AndroidManifest.xml.  
@@ -16,8 +16,8 @@ Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity 4 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.6.1/FuseUnitySDK.unitypackage)  
-[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.6.1/FuseUnitySDK-Unity5.unitypackage)  
+[Unity 4 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.7.0/FuseUnitySDK.unitypackage)  
+[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.7.0/FuseUnitySDK-Unity5.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
@@ -30,6 +30,14 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.6.7.0
+November 30th, 2016
+* iOS: Added support for iOS 10 push notifications
+* iOS: Full support for ATS, allowHTTPDownload no longer required
+* iOS: Added support for latest prime31 StoreKit version
+* Ad provider optimizations
+
 
 ### 2.6.6.1
 October 14th, 2016

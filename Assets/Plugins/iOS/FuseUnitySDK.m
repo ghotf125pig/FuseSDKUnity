@@ -18,7 +18,7 @@ return ___retString___; }
 static char * _FuseGameObject = "FuseSDK";
 static const char *nilString = "";
 
-static FuseSDK_Delegate* _FuseSDK_delegate = nil;
+FuseSDK_Delegate* _FuseSDK_delegate = nil;
 
 
 #pragma mark - Initialization
@@ -48,7 +48,9 @@ void Native_StartSession(const char* gameId , bool registerPush, bool handleAdUR
 	
 	static dispatch_once_t once;
 	dispatch_once(&once, ^ {
-		_FuseSDK_delegate = [FuseSDK_Delegate new];
+		if(_FuseSDK_delegate != nil) {
+			_FuseSDK_delegate = [FuseSDK_Delegate new];
+		}
 	});
 	
 	[FuseSDK setPlatform:@"unity-ios"];

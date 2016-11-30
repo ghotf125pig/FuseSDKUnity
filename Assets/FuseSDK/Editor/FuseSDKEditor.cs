@@ -41,6 +41,8 @@ public class FuseSDKEditor : Editor
 		"GameKit",
 		"UIKit",
 		"GLKit",
+		"JavaScriptCore",
+		"UserNotifications",
 	};
 #endif
 
@@ -628,10 +630,6 @@ public class FuseSDKEditor : Editor
 
 			plugin.SaveAndReimport();
 		}
-
-#if !UNITY_5_0 && !UNITY_5_1
-		PlayerSettings.iOS.allowHTTPDownload = true;
-#endif
 
 		UpdateAndroidManifest();
 
