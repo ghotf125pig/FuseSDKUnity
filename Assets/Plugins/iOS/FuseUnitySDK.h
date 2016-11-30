@@ -175,3 +175,4 @@ bool Native_RegisterCustomEventInt(int eventNumber, int value);
 
 @end
 
+extern FuseSDK_Delegate* _FuseSDK_delegate;

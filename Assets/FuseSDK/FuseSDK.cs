@@ -35,7 +35,6 @@ public partial class FuseSDK : MonoBehaviour
 	public static event Action<AccountType, string> AccountLoginComplete;
 
 	/// <summary>
-	/// NOT IMPLEMENTED!
 	/// Called if an error occurs while trying to log in to an account.
 	/// Listener signature: void AccountLoginError(string accountId, FuseError error)
 	/// </summary>
@@ -50,7 +49,6 @@ public partial class FuseSDK : MonoBehaviour
 	public static event Action<string> NotificationAction;
 
 	/// <summary>
-	/// NOT IMPLEMENTED!
 	/// Called when a Fuse notification is about to disappear.
 	/// </summary>
 	public static event Action NotificationWillClose;

@@ -35,6 +35,8 @@ public static class FusePostProcess
     const string GAMEKIT_ID = "CDECA1A21B02531000CAA931";
 	const string UIKIT_ID = "CDECA1A21B02531000CAA951";
 	const string GLKIT_ID = "CDECA1A21B02531000CAA971";
+	const string JSCORE_ID = "CDECA1A21B02531000CAA991";
+	const string NOTIFICATIONS_ID = "CDECA1A21B02531000CAAA11";
 
 
 	const string CORETELEPHONY_FW = "3F3EE17B1757FB570038DED8";
@@ -54,6 +56,8 @@ public static class FusePostProcess
     const string GAMEKIT_FW = "CDECA1A11B02531000CAA932";
 	const string UIKIT_FW = "CDECA1A11B02531000CAA952";
 	const string GLKIT_FW = "CDECA1A11B02531000CAA972";
+	const string JSCORE_FW = "CDECA1A11B02531000CAA992";
+	const string NOTIFICATIONS_FW = "CDECA1A11B02531000CAAA12";
 
 	// List of all the frameworks to be added to the project
 	public struct framework
@@ -100,6 +104,8 @@ public static class FusePostProcess
                                          new framework("GameKit.framework", GAMEKIT_FW, GAMEKIT_ID),
 										 new framework("UIKit.framework", UIKIT_FW, UIKIT_ID),
 										 new framework("GLKit.framework", GLKIT_FW, GLKIT_ID),
+										 new framework("JavaScriptCore.framework", JSCORE_FW, JSCORE_ID),
+										 new framework("UserNotifications.framework", NOTIFICATIONS_FW, NOTIFICATIONS_ID),
 										};
 
 			string xcodeprojPath = path + "/Unity-iPhone.xcodeproj";
@@ -145,6 +151,8 @@ public static class FusePostProcess
     static bool bFoundGameKit = false;
 	static bool bFoundUIKit = false;
 	static bool bFoundGLKit = false;
+	static bool bFoundJSCore = false;
+	static bool bFoundNotifications = false;
 	public static void updateXcodeProject(string xcodeprojPath, framework[] listeFrameworks)
 	{
 		//Modify Info.plist
@@ -183,34 +191,6 @@ public static class FusePostProcess
 				newPlist.Insert(insertLine + 1, @"    <true/>");
 			}
 #endif
-
-			//Add the NSAppTransportSecurity entry if it doesnt exist
-			insertLine = -1;
-			len = newPlist.Count - 1;
-			for(int l = 0; l < len; l++)
-			{
-				if(newPlist[l].Contains("plist") && newPlist[l + 1].Contains("dict"))
-				{
-					insertLine = l + 2;
-				}
-
-				if(newPlist[l].Contains("NSAppTransportSecurity"))
-				{
-					insertLine = -1;
-					break;
-				}
-			}
-
-			//If the flag doesn't exist, add it now
-			if(insertLine != -1)
-			{
-				newPlist.Insert(insertLine, @"    <key>NSAppTransportSecurity</key>");
-				newPlist.Insert(insertLine + 1, @"    <dict>");
-				newPlist.Insert(insertLine + 2, @"        <key>NSAllowsArbitraryLoads</key>");
-				newPlist.Insert(insertLine + 3, @"        <true/>");
-				newPlist.Insert(insertLine + 4, @"    </dict>");
-			}
-
 
 			//Add the entries with Calendar permission strings
 			insertLine = -1;
@@ -402,6 +382,14 @@ public static class FusePostProcess
 			else if(lines[i].Contains("GLKit.framework"))
 			{
 				bFoundGLKit = true;
+			}
+			else if(lines[i].Contains("JavaScriptCore.framework"))
+			{
+				bFoundJSCore = true;
+			}
+			else if(lines[i].Contains("UserNotifications.framework"))
+			{
+				bFoundNotifications = true;
 			}
 			else if(lines[i].Contains("libsqlite3.tbd"))
 			{
@@ -672,6 +660,8 @@ public static class FusePostProcess
             || (bFoundGameKit && name.Equals("GameKit.framework"))
 			|| (bFoundUIKit && name.Equals("UIKit.framework"))
 			|| (bFoundGLKit && name.Equals("GLKit.framework"))
+			|| (bFoundJSCore && name.Equals("JavaScriptCore.framework"))
+			|| (bFoundNotifications && name.Equals("UserNotifications.framework"))
 			|| (bFoundSQLite && name.Equals("libsqlite3.tbd"))
 			|| (bFoundLibXML && name.Equals("libxml2.tbd"))
 			|| (bFoundLibZ && name.Equals("libz.tbd"))
