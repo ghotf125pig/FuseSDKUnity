@@ -321,13 +321,13 @@ Events</h2></td></tr>
 <tr class="memdesc:aada1b265065a0f94007f2277257fdb22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after an account is logged in to successfully Listener signature: void AccountLoginComplete(AccountType type, string accountId)  <a href="#aada1b265065a0f94007f2277257fdb22">More...</a><br /></td></tr>
 <tr class="separator:aada1b265065a0f94007f2277257fdb22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26cd0d32857aedec2c14a0c83a2a914b"><td class="memItemLeft" align="right" valign="top">static Action&lt; string, <a class="el" href="namespace_fuse_misc.html#ac5f3da519b00a22cde3e6a9b48cf45b2">FuseError</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#a26cd0d32857aedec2c14a0c83a2a914b">AccountLoginError</a></td></tr>
-<tr class="memdesc:a26cd0d32857aedec2c14a0c83a2a914b"><td class="mdescLeft">&#160;</td><td class="mdescRight">NOT IMPLEMENTED! Called if an error occurs while trying to log in to an account. Listener signature: void AccountLoginError(string accountId, FuseError error)  <a href="#a26cd0d32857aedec2c14a0c83a2a914b">More...</a><br /></td></tr>
+<tr class="memdesc:a26cd0d32857aedec2c14a0c83a2a914b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called if an error occurs while trying to log in to an account. Listener signature: void AccountLoginError(string accountId, FuseError error)  <a href="#a26cd0d32857aedec2c14a0c83a2a914b">More...</a><br /></td></tr>
 <tr class="separator:a26cd0d32857aedec2c14a0c83a2a914b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad41a51fdeb71ffb33df0aeae6661a23e"><td class="memItemLeft" align="right" valign="top">static Action&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#ad41a51fdeb71ffb33df0aeae6661a23e">NotificationAction</a></td></tr>
 <tr class="memdesc:ad41a51fdeb71ffb33df0aeae6661a23e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after a user clicks on a Fuse notification (e.g. an update notification) Listener signature: void NotificationAction(string action)  <a href="#ad41a51fdeb71ffb33df0aeae6661a23e">More...</a><br /></td></tr>
 <tr class="separator:ad41a51fdeb71ffb33df0aeae6661a23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdd93c0057d634884ab4e762475d68cd"><td class="memItemLeft" align="right" valign="top">static Action&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#afdd93c0057d634884ab4e762475d68cd">NotificationWillClose</a></td></tr>
-<tr class="memdesc:afdd93c0057d634884ab4e762475d68cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">NOT IMPLEMENTED! Called when a Fuse notification is about to disappear.  <a href="#afdd93c0057d634884ab4e762475d68cd">More...</a><br /></td></tr>
+<tr class="memdesc:afdd93c0057d634884ab4e762475d68cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a Fuse notification is about to disappear.  <a href="#afdd93c0057d634884ab4e762475d68cd">More...</a><br /></td></tr>
 <tr class="separator:afdd93c0057d634884ab4e762475d68cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22c64341cb085b1692fe6377cb0ecf46"><td class="memItemLeft" align="right" valign="top">static Action&lt; string, <a class="el" href="namespace_fuse_misc.html#ac5f3da519b00a22cde3e6a9b48cf45b2">FuseError</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#a22c64341cb085b1692fe6377cb0ecf46">FriendAdded</a></td></tr>
 <tr class="memdesc:a22c64341cb085b1692fe6377cb0ecf46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after a player is added to the user's friend list. Error specifies whether an error occured. Listener signature: void FriendAccepted(string fuseID, FuseError error)  <a href="#a22c64341cb085b1692fe6377cb0ecf46">More...</a><br /></td></tr>
@@ -2523,7 +2523,7 @@ static Action&lt; int, string, string, Dictionary&lt; string, string &gt; &gt;&#
 </table>
 </div><div class="memdoc">
 
-<p>NOT IMPLEMENTED! Called if an error occurs while trying to log in to an account. Listener signature: void AccountLoginError(string accountId, FuseError error) </p>
+<p>Called if an error occurs while trying to log in to an account. Listener signature: void AccountLoginError(string accountId, FuseError error) </p>
 
 </div>
 </div>
@@ -2876,7 +2876,7 @@ static Action&lt; int, string, string, Dictionary&lt; string, string &gt; &gt;&#
 </table>
 </div><div class="memdoc">
 
-<p>NOT IMPLEMENTED! Called when a Fuse notification is about to disappear. </p>
+<p>Called when a Fuse notification is about to disappear. </p>
 
 </div>
 </div>
@@ -3020,7 +3020,7 @@ static Action&lt; int, string, string, Dictionary&lt; string, string &gt; &gt;&#
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_fuse_s_d_k.html">FuseSDK</a></li>
-    <li class="footer">Generated on Wed Oct 12 2016 15:17:02 for FuseUnitySDK by
+    <li class="footer">Generated on Wed Nov 30 2016 15:22:06 for FuseUnitySDK by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>
