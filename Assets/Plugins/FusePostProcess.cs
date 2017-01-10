@@ -192,6 +192,66 @@ public static class FusePostProcess
 			}
 #endif
 
+			//Add the LSApplicationQueriesSchemes entry if it doesnt exist
+			insertLine = -1;
+			len = newPlist.Count - 1;
+			for(int l = 0; l < len; l++)
+			{
+				if(newPlist[l].Contains("plist") && newPlist[l + 1].Contains("dict"))
+				{
+					insertLine = l + 2;
+				}
+
+				if(newPlist[l].Contains("LSApplicationQueriesSchemes"))
+				{
+					insertLine = -1;
+					break;
+				}
+			}
+
+			//If the flag doesn't exist, add it now
+			if(insertLine != -1)
+			{
+				newPlist.Insert(insertLine, @"    <key>LSApplicationQueriesSchemes</key>");
+				newPlist.Insert(insertLine + 1, @"    <array>");
+				newPlist.Insert(insertLine + 2, @"        <string>fb</string>");
+				newPlist.Insert(insertLine + 3, @"        <string>instagram</string>");
+				newPlist.Insert(insertLine + 4, @"        <string>tumblr</string>");
+				newPlist.Insert(insertLine + 5, @"        <string>twitter</string>");
+				newPlist.Insert(insertLine + 6, @"    </array>");
+			}
+
+			
+			//Add the NSAppTransportSecurity entry if it doesnt exist
+			insertLine = -1;
+			len = newPlist.Count - 1;
+			for(int l = 0; l < len; l++)
+			{
+				if(newPlist[l].Contains("plist") && newPlist[l + 1].Contains("dict"))
+				{
+					insertLine = l + 2;
+				}
+
+				if(newPlist[l].Contains("NSAppTransportSecurity"))
+				{
+					insertLine = -1;
+					break;
+				}
+			}
+
+			//If the flag doesn't exist, add it now
+			if(insertLine != -1)
+			{
+				newPlist.Insert(insertLine, @"    <key>NSAppTransportSecurity</key>");
+				newPlist.Insert(insertLine + 1, @"    <dict>");
+				newPlist.Insert(insertLine + 2, @"        <key>NSAllowsLocalNetworking</key>");
+				newPlist.Insert(insertLine + 3, @"        <true/>");
+				newPlist.Insert(insertLine + 4, @"        <key>NSAllowsArbitraryLoadsInWebContent</key>");
+				newPlist.Insert(insertLine + 5, @"        <true/>");
+				newPlist.Insert(insertLine + 6, @"    </dict>");
+			}
+
+			
 			//Add the entries with Calendar permission strings
 			insertLine = -1;
 			len = newPlist.Count - 1;
@@ -514,6 +574,14 @@ public static class FusePostProcess
 				{
 					// rewrite the line to set the library as weak linked
 					UnityEngine.Debug.Log("Setting UIKit.framkework to weak link.");
+					string[] splitstring = line.Split(';');
+					string output = splitstring[0] + ";" + splitstring[1] + "; " + "settings = {ATTRIBUTES = (Weak, ); }; };";
+					fCurrentXcodeProjFile.WriteLine(output);
+				}
+				else if(line.Contains("/* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile;") && !line.Contains("settings = {ATTRIBUTES = (Weak, ); };"))
+				{
+					// rewrite the line to set the library as weak linked
+					UnityEngine.Debug.Log("Setting UserNotifications.framkework to weak link.");
 					string[] splitstring = line.Split(';');
 					string output = splitstring[0] + ";" + splitstring[1] + "; " + "settings = {ATTRIBUTES = (Weak, ); }; };";
 					fCurrentXcodeProjFile.WriteLine(output);

@@ -48,7 +48,7 @@ void Native_StartSession(const char* gameId , bool registerPush, bool handleAdUR
 	
 	static dispatch_once_t once;
 	dispatch_once(&once, ^ {
-		if(_FuseSDK_delegate != nil) {
+		if(_FuseSDK_delegate == nil) {
 			_FuseSDK_delegate = [FuseSDK_Delegate new];
 		}
 	});
