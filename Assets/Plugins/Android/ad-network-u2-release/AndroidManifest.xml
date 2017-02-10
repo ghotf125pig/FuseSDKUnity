@@ -3,7 +3,7 @@
     package="com.fusepowered.ads.adapters.UnityAds"
     android:versionCode="1"
     android:versionName="1.0" > <!-- minSdkVersion 9 -->
-    <!-- sdkVersion 2.0.5 -->
+    <!-- sdkVersion 2.0.7 -->
     <!--
  MANIFEST ENTRIES STORED IN .aar
     <application>

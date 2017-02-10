@@ -13,19 +13,21 @@ using System;
 [CustomEditor(typeof(FuseSDK))]
 public class FuseSDKEditor : Editor
 {
-	public static readonly string ANNOUNCEMENT_KEY = "FuseSDKAnnouncement";
-	public static readonly string ICON_PATH = "/Plugins/Android/FuseUnityBridge/res/drawable/ic_launcher.png";
-	public static readonly string MANIFEST_PATH = "/Plugins/Android/FuseUnityBridge/AndroidManifest.xml";
-	public static readonly string VERSION_PATH = "Assets/FuseSDK/version";
-	public static readonly int ICON_HEIGHT = 72;
-	public static readonly int ICON_WIDTH = 72;
+	public const string ANNOUNCEMENT_KEY = "FuseSDKAnnouncement";
+	public const string ICON_PATH = "/Plugins/Android/FuseUnityBridge/res/drawable/ic_launcher.png";
+	public const string MANIFEST_PATH = "/Plugins/Android/FuseUnityBridge/AndroidManifest.xml";
+	public const string VERSION_PATH = "Assets/FuseSDK/version";
+	private const string IOS_NATIVE_LIBS = "/FuseSDK/NativeLibs/iOS/";
+	private const string ANDROID_NATIVE_LIBS = "/FuseSDK/NativeLibs/Android/";
+	public const int ICON_HEIGHT = 72;
+	public const int ICON_WIDTH = 72;
 
-	private static readonly string API_KEY_PATTERN = @"^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$"; //8-4-4-4-12
-	private static readonly string API_STRIP_PATTERN = @"[^\da-f\-]"; //8-4-4-4-12
+	private const string API_KEY_PATTERN = @"^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$"; //8-4-4-4-12
+	private const string API_STRIP_PATTERN = @"[^\da-f\-]"; //8-4-4-4-12
 
 #if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7)
-	private static readonly string IOS_PLUGIN_M_FLAGS = "-fno-objc-arc";
-	private static readonly string IOS_PLUGIN_A_FLAGS = "-ObjC";
+	private const string IOS_PLUGIN_M_FLAGS = "-fno-objc-arc";
+	private const string IOS_PLUGIN_A_FLAGS = "-ObjC";
 	private static readonly string[] IOS_PLUGIN_A_FRAMEWORKS = new string[] {
 		"CoreTelephony",
 		"AdSupport",
@@ -46,23 +48,41 @@ public class FuseSDKEditor : Editor
 	};
 #endif
 
-	private static readonly string[] ANDROID_DELETED_FILES = new string[] {
+	private static readonly string[] DELETED_FILES = new string[] {
 		"/Plugins/FuseSDK.NET-Stub.dll",
 		"/Plugins/FuseSDK.NET.dll",
 		"/Plugins/Android/FuseSDK.jar",
 		"/Plugins/Android/FuseUnitySDK.jar",
 		"/Plugins/Android/android-support-v4.jar",
 		"/Plugins/Android/google-play-services.jar",
+		"/Plugins/iOS/FuseSDK.h",
+		"/Plugins/iOS/FuseSDKDefinitions.h",
+		"/Plugins/iOS/FuseUnitySDK.h",
+		"/Plugins/iOS/FuseUnitySDK.m",
+		"/Plugins/iOS/NSData-Base64.h",
+		"/Plugins/iOS/NSData-Base64.m",
+		"/Plugins/iOS/libFuseSDK.a",
+		"/Plugins/iOS/libFuseAdapter.a",
+		"/Plugins/iOS/libFuseAdapterAdcolony.a",
+		"/Plugins/iOS/libFuseAdapterAppLovin.a",
+		"/Plugins/iOS/libFuseAdapterNativeX.a",
 		"/FuseSDK/FuseSDK_UnityEditor.cs",
 		"/FuseSDK/FuseSDK_UnityEditor.cs",
+		"/FuseSDK/FuseMisc.cs",
+		"/FuseSDK/FusePostProcess.cs",
+		"/FuseSDK/FuseSDK.cs",
+		"/FuseSDK/FuseSDKEditorSession.cs",
+		"/FuseSDK/FuseSDK_SoomlaIAP.cs",
+		"/FuseSDK/JSONObject.cs",
+		"/FuseSDK/FuseMisc.cs",
 		"/FuseSDK/Editor/Ionic.Zip.dll",
 	};
 
-	private static readonly string MANIFEST_PERMISSION_COARSE_LOCATION = "    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />";
-	private static readonly string MANIFEST_PERMISSION_FINE_LOCATION = "    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />";
+	private const string MANIFEST_PERMISSION_COARSE_LOCATION = "    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />";
+	private const string MANIFEST_PERMISSION_FINE_LOCATION = "    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />";
 
-	private static readonly string MANIFEST_PERMISSION_COARSE_LOCATION_REGEX = @"\s*(?<comment><!--\s*)?<\s*uses-permission\s+android:name\s*=\s*""android.permission.ACCESS_COARSE_LOCATION""\s*/>.*";
-	private static readonly string MANIFEST_PERMISSION_FINE_LOCATION_REGEX = @"\s*(?<comment><!--\s*)?<\s*uses-permission\s+android:name\s*=\s*""android.permission.ACCESS_FINE_LOCATION""\s*/>.*";
+	private const string MANIFEST_PERMISSION_COARSE_LOCATION_REGEX = @"\s*(?<comment><!--\s*)?<\s*uses-permission\s+android:name\s*=\s*""android.permission.ACCESS_COARSE_LOCATION""\s*/>.*";
+	private const string MANIFEST_PERMISSION_FINE_LOCATION_REGEX = @"\s*(?<comment><!--\s*)?<\s*uses-permission\s+android:name\s*=\s*""android.permission.ACCESS_FINE_LOCATION""\s*/>.*";
 
 	private static readonly string[] MANIFEST_GCM_RECEIVER_ENTRY = new string[] { "\t\t<meta-data android:name=\"com.fusepowered.replace.gcmReceiver\" android:value=\"{{timestamp}}\" />",
 					"\t\t<!-- GCM -->",
@@ -518,9 +538,15 @@ public class FuseSDKEditor : Editor
 
 	private bool DoSettingsNeedUpdate()
 	{
-		foreach(var file in ANDROID_DELETED_FILES)
+		foreach(var file in DELETED_FILES)
 			if(File.Exists(Application.dataPath + file))
 				return true;
+
+		if(Directory.GetDirectories(Application.dataPath + IOS_NATIVE_LIBS).Length > 1)
+			return true;
+
+		if(Directory.GetDirectories(Application.dataPath + ANDROID_NATIVE_LIBS).Length > 1)
+			return true;
 
 		if(!PlayerSettings.Android.forceSDCardPermission || !PlayerSettings.Android.forceInternetPermission)
 			return true;
@@ -543,11 +569,9 @@ public class FuseSDKEditor : Editor
 			return true;
 
 		List<PluginImporter> iosPlugins =
-			Directory.GetFiles(Application.dataPath + "/Plugins/iOS")
-			.Select(file => file.Substring(file.LastIndexOfAny(new char[] { '\\', '/' }) + 1))
+			Directory.GetFiles(Application.dataPath + IOS_NATIVE_LIBS, "*", SearchOption.AllDirectories)
 			.Where(file => !file.EndsWith(".meta"))
-			.Where(file => file.Contains("FuseSDK") || file.Contains("libFuse") || file.Contains("FuseUnity") || file.Contains("NSData-Base64"))
-			.Select(file => PluginImporter.GetAtPath("Assets/Plugins/iOS/" + file) as PluginImporter)
+			.Select(file => PluginImporter.GetAtPath("Assets" + file.Substring(Application.dataPath.Length)) as PluginImporter)
 			.Where(plugin => plugin != null)
 			.ToList();
 
@@ -574,7 +598,7 @@ public class FuseSDKEditor : Editor
 
 	private void UpdateAllSettings()
 	{
-		foreach(var file in ANDROID_DELETED_FILES)
+		foreach(var file in DELETED_FILES)
 		{
 			try
 			{
@@ -593,14 +617,38 @@ public class FuseSDKEditor : Editor
 		if(!FuseSDKUpdater.ReadVersionFile(out currentVersion, out _))
 			return;
 
-		var versionMeta = AssetImporter.GetAtPath(VERSION_PATH);
+		foreach(var dir in Directory.GetDirectories(Application.dataPath + IOS_NATIVE_LIBS))
+		{
+			try
+			{
+				if(!dir.Contains(currentVersion))
+				{
+					Directory.Delete(dir, true);
+					File.Delete(dir.TrimEnd('/', '\\') + ".meta");
+				}
+			}
+			catch
+			{ }
+		}
+
+		foreach(var dir in Directory.GetDirectories(Application.dataPath + ANDROID_NATIVE_LIBS))
+		{
+			try
+			{
+				if(!dir.Contains(currentVersion))
+				{
+					Directory.Delete(dir, true);
+					File.Delete(dir.TrimEnd('/', '\\') + ".meta");
+				}
+			}
+			catch
+			{ }
+		}
 
 		List<PluginImporter> iosPlugins =
-			Directory.GetFiles(Application.dataPath + "/Plugins/iOS")
-			.Select(file => file.Substring(file.LastIndexOfAny(new char[] { '\\', '/' }) + 1))
+			Directory.GetFiles(Application.dataPath + IOS_NATIVE_LIBS, "*", SearchOption.AllDirectories)
 			.Where(file => !file.EndsWith(".meta"))
-			.Where(file => file.Contains("FuseSDK") || file.Contains("libFuse") || file.Contains("FuseUnity") || file.Contains("NSData-Base64"))
-			.Select(file => PluginImporter.GetAtPath("Assets/Plugins/iOS/" + file) as PluginImporter)
+			.Select(file => PluginImporter.GetAtPath("Assets" + file.Substring(Application.dataPath.Length)) as PluginImporter)
 			.Where(plugin => plugin != null)
 			.ToList();
 
@@ -633,6 +681,7 @@ public class FuseSDKEditor : Editor
 
 		UpdateAndroidManifest();
 
+		var versionMeta = AssetImporter.GetAtPath(VERSION_PATH);
 		versionMeta.userData = currentVersion + "#" + PlayerSettings.bundleIdentifier;
 		versionMeta.SaveAndReimport();
 #endif
@@ -970,19 +1019,22 @@ public class FuseSDKPrefs : EditorWindow
 	{
 		AdColony = 1 << 0,
 		AppLovin = 1 << 1,
-		NativeX = 1 << 4,
+		Mopub = 1 << 2,
+		Supersonic = 1 << 3,
+		UnityAds = 1 << 4,
 	}
 
 	private static readonly string[] AdapterFilenames = new string[]
 	{
-		"libFuseAdapterAdcolony.a",
-		"libFuseAdapterAppLovin.a",
-		"libFuseAdapterNativeX.a",
+		"libAdapterAdcolony.a",
+		"libAdapterAppLovin.a",
+		"libAdapterMopub.a",
+		"libAdapterSupersonic.a",
+		"libAdapterUnityAds.a",
 	};
 
-	private static readonly string ADAPTERS_KEY = "FuseSDKActiveAdapters";
-	private static readonly string DISABLED_ADAPTERS_PATH = "/FuseSDK/UnusedAdapters/";
-	private static readonly string ENABLED_ADAPTERS_PATH = "/Plugins/iOS/";
+	private const string ADAPTERS_KEY = "FuseSDKIosAdapters";
+	private const string IOS_ADAPTERS_PATH = "/FuseSDK/NativeLibs/iOS/";
 
 	[MenuItem("FuseSDK/Preferences", false, 60)]
 	public static void Init()
@@ -1023,56 +1075,30 @@ public class FuseSDKPrefs : EditorWindow
 
 	private void UpdateAdapters(uint oldAdapters, uint newAdapters)
 	{
-		if(!Directory.Exists(Application.dataPath + DISABLED_ADAPTERS_PATH))
-			Directory.CreateDirectory(Application.dataPath + DISABLED_ADAPTERS_PATH);
+#if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7)
+		string currentVersion, metaVersion;
+		if(!FuseSDKUpdater.ReadVersionFile(out currentVersion, out metaVersion))
+			return;
 
 		for(int i = 0; i < AdapterFilenames.Length && (oldAdapters >> i > 0 || newAdapters >> i > 0); i++)
 		{
-			if((oldAdapters>>i) % 2 > (newAdapters>>i) % 2)
+			var foundFile = Directory.GetFiles(Application.dataPath + AdapterFilenames[i], "*", SearchOption.AllDirectories).FirstOrDefault();
+
+			if(string.IsNullOrEmpty(foundFile))
 			{
-				try
-				{
-					File.Move(Application.dataPath + ENABLED_ADAPTERS_PATH + AdapterFilenames[i], Application.dataPath + DISABLED_ADAPTERS_PATH + AdapterFilenames[i]);
-				}
-				catch(IOException)
-				{
-					if(File.Exists(Application.dataPath + DISABLED_ADAPTERS_PATH + AdapterFilenames[i]) && File.Exists(Application.dataPath + ENABLED_ADAPTERS_PATH + AdapterFilenames[i]))
-					{
-						File.Delete(Application.dataPath + ENABLED_ADAPTERS_PATH + AdapterFilenames[i]);
-					}
-					else if(!File.Exists(Application.dataPath + ENABLED_ADAPTERS_PATH + AdapterFilenames[i]) && !File.Exists(Application.dataPath + ENABLED_ADAPTERS_PATH + AdapterFilenames[i]))
-					{
-						Debug.LogWarning("FuseSDK: Could not disable " + AdapterFilenames[i] + ". File does not exist.");
-					}
-				}
-				catch(System.UnauthorizedAccessException)
-				{
-					Debug.LogWarning("FuseSDK: Could not disable " + AdapterFilenames[i] + ". You do not have the required permission to move " + Application.dataPath + ENABLED_ADAPTERS_PATH + AdapterFilenames[i]);
-				}
+				Debug.LogWarning("Unable to locate " + AdapterFilenames[i] + " in Assets/" + IOS_ADAPTERS_PATH);
+				continue;
 			}
-			else if((oldAdapters>>i) % 2 < (newAdapters>>i) % 2)
+
+			var plugin = PluginImporter.GetAtPath("Assets" + foundFile.Substring(Application.dataPath.Length)) as PluginImporter;
+			bool shouldEnable = (newAdapters >> i) % 2 == 1;
+			if(plugin != null && shouldEnable != plugin.GetCompatibleWithPlatform(BuildTarget.iOS))
 			{
-				try
-				{
-					File.Move(Application.dataPath + DISABLED_ADAPTERS_PATH + AdapterFilenames[i], Application.dataPath + ENABLED_ADAPTERS_PATH + AdapterFilenames[i]);
-				}
-				catch(IOException)
-				{
-					if(File.Exists(Application.dataPath + DISABLED_ADAPTERS_PATH + AdapterFilenames[i]) && File.Exists(Application.dataPath + ENABLED_ADAPTERS_PATH + AdapterFilenames[i]))
-					{
-						File.Delete(Application.dataPath + DISABLED_ADAPTERS_PATH + AdapterFilenames[i]);
-					}
-					else if(!File.Exists(Application.dataPath + ENABLED_ADAPTERS_PATH + AdapterFilenames[i]) && !File.Exists(Application.dataPath + ENABLED_ADAPTERS_PATH + AdapterFilenames[i]))
-					{
-						Debug.LogWarning("FuseSDK: Could not enable " + AdapterFilenames[i] + ". File does not exist.");
-					}
-				}
-				catch(System.UnauthorizedAccessException)
-				{
-					Debug.LogWarning("FuseSDK: Could not enable " + AdapterFilenames[i] + ". You do not have the required permission to move " + Application.dataPath + DISABLED_ADAPTERS_PATH + AdapterFilenames[i]);
-				}
+				plugin.SetCompatibleWithAnyPlatform(false);
+				plugin.SetCompatibleWithPlatform(BuildTarget.iOS, shouldEnable);
 			}
 		}
 		AssetDatabase.Refresh();
+#endif
 	}
 }
