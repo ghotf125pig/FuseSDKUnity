@@ -17,14 +17,16 @@
     -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- minSdkVersion 15 -->
-    <!-- sdkVersion 6.3.0 -->
+    <!-- sdkVersion 6.4.0 -->
     <!--
  AppLovin jar modified:
         com.applovin.sdk.AppLovinSdkUtils.class removed and replaced with
         com.fusepowered.al.sdk.AppLovinSdkUtils.java
     -->
     <application>
-        <activity android:name="com.fusepowered.al.adview.ALInterstitialActivity" />
+        <activity
+            android:name="com.fusepowered.al.adview.ALInterstitialActivity"
+            android:configChanges="orientation|screenSize" />
         <activity android:name="com.fusepowered.al.adview.ALConfirmationActivity" />
         <activity
             android:name="com.fusepowered.ads.adapters.ALActivity"

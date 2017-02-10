@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- minSdkVersion 9 -->
-    <!-- sdkVersion 4.9.0 -->
+    <!-- sdkVersion 4.11.0 -->
     <!--
  mopub source modified:
         com.mopub.mraid.MraidOrientation:7
@@ -21,16 +21,16 @@
     <application>
         <activity
             android:name="com.mopub.mobileads.MoPubActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout" />
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name="com.mopub.mobileads.MraidActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout" />
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name="com.mopub.common.MoPubBrowser"
-            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout" />
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout" />
+            android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
 
 </manifest>

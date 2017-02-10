@@ -2,12 +2,12 @@
 
 ## Current Version
 
-Version: 2.6.7.1
+Version: 2.7.0.0
 
-Released: January 10th, 2017
+Released: February 10th, 2017
 
 ## Update Instructions
-Before updating, please remove all Fuse files from Assets/Plugins/Android, Assets/Plugins/iOS and any Fuse entries from your AndroidManifest.xml.  
+Before updating, please remove all Fuse files from Assets/Plugins/Android, Assets/Plugins/iOS and the entire Assets/FuseSDK folder.  
 We have removed several 3rd party dependencies, these files will remain in your project unless manually removed.  
 The FuseSDK now uses the [JarResolver](https://github.com/googlesamples/unity-jar-resolver) library to manage Google Play Services dependencies.
 If your project has any play services or support jars that you included manually you could encounter some conflicts.  
@@ -16,8 +16,7 @@ Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity 4 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.7.1/FuseUnitySDK.unitypackage)  
-[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.6.7.1/FuseUnitySDK-Unity5.unitypackage)  
+[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.7.0.0/FuseUnitySDK-Unity5.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
@@ -30,6 +29,13 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.7.0.0
+February 10th, 2017
+* Major ad network updates
+* Optimize cache usage for S2S videos
+* Optimize ad network initialization
+* Update JarResolver and Google Play Services dependencies
 
 ### 2.6.7.1
 January 10th, 2017

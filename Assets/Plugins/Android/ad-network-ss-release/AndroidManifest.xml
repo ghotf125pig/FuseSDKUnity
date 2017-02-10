@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- minSdkVersion 11 -->
-    <!-- sdkVersion 6.4.16 -->
+    <!-- sdkVersion 6.4.21 -->
     <application>
         <activity
             android:name="com.fusepowered.ssads.sdk.controller.ControllerActivity"

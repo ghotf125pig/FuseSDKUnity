@@ -41,10 +41,9 @@ public static class FuseSDKDependencies
     {
         svcSupport = PlayServicesSupport.CreateInstance(PluginName, EditorPrefs.GetString("AndroidSdkRoot"), "ProjectSettings");
 		svcSupport.ClearDependencies();
-        svcSupport.DependOn("com.google.android.gms", "play-services-basement", "8.4.0");
-		svcSupport.DependOn("com.android.support", "support-annotations", "23.4.0");
-		svcSupport.DependOn("com.android.support", "support-v4", "23.4.0");
-		svcSupport.DependOn("com.android.support", "recyclerview-v7", "23.4.0");
+		svcSupport.DependOn("com.google.android.gms", "play-services-basement", "+");
+		svcSupport.DependOn("com.android.support", "support-annotations", "24.1.1");
+		svcSupport.DependOn("com.android.support", "support-v4", "24.1.1");
 	}
 
 	[MenuItem("FuseSDK/Resolve Google Dependencies", false, 3)]
