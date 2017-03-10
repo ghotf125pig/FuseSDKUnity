@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.7.0.0
+Version: 2.7.2.0
 
-Released: February 10th, 2017
+Released: March 10th, 2017
 
 ## Update Instructions
 Before updating, please remove all Fuse files from Assets/Plugins/Android, Assets/Plugins/iOS and the entire Assets/FuseSDK folder.  
@@ -16,12 +16,12 @@ Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.7.0.0/FuseUnitySDK-Unity5.unitypackage)  
+[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.7.2.0/FuseUnitySDK-Unity5.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
 
-Please review the [integration instructions](https://wiki.fusepowered.com/index.php?title=Unity) found here for more information on integrating the Fuse SDK.
+Please review the [integration instructions](https://wiki.fusepowered.com/index.php?title=Unity) for more information on integrating the Fuse SDK.
 
 ## References
 
@@ -29,6 +29,11 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.7.2.0
+March 10th, 2017
+* Add support for the gradle build system in Unity
+* Fix for some devices without Google Play Services
 
 ### 2.7.0.0
 February 10th, 2017
@@ -110,21 +115,6 @@ March 11th, 2016
 * Added Soomla Store IAP tracking
 * Added Unity IAP tracking to Extras folder
 * Added new iOS Frameworks
-* Bug fixes
-
-### 2.4.2.1
-January 20th, 2016
-* Android Manifest bug fixes
-
-### 2.4.2.0
-November 26th, 2015
-* Ad Provider optimizations
-
-### 2.4.1.0
-November 23rd, 2015
-* Ad Provider updates
-* VAST Improvements
-* Custom End Cards
 * Bug fixes
 
 

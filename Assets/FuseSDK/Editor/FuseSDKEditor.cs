@@ -1015,38 +1015,16 @@ public class FuseSDKPrefs : EditorWindow
 		Bugfixes = 3,
 	}
 
-	enum ActiveAdapters
-	{
-		AdColony = 1 << 0,
-		AppLovin = 1 << 1,
-		Mopub = 1 << 2,
-		Supersonic = 1 << 3,
-		UnityAds = 1 << 4,
-	}
-
-	private static readonly string[] AdapterFilenames = new string[]
-	{
-		"libAdapterAdcolony.a",
-		"libAdapterAppLovin.a",
-		"libAdapterMopub.a",
-		"libAdapterSupersonic.a",
-		"libAdapterUnityAds.a",
-	};
-
-	private const string ADAPTERS_KEY = "FuseSDKIosAdapters";
-	private const string IOS_ADAPTERS_PATH = "/FuseSDK/NativeLibs/iOS/";
-
 	[MenuItem("FuseSDK/Preferences", false, 60)]
 	public static void Init()
 	{
-		GetWindowWithRect<FuseSDKPrefs>(new Rect(0, 0, 400, 100), true, "Fuse SDK Preferences").ShowUtility();
+		GetWindowWithRect<FuseSDKPrefs>(new Rect(0, 0, 400, 50), true, "Fuse SDK Preferences").ShowUtility();
 	}
 
 	void OnGUI()
 	{
 		UpdateType updateStream = (UpdateType)Mathf.Min(EditorPrefs.GetInt(FuseSDKUpdater.AUTOUPDATE_KEY, 4) + 1, (int)UpdateType.Bugfixes);
 		DownloadType autoDL = (DownloadType)EditorPrefs.GetInt(FuseSDKUpdater.AUTODOWNLOAD_KEY, 1);
-		ActiveAdapters activeAdapters = (ActiveAdapters)EditorPrefs.GetInt(ADAPTERS_KEY, int.MaxValue);
 
 		UpdateType newStream = (UpdateType)EditorGUILayout.EnumPopup("Auto Update Checking", updateStream);
 		
@@ -1061,44 +1039,5 @@ public class FuseSDKPrefs : EditorWindow
 			if(newDL != autoDL)
 				EditorPrefs.SetInt(FuseSDKUpdater.AUTODOWNLOAD_KEY, (int)newDL);
 		}
-
-		GUILayout.Space(30);
-
-		ActiveAdapters newAdapters = (ActiveAdapters)EditorGUILayout.EnumMaskField("Active Adapters", activeAdapters);
-
-		if(newAdapters != activeAdapters)
-		{
-			EditorPrefs.SetInt(ADAPTERS_KEY, (int)newAdapters);
-			UpdateAdapters((uint)activeAdapters, (uint)newAdapters);
-		}
-	}
-
-	private void UpdateAdapters(uint oldAdapters, uint newAdapters)
-	{
-#if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7)
-		string currentVersion, metaVersion;
-		if(!FuseSDKUpdater.ReadVersionFile(out currentVersion, out metaVersion))
-			return;
-
-		for(int i = 0; i < AdapterFilenames.Length && (oldAdapters >> i > 0 || newAdapters >> i > 0); i++)
-		{
-			var foundFile = Directory.GetFiles(Application.dataPath + AdapterFilenames[i], "*", SearchOption.AllDirectories).FirstOrDefault();
-
-			if(string.IsNullOrEmpty(foundFile))
-			{
-				Debug.LogWarning("Unable to locate " + AdapterFilenames[i] + " in Assets/" + IOS_ADAPTERS_PATH);
-				continue;
-			}
-
-			var plugin = PluginImporter.GetAtPath("Assets" + foundFile.Substring(Application.dataPath.Length)) as PluginImporter;
-			bool shouldEnable = (newAdapters >> i) % 2 == 1;
-			if(plugin != null && shouldEnable != plugin.GetCompatibleWithPlatform(BuildTarget.iOS))
-			{
-				plugin.SetCompatibleWithAnyPlatform(false);
-				plugin.SetCompatibleWithPlatform(BuildTarget.iOS, shouldEnable);
-			}
-		}
-		AssetDatabase.Refresh();
-#endif
 	}
 }
