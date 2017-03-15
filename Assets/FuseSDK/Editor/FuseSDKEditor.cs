@@ -76,6 +76,7 @@ public class FuseSDKEditor : Editor
 		"/FuseSDK/JSONObject.cs",
 		"/FuseSDK/FuseMisc.cs",
 		"/FuseSDK/Editor/Ionic.Zip.dll",
+		"/FuseSDK/Common/FusePostProcess.cs",
 	};
 
 	private const string MANIFEST_PERMISSION_COARSE_LOCATION = "    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />";

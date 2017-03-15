@@ -1,5 +1,4 @@
-#define FUSE_USE_SSL
-#if UNITY_EDITOR && UNITY_5_3_OR_NEWER
+#if UNITY_EDITOR
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -11,74 +10,80 @@ using UnityEngine;
 
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.iOS.Xcode;
+using UnityEditorCompat.iOS.Xcode;
+using UnityEditorCompat.iOS.Xcode.Extensions;
+
 
 public static class FusePostProcess
 {
-	[PostProcessBuild] // <- this is where the magic happens
+	[PostProcessBuild(1)] // <- this is where the magic happens
 	public static void OnPostProcessBuild(BuildTarget target, string buildPath)
 	{
+#if UNITY_5
 		if(target != BuildTarget.iOS)
+#else
+		if(target != BuildTarget.iPhone)
+#endif
 			return;
 
 		UnityEngine.Debug.Log("FusePostProcess Build Step - START");
 
 		string[] frameworks = new string[] {
 			"CoreTelephony.framework",
-			"AdSupport.framework",
-			"StoreKit.framework",
 			"MessageUI.framework",
 			"EventKit.framework",
 			"EventKitUI.framework",
 			"Twitter.framework",
-			"Social.framework",
 			"Security.framework",
 			"MobileCoreServices.framework",
-			"WebKit.framework",
 			"GameKit.framework",
 			"GLKit.framework",
 			"JavaScriptCore.framework",
 			"libsqlite3.tbd",
 			"libxml2.tbd",
 			"libz.tbd",
+
 		};
 
 		string[] weakFrameworks = new string[] {
 			"Foundation.framework",
 			"UIKit.framework",
 			"UserNotifications.framework",
+			"WebKit.framework",
+			"AdSupport.framework",
+			"Social.framework",
+			"StoreKit.framework",
 		};
 
-		////////////////////////////////
-		//PBXProject processing
-		string pbxPath = PBXProject.GetPBXProjectPath(buildPath);
 
-		var pbxProject = new PBXProject();
-		pbxProject.ReadFromFile(pbxPath);
+		string pbxProjPath = PBXProject.GetPBXProjectPath(buildPath);
+		PBXProject pbxProj = new PBXProject();
+		pbxProj.ReadFromFile(pbxProjPath);
+		string targetGuid = pbxProj.TargetGuidByName(PBXProject.GetUnityTargetName());
 
-		var targetGuid = pbxProject.TargetGuidByName(PBXProject.GetUnityTargetName());
-
-		//Add frameworks
-		foreach(var f in frameworks)
-			if(!pbxProject.HasFramework(f))
-				pbxProject.AddFrameworkToProject(targetGuid, f, false);
-
-		//Add weak linked frameworks, delete and readd if they already exist to make sure they are weaklinked
-		foreach(var f in weakFrameworks)
+		//Add Required Frameworks
+		foreach(var framework in frameworks)
 		{
-			if(pbxProject.HasFramework(f))
-				pbxProject.RemoveFrameworkFromProject(targetGuid, f);
-
-			pbxProject.AddFrameworkToProject(targetGuid, f, true);
+			if(!pbxProj.ContainsFramework(targetGuid, framework, framework.EndsWith(".framework") ? "System/Library/Frameworks/" : "usr/lib/"))
+				pbxProj.AddFrameworkToProject(targetGuid, framework, false, framework.EndsWith(".framework") ? "System/Library/Frameworks/" : "usr/lib/");
 		}
 
-		//Add -ObjC flag
-		pbxProject.AddBuildProperty(targetGuid, "OTHER_LDFLAGS", "-ObjC");
 
-		pbxProject.WriteToFile(pbxPath);
-		/////////////////////////////////
+		//Add Optional Frameworks
+		foreach(var framework in weakFrameworks)
+		{
+			if(pbxProj.ContainsFramework(targetGuid, framework, framework.EndsWith(".framework") ? "System/Library/Frameworks/" : "usr/lib/"))
+				pbxProj.RemoveFrameworkFromProject(targetGuid, framework, framework.EndsWith(".framework") ? "System/Library/Frameworks/" : "usr/lib/");
 
-		/////////////////////////////////
+			pbxProj.AddFrameworkToProject(targetGuid, framework, true, framework.EndsWith(".framework") ? "System/Library/Frameworks/" : "usr/lib/");
+		}
+
+		//Add -ObjC linker flag
+		pbxProj.AddBuildProperty(targetGuid, "OTHER_LDFLAGS", "-ObjC");
+
+		pbxProj.WriteToFile(pbxProjPath);
+
+
 		//Info.plist processing
 		string infoPlistPath = buildPath + "/Info.plist";
 
@@ -102,17 +107,17 @@ public static class FusePostProcess
 		PlistElementDict atsDict = (plistParser.root["NSAppTransportSecurity"] ?? (plistParser.root["NSAppTransportSecurity"] = new PlistElementDict())).AsDict();
 		atsDict["NSAllowsLocalNetworking"] = new PlistElementBoolean(true);
 		atsDict["NSAllowsArbitraryLoadsInWebContent"] = new PlistElementBoolean(true);
-		
-		PlistElementArray appQueriesSchemes = (plistParser.root["LSApplicationQueriesSchemes"] ?? (plistParser.root["LSApplicationQueriesSchemes"] = new PlistElementDict())).AsArray();
+
+		PlistElementArray appQueriesSchemes = (plistParser.root["LSApplicationQueriesSchemes"] ?? (plistParser.root["LSApplicationQueriesSchemes"] = new PlistElementArray())).AsArray();
 		appQueriesSchemes.AddString("fb");
 		appQueriesSchemes.AddString("instagram");
 		appQueriesSchemes.AddString("tumblr");
 		appQueriesSchemes.AddString("twitter");
 
 		plistParser.WriteToFile(infoPlistPath);
-		////////////////////////////////////
+
 
 		UnityEngine.Debug.Log("FusePostProcess - STOP");
 	}
 }
-#endif // UNITY_EDITOR
+#endif
