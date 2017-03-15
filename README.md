@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.7.2.0
+Version: 2.7.2.1
 
-Released: March 10th, 2017
+Released: March 15th, 2017
 
 ## Update Instructions
 Before updating, please remove all Fuse files from Assets/Plugins/Android, Assets/Plugins/iOS and the entire Assets/FuseSDK folder.  
@@ -16,7 +16,7 @@ Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.7.2.0/FuseUnitySDK-Unity5.unitypackage)  
+[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.7.2.1/FuseUnitySDK-Unity5.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
@@ -29,6 +29,12 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.7.2.1
+March 15th, 2017
+* Android: Fixed 'failed to initialize' error
+* iOS: Fix missing frameworks in Post Process script
+* iOS: Post Process script now supports all versions of Unity 5
 
 ### 2.7.2.0
 March 10th, 2017
