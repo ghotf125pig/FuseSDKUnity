@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -78,6 +78,27 @@ public static class FusePostProcess
 			pbxProj.AddFrameworkToProject(targetGuid, framework, true, framework.EndsWith(".framework") ? "System/Library/Frameworks/" : "usr/lib/");
 		}
 
+        Directory.CreateDirectory(buildPath + "/FrameworkRes");
+        foreach(string frameworkPath in Directory.GetDirectories(Application.dataPath + FuseSDKEditor.IOS_NATIVE_LIBS, "*.embeddedframework", SearchOption.AllDirectories))
+        {
+            RecursiveDirCopy(frameworkPath + "/Resources", buildPath + "/FrameworkRes");
+
+            //Don't iterate recursively.
+            //Instead add all files and folders in the topmost directory as files.
+            //This adds .bundle folders as files which is what's needed.
+            foreach(string path in Directory.GetFiles(buildPath + "/FrameworkRes", "*", SearchOption.TopDirectoryOnly))
+            {
+                string localPath = path.Substring(buildPath.Length + 1);
+                pbxProj.AddFileToBuild(targetGuid, pbxProj.AddFile(localPath, localPath));
+            }
+
+            foreach(string path in Directory.GetDirectories(buildPath + "/FrameworkRes", "*", SearchOption.TopDirectoryOnly))
+            {
+                string localPath = path.Substring(buildPath.Length + 1);
+                pbxProj.AddFileToBuild(targetGuid, pbxProj.AddFile(localPath, localPath));
+            }
+        }
+
 		//Add -ObjC linker flag
 		pbxProj.AddBuildProperty(targetGuid, "OTHER_LDFLAGS", "-ObjC");
 
@@ -119,5 +140,31 @@ public static class FusePostProcess
 
 		UnityEngine.Debug.Log("FusePostProcess - STOP");
 	}
+
+    //Recursively copy an entire directory to another location. Includes options to skip empty folders and overwrite files
+    //Returns whether any files/folders were actually copied
+    public static bool RecursiveDirCopy(string fromPath, string toPath, bool skipEmpty = true, bool overwrite = true)
+    {
+        var files = Directory.GetFiles(fromPath);
+        var dirs = Directory.GetDirectories(fromPath);
+
+        if((!skipEmpty || files.Length > 0) && !Directory.Exists(toPath))
+            Directory.CreateDirectory(toPath);
+
+        foreach(var file in files)
+            if(!file.EndsWith(".meta"))
+                File.Copy(file, toPath + "/" + GetLastFileOrFolderInPath(file), overwrite);
+
+        bool didCopy = false;
+        foreach(var dir in dirs)
+            didCopy |= RecursiveDirCopy(dir, toPath + "/" + GetLastFileOrFolderInPath(dir), skipEmpty, overwrite);
+
+        return didCopy || files.Length > 0 || !skipEmpty;
+    }
+
+    public static string GetLastFileOrFolderInPath(string path)
+    {
+        return path.Substring(path.LastIndexOfAny(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }) + 1);
+    }
 }
 #endif

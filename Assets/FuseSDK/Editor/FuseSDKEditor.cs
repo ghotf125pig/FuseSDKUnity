@@ -17,8 +17,8 @@ public class FuseSDKEditor : Editor
 	public const string ICON_PATH = "/Plugins/Android/FuseUnityBridge/res/drawable/ic_launcher.png";
 	public const string MANIFEST_PATH = "/Plugins/Android/FuseUnityBridge/AndroidManifest.xml";
 	public const string VERSION_PATH = "Assets/FuseSDK/version";
-	private const string IOS_NATIVE_LIBS = "/FuseSDK/NativeLibs/iOS/";
-	private const string ANDROID_NATIVE_LIBS = "/FuseSDK/NativeLibs/Android/";
+	public const string IOS_NATIVE_LIBS = "/FuseSDK/NativeLibs/iOS/";
+	public const string ANDROID_NATIVE_LIBS = "/FuseSDK/NativeLibs/Android/";
 	public const int ICON_HEIGHT = 72;
 	public const int ICON_WIDTH = 72;
 
@@ -85,14 +85,14 @@ public class FuseSDKEditor : Editor
 	private const string MANIFEST_PERMISSION_COARSE_LOCATION_REGEX = @"\s*(?<comment><!--\s*)?<\s*uses-permission\s+android:name\s*=\s*""android.permission.ACCESS_COARSE_LOCATION""\s*/>.*";
 	private const string MANIFEST_PERMISSION_FINE_LOCATION_REGEX = @"\s*(?<comment><!--\s*)?<\s*uses-permission\s+android:name\s*=\s*""android.permission.ACCESS_FINE_LOCATION""\s*/>.*";
 
-	private static readonly string[] MANIFEST_GCM_RECEIVER_ENTRY = new string[] { "\t\t<meta-data android:name=\"com.fusepowered.replace.gcmReceiver\" android:value=\"{{timestamp}}\" />",
+	private static readonly string[] MANIFEST_GCM_RECEIVER_ENTRY = new string[] { "\t\t<meta-data android:name=\"com.upsight.mediation.replace.gcmReceiver\" android:value=\"{{timestamp}}\" />",
 					"\t\t<!-- GCM -->",
 					"\t\t<activity",
-					"            android:name=\"com.fusepowered.unity.GCMJava\"",
+					"            android:name=\"com.upsight.mediation.unity.GCMJava\"",
 					"            android:label=\"@string/app_name\" >",
 					"\t\t</activity>",
 					"\t\t<receiver",
-					"            android:name=\"com.fusepowered.unity.FuseUnityGCMReceiver\"",
+					"            android:name=\"com.upsight.mediation.unity.FuseUnityGCMReceiver\"",
 					"            android:permission=\"com.google.android.c2dm.permission.SEND\" >",
 					"            <intent-filter>",
 					"                <!-- Receives the actual messages. -->",
@@ -100,25 +100,25 @@ public class FuseSDKEditor : Editor
 					"                <!-- Receives the registration id. -->",
 					"                <action android:name=\"com.google.android.c2dm.intent.REGISTRATION\" />",
 					"\t\t\t\t",
-					"\t\t\t\t<meta-data android:name=\"com.fusepowered.replace.packageId\" android:value=\"{{packageId}}\" />",
+					"\t\t\t\t<meta-data android:name=\"com.upsight.mediation.replace.packageId\" android:value=\"{{packageId}}\" />",
 					"                <category android:name=\"{{packageId}}\" />",
 					"",
 					"            </intent-filter>",
 					"\t\t</receiver>",
-					"\t\t<service android:name=\"com.fusepowered.unity.GCMIntentService\" />",
+					"\t\t<service android:name=\"com.upsight.mediation.unity.GCMIntentService\" />",
 					"\t\t<!-- end -->",
 	};
 
-	private static readonly string[] MANIFEST_GCM_PERMISSIONS_ENTRY = new string[] { "\t<meta-data android:name=\"com.fusepowered.replace.gcmPermissions\" android:value=\"{{timestamp}}\" />",
+	private static readonly string[] MANIFEST_GCM_PERMISSIONS_ENTRY = new string[] { "\t<meta-data android:name=\"com.upsight.mediation.replace.gcmPermissions\" android:value=\"{{timestamp}}\" />",
 					"\t<!-- Permissions for GCM -->",
 					"\t<!-- Keeps the processor from sleeping when a message is received. -->",
 					"\t<uses-permission android:name=\"android.permission.WAKE_LOCK\" />",
 					"\t",
 					"\t<!-- Creates a custom permission so only this app can receive its messages. -->",
-					"\t<meta-data android:name=\"com.fusepowered.replace.packageId\" android:value=\"{{packageId}}\" />",
+					"\t<meta-data android:name=\"com.upsight.mediation.replace.packageId\" android:value=\"{{packageId}}\" />",
 					"\t<permission android:name=\"{{packageId}}.permission.C2D_MESSAGE\" android:protectionLevel=\"signature\" />",
 					"",
-					"\t<meta-data android:name=\"com.fusepowered.replace.packageId\" android:value=\"{{packageId}}\" />",
+					"\t<meta-data android:name=\"com.upsight.mediation.replace.packageId\" android:value=\"{{packageId}}\" />",
 					"\t<uses-permission android:name=\"{{packageId}}.permission.C2D_MESSAGE\" />",
 					"\t",
 					"\t<!-- This app has permission to register and receive data message. -->",
@@ -576,8 +576,17 @@ public class FuseSDKEditor : Editor
 			.Where(plugin => plugin != null)
 			.ToList();
 
-		foreach(var plugin in iosPlugins)
+        iosPlugins.AddRange(
+            Directory.GetDirectories(Application.dataPath + IOS_NATIVE_LIBS, "*.framework", SearchOption.AllDirectories)
+            .Select(path => PluginImporter.GetAtPath("Assets" + path.Substring(Application.dataPath.Length)) as PluginImporter)
+            .Where(plugin => plugin != null)
+            );
+
+        foreach(var plugin in iosPlugins)
 		{
+            if(!plugin.GetCompatibleWithPlatform(BuildTarget.iOS))
+                return true;
+
 			if(plugin.assetPath.EndsWith(".m"))
 			{
 				string flags = plugin.GetPlatformData(BuildTarget.iOS, "CompileFlags");
@@ -591,7 +600,7 @@ public class FuseSDKEditor : Editor
 				if(!flags.Contains(IOS_PLUGIN_A_FLAGS) || frameworks.Intersect(IOS_PLUGIN_A_FRAMEWORKS).Count() != IOS_PLUGIN_A_FRAMEWORKS.Length)
 					return true;
 			}
-		}
+        }
 #endif
 
 		return false;
@@ -646,12 +655,18 @@ public class FuseSDKEditor : Editor
 			{ }
 		}
 
-		List<PluginImporter> iosPlugins =
+        List<PluginImporter> iosPlugins =
 			Directory.GetFiles(Application.dataPath + IOS_NATIVE_LIBS, "*", SearchOption.AllDirectories)
 			.Where(file => !file.EndsWith(".meta"))
 			.Select(file => PluginImporter.GetAtPath("Assets" + file.Substring(Application.dataPath.Length)) as PluginImporter)
 			.Where(plugin => plugin != null)
 			.ToList();
+
+        iosPlugins.AddRange(
+            Directory.GetDirectories(Application.dataPath + IOS_NATIVE_LIBS, "*.framework", SearchOption.AllDirectories)
+            .Select(path => PluginImporter.GetAtPath("Assets" + path.Substring(Application.dataPath.Length)) as PluginImporter)
+            .Where(plugin => plugin != null)
+            );
 
 		foreach(var plugin in iosPlugins)
 		{
@@ -866,9 +881,9 @@ public class FuseSDKEditor : Editor
 		}
 
 		Regex multiLineMetaDataRegex = new Regex(@"\s*<\s*meta-data\s*", RegexOptions.Singleline);
-		Regex packageIdRegex = new Regex(@"\s*<\s*meta-data\s+android:name\s*=\s*""com.fusepowered.replace.packageId""\s*android:value\s*=\s*""(?<id>\S+)""\s*/>.*", RegexOptions.Singleline);
-		Regex gcmReceiverRegex = new Regex(@"\s*<\s*meta-data\s+android:name\s*=\s*""com.fusepowered.replace.gcmReceiver""\s*android:value\s*=\s*""(?<time>\S+)""\s*/>.*", RegexOptions.Singleline);
-		Regex gcmPermissionsRegex = new Regex(@"\s*<\s*meta-data\s+android:name\s*=\s*""com.fusepowered.replace.gcmPermissions""\s*android:value\s*=\s*""(?<time>\S+)""\s*/>.*", RegexOptions.Singleline);
+		Regex packageIdRegex = new Regex(@"\s*<\s*meta-data\s+android:name\s*=\s*""com.upsight.mediation.replace.packageId""\s*android:value\s*=\s*""(?<id>\S+)""\s*/>.*", RegexOptions.Singleline);
+		Regex gcmReceiverRegex = new Regex(@"\s*<\s*meta-data\s+android:name\s*=\s*""com.upsight.mediation.replace.gcmReceiver""\s*android:value\s*=\s*""(?<time>\S+)""\s*/>.*", RegexOptions.Singleline);
+		Regex gcmPermissionsRegex = new Regex(@"\s*<\s*meta-data\s+android:name\s*=\s*""com.upsight.mediation.replace.gcmPermissions""\s*android:value\s*=\s*""(?<time>\S+)""\s*/>.*", RegexOptions.Singleline);
 		Regex coarseLocPermissionsRegex = new Regex(MANIFEST_PERMISSION_COARSE_LOCATION_REGEX, RegexOptions.Singleline);
 		Regex fineLocPermissionsRegex = new Regex(MANIFEST_PERMISSION_FINE_LOCATION_REGEX, RegexOptions.Singleline);
 		string[] manifest = File.ReadAllLines(path);
