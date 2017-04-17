@@ -33,7 +33,7 @@ public partial class FuseSDK
 			gameObject.AddComponent<FuseSDK_Unibill_Android>().logging = logging;
 
 		//Initialize Java bridge
-		_fuseUnityPlugin = new AndroidJavaClass("com.fusepowered.unity.FuseUnitySDK");
+		_fuseUnityPlugin = new AndroidJavaClass("com.upsight.mediation.unity.FuseUnitySDK");
 		FuseLog("FuseUnityPlugin " + (_fuseUnityPlugin == null ? "NOT FOUND" : "FOUND"));
 		FuseLog("Callback object is: " + gameObject.name);
 		_fuseUnityPlugin.CallStatic("SetGameObjectCallback", gameObject.name);

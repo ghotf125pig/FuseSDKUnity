@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.7.2.1
+Version: 2.8.0.0
 
-Released: March 15th, 2017
+Released: April 17th, 2017
 
 ## Update Instructions
 Before updating, please remove all Fuse files from Assets/Plugins/Android, Assets/Plugins/iOS and the entire Assets/FuseSDK folder.  
@@ -16,7 +16,7 @@ Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.7.2.1/FuseUnitySDK-Unity5.unitypackage)  
+[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.8.0.0/FuseUnitySDK-Unity5.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
@@ -29,6 +29,13 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.8.0.0
+April 17th, 2017
+* Minor changes to native SDK structure
+* Updated JarResolver
+* Ad provider updates
+* Android: Minimum Android API is now 16 (Android 4.1)
 
 ### 2.7.2.1
 March 15th, 2017
@@ -58,7 +65,6 @@ November 30th, 2016
 * iOS: Full support for ATS, allowHTTPDownload no longer required
 * iOS: Added support for latest prime31 StoreKit version
 * Ad provider optimizations
-
 
 ### 2.6.6.1
 October 14th, 2016
@@ -95,33 +101,6 @@ July 7th, 2016
   * Minimum API version increased to API 15 (Android 4.0.3)
 * iOS
   * Refactor of IOS SDK
-
-### 2.5.5.0
-April 1st, 2016
-* Critical Android Bug fixes in 3rd party providers
-
-### 2.5.4.0
-March 29th, 2016
-* iOS Bug fixes
-
-### 2.5.3.0
-March 23rd, 2016
-* Removed Android InAppBilling library (included by Unity or other 3rd party billing plugins)
-* Removed FuseSDK.NET-Stub.dll
-* Added options to FuseSDK prefab to start Fuse Sessions in the Editor and Standalone builds
-* iOS Bug fixes
-
-### 2.5.2.0
-March 11th, 2016
-* Ad provider updates
-* Price localization for offers
-* Rich media pre and post rolls for cross promotional videos
-* Optimized PostProcess scripts
-* Removed support for Unity 3.5
-* Added Soomla Store IAP tracking
-* Added Unity IAP tracking to Extras folder
-* Added new iOS Frameworks
-* Bug fixes
 
 
 ## Legal Requirements

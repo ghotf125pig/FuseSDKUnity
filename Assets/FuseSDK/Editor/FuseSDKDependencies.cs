@@ -1,4 +1,4 @@
-﻿// <copyright file="SampleDependencies.cs" company="Google Inc.">
+﻿// <copyright file="GPGSDependencies.cs" company="Google Inc.">
 // Copyright (C) 2015 Google Inc. All Rights Reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,42 +15,54 @@
 // </copyright>
 
 #if UNITY_ANDROID
-using Google.JarResolver;
 using UnityEditor;
+using Google.JarResolver;
 
-/// <summary>
-/// Sample dependencies file.  Copy this to a different name specific to your
-/// plugin and add the Google Play Services and Android Support components that
-/// your plugin depends on.
-/// </summary>
+/// Sample dependencies file.  Change the class name and dependencies as required by your project, then
+/// save the file in a folder named Editor (which can be a sub-folder of your plugin).
+///   There can be multiple dependency files like this one per project, the  resolver will combine them and process all
+/// of them at once.
 [InitializeOnLoad]
-public static class FuseSDKDependencies
+public class FuseSDKDependencies : AssetPostprocessor
 {
-    /// <summary>
-    /// The name of your plugin.  This is used to create a settings file
-    /// which contains the dependencies specific to your plugin.
-    /// </summary>
-    private static readonly string PluginName = "FuseSDK";
+    /// <summary>Instance of the PlayServicesSupport resolver</summary>
+	private static PlayServicesSupport svcSupport;
 
-	private static readonly PlayServicesSupport svcSupport;
-
-	/// <summary>
-	/// Initializes static members of the <see cref="FuseSDKDependencies"/> class.
-	/// </summary>
-	static FuseSDKDependencies()
+    /// Initializes static members of the class.
+    static FuseSDKDependencies()
     {
-        svcSupport = PlayServicesSupport.CreateInstance(PluginName, EditorPrefs.GetString("AndroidSdkRoot"), "ProjectSettings");
-		svcSupport.ClearDependencies();
-		svcSupport.DependOn("com.google.android.gms", "play-services-basement", "+");
-		svcSupport.DependOn("com.android.support", "support-annotations", "24.1.1");
-		svcSupport.DependOn("com.android.support", "support-v4", "24.1.1");
-	}
+        RegisterAndroidDependencies();
+    }
 
-	[MenuItem("FuseSDK/Resolve Google Dependencies", false, 3)]
-	public static void RunResolver()
-	{
-		GooglePlayServices.PlayServicesResolver.Resolver.DoResolution(svcSupport, "Assets/Plugins/Android", (oldDep, newDep) => oldDep.BestVersion == newDep.BestVersion);
-	}
+    /// <summary>
+    /// Registers the android dependencies.
+    /// </summary>
+    public static void RegisterAndroidDependencies()
+    {
+        svcSupport = PlayServicesSupport.CreateInstance("FuseSDK", EditorPrefs.GetString("AndroidSdkRoot"), "ProjectSettings");
+        svcSupport.ClearDependencies();
+        svcSupport.DependOn("com.google.android.gms", "play-services-basement", "10+", packageIds: new string[] { "extra-google-m2repository" });
+        svcSupport.DependOn("com.android.support", "support-annotations", "24.1.1", packageIds: new string[] { "extra-google-m2repository" });
+        svcSupport.DependOn("com.android.support", "support-v4", "24.1.1", packageIds: new string[] { "extra-google-m2repository" });
+    }
+
+    // Handle delayed loading of the dependency resolvers.
+    private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
+    {
+        foreach(string asset in importedAssets)
+        {
+            if(asset.Contains("JarResolver"))
+            {
+                RegisterAndroidDependencies();
+                break;
+            }
+        }
+    }
+
+    [MenuItem("FuseSDK/Resolve Google Dependencies", false, 3)]
+    public static void RunResolver()
+    {
+        GooglePlayServices.PlayServicesResolver.Resolver.DoResolution(svcSupport, "Assets/Plugins/Android", (oldDep, newDep) => true);
+    }
 }
-
 #endif

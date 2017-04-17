@@ -57,8 +57,8 @@ void Native_StartSession(const char* gameId , bool registerPush, bool handleAdUR
 	[FuseSDK startSession:[NSString stringWithUTF8String:gameId]
 		delegate:_FuseSDK_delegate withOptions:@{
 			kFuseSDKOptionKey_RegisterForPush: [NSNumber numberWithBool: registerPush],
-			kFuseSDKOptionKey_HandleAdURLs: [NSNumber numberWithBool: handleAdURLs],
-			kFuseSDKOptionKey_DisableCrashReporting: [NSNumber numberWithBool: !enableCrashDetection]
+			kFuseSDKOptionKey_HandleAdURLs: [NSNumber numberWithBool: handleAdURLs]
+			//crash reporting has been removed
 		}
 	];
 }
