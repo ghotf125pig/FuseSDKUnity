@@ -5,6 +5,6 @@ var struct_fuse_misc_1_1_rewarded_info =
     [ "PreRollMessage", "struct_fuse_misc_1_1_rewarded_info.html#aa2431565319f0ceb5ac47f652e148d09", null ],
     [ "RewardAmount", "struct_fuse_misc_1_1_rewarded_info.html#a90c1ec43b15528ba4f8c38628218c845", null ],
     [ "RewardItem", "struct_fuse_misc_1_1_rewarded_info.html#a028601fdf6ea67315e019e15c476398e", null ],
-    [ "RewardItemId", "struct_fuse_misc_1_1_rewarded_info.html#af1bece06be272d5c170100e09e8077f2", null ],
+    [ "RewardItemId", "struct_fuse_misc_1_1_rewarded_info.html#a32aacf66edc07fb15bb10ab2180154d2", null ],
     [ "RewardMessage", "struct_fuse_misc_1_1_rewarded_info.html#af541ebad3b30f5c74fb09a51fbbc8537", null ]
 ];
