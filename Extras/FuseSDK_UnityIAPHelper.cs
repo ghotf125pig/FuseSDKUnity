@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
+using UnityEngine;
 using UnityEngine.Purchasing;
 using System.Collections.Generic;
 

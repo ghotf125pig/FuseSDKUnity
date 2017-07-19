@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
+using System;
 using System.Collections.Generic;
 using FuseMisc;
 #if(FUSE_SESSION_IN_EDITOR && UNITY_EDITOR) || (FUSE_SESSION_IN_STANDALONE && UNITY_STANDALONE)

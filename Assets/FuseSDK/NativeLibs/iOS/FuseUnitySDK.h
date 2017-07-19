@@ -1,3 +1,6 @@
+/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
 
 #pragma mark Initialization
 

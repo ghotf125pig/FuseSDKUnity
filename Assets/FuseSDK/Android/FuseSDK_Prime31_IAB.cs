@@ -1,3 +1,7 @@
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
 //#define USING_PRIME31_ANDROID
 
 using UnityEngine;

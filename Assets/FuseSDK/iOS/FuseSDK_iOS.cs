@@ -1,4 +1,8 @@
-﻿#if UNITY_IOS && !UNITY_EDITOR
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
+#if UNITY_IOS && !UNITY_EDITOR
 using UnityEngine;
 using System;
 using System.Collections;
@@ -188,19 +192,11 @@ public partial class FuseSDK
 		}
 		else
 		{
-#if UNITY_4 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-			foreach(var n in NotificationServices.remoteNotifications)
-				if(n.userInfo.Contains("notification_id"))
-					Native_ReceivedRemoteNotification(n.userInfo["notification_id"].ToString());
-			
-			NotificationServices.ClearRemoteNotifications();
-#else
 			foreach(var n in UnityEngine.iOS.NotificationServices.remoteNotifications)
 				if(n.userInfo.Contains("notification_id"))
 					Native_ReceivedRemoteNotification(n.userInfo["notification_id"].ToString());
 			
 			UnityEngine.iOS.NotificationServices.ClearRemoteNotifications();
-#endif
 		}
 	}
 #endregion
@@ -811,24 +807,15 @@ public partial class FuseSDK
 	{
 		FuseLog("SetupPushNotifications()");
 		
-#if UNITY_4 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-		NotificationServices.RegisterForRemoteNotificationTypes(RemoteNotificationType.Alert | RemoteNotificationType.Badge | RemoteNotificationType.Sound);
-#else
 		UnityEngine.iOS.NotificationServices.RegisterForNotifications(UnityEngine.iOS.NotificationType.Alert | UnityEngine.iOS.NotificationType.Badge | UnityEngine.iOS.NotificationType.Sound, true);
-#endif
-		
+
 		while(true)
 		{
 			byte[] token = null;
 			string error = null;
 
-#if UNITY_4 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-			token = NotificationServices.deviceToken;
-			error = NotificationServices.registrationError;
-#else
 			token = UnityEngine.iOS.NotificationServices.deviceToken;
 			error = UnityEngine.iOS.NotificationServices.registrationError;
-#endif
 
 			if(token != null)
 			{

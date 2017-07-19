@@ -1,3 +1,7 @@
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
 using UnityEngine;
 using System;
 using System.Collections;

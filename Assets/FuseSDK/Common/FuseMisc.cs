@@ -1,4 +1,8 @@
-﻿using System;
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Debug = UnityEngine.Debug;
@@ -86,7 +90,7 @@ namespace FuseMisc
 		public string RewardItem;
  
 		/// <summary>The ID of the item the user will get as a reward.</summary>
-		public int RewardItemId;
+		public string RewardItemId;
 
 		/// <summary>The amount the user will get as a reward, used when the item is a currency.</summary>
 		public int RewardAmount;
@@ -112,13 +116,13 @@ namespace FuseMisc
 			try
 			{
 				var pars = infoString.Split(',');
-				int ra, rid;
+				int ra;
 
 				PreRollMessage = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(pars[0]));
 				RewardMessage = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(pars[1]));
 				RewardItem = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(pars[2]));
 				RewardAmount = int.TryParse(pars[3], out ra) ? ra : 0;
-				RewardItemId = int.TryParse(pars[4], out rid) ? rid : 0;
+                RewardItemId = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(pars[4]));
 			}
 			catch(Exception e)
 			{

@@ -1,3 +1,7 @@
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
 using UnityEngine;
 using UnityEditor;
 
@@ -5,11 +9,6 @@ using UnityEditor;
 public static class FuseSDKUpdater
 {
 	public static readonly string LATEST_SDK_URL = @"https://github.com/fusepowered/FuseSDKUnity";
-#if UNITY_5
-	public static readonly string LATEST_PACKAGE = @"https://raw.githubusercontent.com/fusepowered/FuseSDKUnity/master/FuseUnitySDK-Unity5.unitypackage";
-#else
-	public static readonly string LATEST_PACKAGE = @"https://raw.githubusercontent.com/fusepowered/FuseSDKUnity/master/FuseUnitySDK.unitypackage";
-#endif
 	public static readonly string UPDATE_URL = @"https://raw.githubusercontent.com/fusepowered/FuseSDKUnity/master/Assets/FuseSDK/version";
 	public static readonly string ANNOUNCEMENT_URL = @"https://raw.githubusercontent.com/fusepowered/FuseSDKUnity/announcements/message";
 	public static readonly long TIMEOUT = 1000;
@@ -61,7 +60,7 @@ public static class FuseSDKUpdater
 		string latestVersion = "";
 		string ignoreVersion;
 		string currentVersion;
-		string updateUrl = LATEST_PACKAGE;
+		string updateUrl = "";
 		var stopwatch = new System.Diagnostics.Stopwatch();
 		stopwatch.Reset();
 		stopwatch.Start();

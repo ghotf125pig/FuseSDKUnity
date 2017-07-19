@@ -1,3 +1,7 @@
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
 #if UNITY_ANDROID && !UNITY_EDITOR
 using UnityEngine;
 using System;

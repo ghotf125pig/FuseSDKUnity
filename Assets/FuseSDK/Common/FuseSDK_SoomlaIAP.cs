@@ -1,4 +1,8 @@
-﻿//#define USING_SOOMLA_IAP
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
+//#define USING_SOOMLA_IAP
 
 using UnityEngine;
 using System;

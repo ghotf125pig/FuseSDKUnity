@@ -42,8 +42,6 @@ public class FuseSDKDependencies : AssetPostprocessor
         svcSupport = PlayServicesSupport.CreateInstance("FuseSDK", EditorPrefs.GetString("AndroidSdkRoot"), "ProjectSettings");
         svcSupport.ClearDependencies();
         svcSupport.DependOn("com.google.android.gms", "play-services-basement", "10+", packageIds: new string[] { "extra-google-m2repository" });
-        svcSupport.DependOn("com.android.support", "support-annotations", "24.1.1", packageIds: new string[] { "extra-google-m2repository" });
-        svcSupport.DependOn("com.android.support", "support-v4", "24.1.1", packageIds: new string[] { "extra-google-m2repository" });
     }
 
     // Handle delayed loading of the dependency resolvers.
