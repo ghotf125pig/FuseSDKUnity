@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
+using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using System.Collections;
@@ -25,7 +29,6 @@ public class FuseSDKEditor : Editor
 	private const string API_KEY_PATTERN = @"^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$"; //8-4-4-4-12
 	private const string API_STRIP_PATTERN = @"[^\da-f\-]"; //8-4-4-4-12
 
-#if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7)
 	private const string IOS_PLUGIN_M_FLAGS = "-fno-objc-arc";
 	private const string IOS_PLUGIN_A_FLAGS = "-ObjC";
 	private static readonly string[] IOS_PLUGIN_A_FRAMEWORKS = new string[] {
@@ -46,7 +49,6 @@ public class FuseSDKEditor : Editor
 		"JavaScriptCore",
 		"UserNotifications",
 	};
-#endif
 
 	private static readonly string[] DELETED_FILES = new string[] {
 		"/Plugins/FuseSDK.NET-Stub.dll",
@@ -217,9 +219,8 @@ public class FuseSDKEditor : Editor
 			_needReimport = false;
 		}
 
-#if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7)
 		Undo.RecordObject(target, "FuseSDK modified");
-#endif
+
 		_self = (FuseSDK)target;
 
 		GUILayout.Space(8);
@@ -343,17 +344,11 @@ public class FuseSDKEditor : Editor
 		CheckToggle(_self.androidIAB, oldAndroidIAB, BuildTargetGroup.Android, "USING_PRIME31_ANDROID");
 		CheckToggle(_self.androidUnibill, oldandroidUnibill, BuildTargetGroup.Android, "USING_UNIBILL_ANDROID");
 		CheckToggle(_self.soomlaStore, oldSoomlaStore, BuildTargetGroup.Android, "USING_SOOMLA_IAP");
-#if UNITY_5
+
 		CheckToggle(_self.editorSessions, oldEditorSession, BuildTargetGroup.iOS, "FUSE_SESSION_IN_EDITOR");
 		CheckToggle(_self.iosStoreKit, oldiosStoreKit, BuildTargetGroup.iOS, "USING_PRIME31_IOS");
 		CheckToggle(_self.iosUnibill, oldiosUnibill, BuildTargetGroup.iOS, "USING_UNIBILL_IOS");
 		CheckToggle(_self.soomlaStore, oldSoomlaStore, BuildTargetGroup.iOS, "USING_SOOMLA_IAP");
-#else
-		CheckToggle(_self.editorSessions, oldEditorSession, BuildTargetGroup.iPhone, "FUSE_SESSION_IN_EDITOR");
-		CheckToggle(_self.iosStoreKit, oldiosStoreKit, BuildTargetGroup.iPhone, "USING_PRIME31_IOS");
-		CheckToggle(_self.iosUnibill, oldiosUnibill, BuildTargetGroup.iPhone, "USING_UNIBILL_IOS");
-		CheckToggle(_self.soomlaStore, oldSoomlaStore, BuildTargetGroup.iPhone, "USING_SOOMLA_IAP");
-#endif
 
 		GUILayout.Space(4);
 
@@ -427,11 +422,9 @@ public class FuseSDKEditor : Editor
 
 		EditorGUILayout.BeginHorizontal();
 		GUILayout.Space(12);
-#if UNITY_5
+
 		EditorGUILayout.LabelField("Required Permissions", EditorStyles.helpBox);
-#else
-		EditorGUILayout.LabelField("Required Permissions");
-#endif
+
 		EditorGUILayout.EndHorizontal();
 
 		EditorGUILayout.BeginHorizontal();
@@ -552,7 +545,6 @@ public class FuseSDKEditor : Editor
 		if(!PlayerSettings.Android.forceSDCardPermission || !PlayerSettings.Android.forceInternetPermission)
 			return true;
 
-#if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7)
 		string currentVersion, metaVersion, bundleId;
 		if(!FuseSDKUpdater.ReadVersionFile(out currentVersion, out metaVersion))
 			return true;
@@ -566,7 +558,14 @@ public class FuseSDKEditor : Editor
 		int[] actualVer = FuseSDKUpdater.ParseVersion(currentVersion, ref _);
 		int[] metaVer = FuseSDKUpdater.ParseVersion(metaVersion, ref _);
 
-		if(metaVer == null || bundleId != PlayerSettings.bundleIdentifier || FuseSDKUpdater.HowOldIsVersion(metaVer, actualVer) >= 0)
+        //If there are different bundleIds for Android and iOS this will cause settings to update everytime the target is changed
+        string currentBundleId =
+#if UNITY_5_6_OR_NEWER
+        PlayerSettings.applicationIdentifier;
+#else
+        PlayerSettings.bundleIdentifier;
+#endif
+        if(metaVer == null || bundleId != currentBundleId || FuseSDKUpdater.HowOldIsVersion(metaVer, actualVer) >= 0)
 			return true;
 
 		List<PluginImporter> iosPlugins =
@@ -601,7 +600,6 @@ public class FuseSDKEditor : Editor
 					return true;
 			}
         }
-#endif
 
 		return false;
 	}
@@ -622,7 +620,6 @@ public class FuseSDKEditor : Editor
 		PlayerSettings.Android.forceSDCardPermission = true;
 		PlayerSettings.Android.forceInternetPermission = true;
 
-#if !(UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7)
 		string currentVersion, _;
 		if(!FuseSDKUpdater.ReadVersionFile(out currentVersion, out _))
 			return;
@@ -697,10 +694,14 @@ public class FuseSDKEditor : Editor
 
 		UpdateAndroidManifest();
 
-		var versionMeta = AssetImporter.GetAtPath(VERSION_PATH);
-		versionMeta.userData = currentVersion + "#" + PlayerSettings.bundleIdentifier;
-		versionMeta.SaveAndReimport();
+        //If there are different bundleIds for Android and iOS this will cause settings to update everytime the target is changed
+        var versionMeta = AssetImporter.GetAtPath(VERSION_PATH);
+#if UNITY_5_6_OR_NEWER
+        versionMeta.userData = currentVersion + "#" + PlayerSettings.applicationIdentifier;
+#else
+        versionMeta.userData = currentVersion + "#" + PlayerSettings.bundleIdentifier;
 #endif
+		versionMeta.SaveAndReimport();
 	}
 
 #if !FUSE_DISABLE_INTERNAL_ANALYTICS
@@ -711,7 +712,7 @@ public class FuseSDKEditor : Editor
 			return;
 		try
 		{
-			string appID = "", bundleID, prodName, compName, gameVer, unityVer, isPro, targetPlat;
+			string appID = "", bundleID = "", prodName, compName, gameVer, unityVer, isPro, targetPlat;
 			string url = "http://api.fusepowered.com/unity/buildstats.php";
 			string baseJson = @"{
 							""game_id"" : ""{{game_id}}"",
@@ -738,13 +739,17 @@ public class FuseSDKEditor : Editor
 #endif
 			}
 
-			//Bundle ID
-			bundleID = PlayerSettings.bundleIdentifier;
+            //Bundle ID of currently selected platform
+#if UNITY_5_6_OR_NEWER
+            bundleID = PlayerSettings.applicationIdentifier;
+#else
+            bundleID = PlayerSettings.bundleIdentifier;
+#endif
+
+            //Product name
+            prodName = PlayerSettings.productName;
 			
-			//Bundle ID
-			prodName = PlayerSettings.productName;
-			
-			//Bundle ID
+			//Company Name
 			compName = PlayerSettings.companyName;
 
 			//Game Ver
@@ -868,7 +873,7 @@ public class FuseSDKEditor : Editor
 	[MenuItem("FuseSDK/Update Android Manifest", false, 1)]
 	public static void UpdateAndroidManifest()
 	{
-		string packageName = PlayerSettings.bundleIdentifier;
+		string packageName = AndroidBundleId;
 		string path = Application.dataPath + MANIFEST_PATH;
 
 		if(string.IsNullOrEmpty(packageName))
@@ -1004,12 +1009,57 @@ public class FuseSDKEditor : Editor
 
 	internal static T LoadAsset<T>(string path) where T : UnityEngine.Object
 	{
-#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0
+#if UNITY_5_0
 		return Resources.LoadAssetAtPath<T>(path);
 #else
 		return AssetDatabase.LoadAssetAtPath<T>(path);
 #endif
 	}
+
+    //Gets and Sets the BundleID / ApplicationID in Unity's PlayerSettings for Android
+    internal static string AndroidBundleId
+    {
+        get
+        {
+#if UNITY_5_6_OR_NEWER
+            return PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.Android);
+#else
+                return PlayerSettings.bundleIdentifier;
+#endif
+        }
+
+        set
+        {
+#if UNITY_5_6_OR_NEWER
+            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, value);
+#else
+                PlayerSettings.bundleIdentifier = value;
+#endif
+        }
+    }
+
+
+    //Gets and Sets the BundleID / ApplicationID in Unity's PlayerSettings for Ios
+    internal static string IosBundleId
+    {
+        get
+        {
+#if UNITY_5_6_OR_NEWER
+            return PlayerSettings.GetApplicationIdentifier(BuildTargetGroup.iOS);
+#else
+                return PlayerSettings.bundleIdentifier;
+#endif
+        }
+
+        set
+        {
+#if UNITY_5_6_OR_NEWER
+            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS, value);
+#else
+                PlayerSettings.bundleIdentifier = value;
+#endif
+        }
+    }
 }
 
 public class FuseSDKPrefs : EditorWindow

@@ -1,4 +1,8 @@
-﻿#if UNITY_EDITOR
+﻿/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
+
+#if UNITY_EDITOR
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -19,11 +23,7 @@ public static class FusePostProcess
 	[PostProcessBuild(1)] // <- this is where the magic happens
 	public static void OnPostProcessBuild(BuildTarget target, string buildPath)
 	{
-#if UNITY_5
 		if(target != BuildTarget.iOS)
-#else
-		if(target != BuildTarget.iPhone)
-#endif
 			return;
 
 		UnityEngine.Debug.Log("FusePostProcess Build Step - START");
@@ -81,6 +81,9 @@ public static class FusePostProcess
         Directory.CreateDirectory(buildPath + "/FrameworkRes");
         foreach(string frameworkPath in Directory.GetDirectories(Application.dataPath + FuseSDKEditor.IOS_NATIVE_LIBS, "*.embeddedframework", SearchOption.AllDirectories))
         {
+			if(!Directory.Exists(frameworkPath + "/Resources"))
+				continue;
+			
             RecursiveDirCopy(frameworkPath + "/Resources", buildPath + "/FrameworkRes");
 
             //Don't iterate recursively.

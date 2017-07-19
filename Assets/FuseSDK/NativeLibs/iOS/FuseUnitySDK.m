@@ -1,3 +1,6 @@
+/*
+ *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
+ */
 
 #import "FuseSDK.h"
 #import "FuseUnitySDK.h"
@@ -356,13 +359,14 @@ const char* Native_GetRewardedInfoForZone(const char* _zoneId)
 	NSString * message = base64NSString(rewObj.rewardMessage);
 	NSString * rewardID = base64NSString(rewObj.rewardItem);
 	NSString * rewardQty = [NSString stringWithFormat:@"%@",rewObj.rewardAmount];
-	NSString * itemID = [NSString stringWithFormat:@"%d",rewObj.itemID];
+	NSString * itemID = base64NSString(rewObj.itemID);
 	if(preRoll && message && rewardID && rewardQty && itemID)
 	{
 		values = @[preRoll,message,rewardID,rewardQty,itemID];
 		FuseSafeRelease(preRoll);
 		FuseSafeRelease(message);
 		FuseSafeRelease(rewardID);
+		FuseSafeRelease(itemID);
 		ReturnNSString([values componentsJoinedByString:@","]);
 	}
 	ReturnNSString(@"");
@@ -919,7 +923,7 @@ bool Native_RegisterCustomEventInt(int eventNumber, int value)
 	NSString * message = base64NSString(reward.rewardMessage);
 	NSString * rewardID = base64NSString(reward.rewardItem);
 	NSString * rewardQty = [NSString stringWithFormat:@"%@",reward.rewardAmount];
-	NSString * itemID = [NSString stringWithFormat:@"%d",reward.itemID];
+	NSString * itemID = base64NSString(reward.itemID);
 	if(preRoll && message && rewardID && rewardQty && itemID)
 	{
 		values = @[preRoll,message,rewardID,rewardQty,itemID];
@@ -929,6 +933,7 @@ bool Native_RegisterCustomEventInt(int eventNumber, int value)
 	FuseSafeRelease(preRoll);
 	FuseSafeRelease(message);
 	FuseSafeRelease(rewardID);
+	FuseSafeRelease(itemID);
 }
 
 -(void) IAPOfferAcceptedWithObject:(FuseIAPOfferObject*) _offer
@@ -991,6 +996,41 @@ bool Native_RegisterCustomEventInt(int eventNumber, int value)
 
 -(void) adWillClose
 {
+    // Ensure that the UnityView orientation matches up with the actual OS orientation after content has finished displaying
+    Class UnityViewClass = NSClassFromString(@"UnityView");
+    NSArray * theViews = [[[UIApplication sharedApplication] keyWindow] subviews];
+    for( UIView* currentView in theViews )
+    {
+        if( nil!= currentView && [currentView isKindOfClass:UnityViewClass] )
+        {
+			UIInterfaceOrientation unityOrientation = UIInterfaceOrientationUnknown;
+			SEL contentOrientationSelector = NSSelectorFromString(@"contentOrientation");
+			if( [currentView respondsToSelector:contentOrientationSelector] )
+			{
+				NSInvocation *contentOrientationInvocation = [NSInvocation invocationWithMethodSignature:[UnityViewClass instanceMethodSignatureForSelector:contentOrientationSelector]];
+				[contentOrientationInvocation setSelector:contentOrientationSelector];
+				[contentOrientationInvocation setTarget:currentView];
+				[contentOrientationInvocation invoke];
+				[contentOrientationInvocation getReturnValue:&unityOrientation];
+			}
+			UIInterfaceOrientation actualInterfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+			if( unityOrientation != actualInterfaceOrientation )
+			{
+				SEL willRotateSelector = NSSelectorFromString(@"willRotateToOrientation:fromOrientation:");
+				if( [UnityViewClass instancesRespondToSelector:willRotateSelector] )
+				{
+					NSInvocation *willRotateInvocation = [NSInvocation invocationWithMethodSignature:[UnityViewClass instanceMethodSignatureForSelector:willRotateSelector]];
+					[willRotateInvocation setSelector:willRotateSelector];
+					[willRotateInvocation setTarget:currentView];
+					// Indices 0 and 1 indicate the hidden arguments self and _cmd, respectively; Use indices 2 and greater for the arguments normally passed in a message.
+					[willRotateInvocation setArgument:&actualInterfaceOrientation atIndex:2];
+					[willRotateInvocation setArgument:&unityOrientation atIndex:3];
+					[willRotateInvocation invoke];
+				}
+			}
+        }
+    }
+    
 	CallUnity("_CB_AdWillClose", NULL);
 }
 
