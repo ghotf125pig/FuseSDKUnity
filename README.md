@@ -2,21 +2,21 @@
 
 ## Current Version
 
-Version: 2.8.2.0
+Version: 2.9.0.0
 
-Released: May 18th, 2017
+Released: July 19th, 2017
 
 ## Update Instructions
 Before updating, please remove all Fuse files from Assets/Plugins/Android, Assets/Plugins/iOS and the entire Assets/FuseSDK folder.  
 We have removed several 3rd party dependencies, these files will remain in your project unless manually removed.  
-The FuseSDK now uses the [JarResolver](https://github.com/googlesamples/unity-jar-resolver) library to manage Google Play Services dependencies.
+The FuseSDK uses the [JarResolver](https://github.com/googlesamples/unity-jar-resolver) library to manage Google Play Services dependencies.
 If your project has any play services or support jars that you included manually you could encounter some conflicts.  
 [See here](https://wiki.fusepowered.com/index.php?title=Unity#Using_JarResolver) for more information.  
 Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity 5 Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.8.2.0/FuseUnitySDK-Unity5.unitypackage)  
+[Unity Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.9.0.0/FuseUnitySDK.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
@@ -29,6 +29,17 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.9.0.0
+July 19th, 2017
+* API change: RewardedInfo.RewardItemId type changed from int to String
+* Improved ad loading analytics to allow fill rate tracking and future optimization
+* Improved VAST performance
+* Ad adapter updates
+* Various bug fixes
+* Improve support for Unity 5.6
+* Add support for Unity 2017
+* Remove support for Unity 4
 
 ### 2.8.2.0
 May 18th, 2017
