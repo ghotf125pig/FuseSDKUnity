@@ -574,6 +574,13 @@ const char* Native_LibraryVersion()
 	ReturnNSString(libraryVersion);
 }
 
+const char* Native_ConfigString()
+{
+	NSString* buildConfig = [FuseSDK buildConfig];
+	
+	ReturnNSString(buildConfig);
+}
+
 bool Native_Connected()
 {
 	return [FuseSDK connected];
