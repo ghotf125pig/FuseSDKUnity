@@ -119,6 +119,7 @@ void Native_GooglePlayLogin(const char* alias, const char* token);
 
 int Native_GamesPlayed();
 const char* Native_LibraryVersion();
+const char* Native_ConfigString();
 bool Native_Connected();
 void Native_TimeFromServer();
 
