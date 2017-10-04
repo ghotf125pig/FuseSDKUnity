@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.9.2.0
+Version: 2.9.3.0
 
-Released: September 7th, 2017
+Released: October 4th, 2017
 
 ## Update Instructions
 Before updating, please remove all Fuse files from Assets/Plugins/Android, Assets/Plugins/iOS and the entire Assets/FuseSDK folder.  
@@ -16,7 +16,7 @@ Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.9.2.0/FuseUnitySDK.unitypackage)  
+[Unity Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.9.3.0/FuseUnitySDK.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
@@ -29,6 +29,10 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.9.3.0
+October 4th, 2017
+* Ad provider updates
 
 ### 2.9.2.0
 September 7th, 2017
