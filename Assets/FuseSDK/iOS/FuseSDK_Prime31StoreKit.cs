@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
  */
 
@@ -14,9 +14,9 @@ using Prime31;
 #endif
 
 public class FuseSDK_Prime31StoreKit : MonoBehaviour
-{	
-	public bool logging = false;
-	// Uncomment the #define at the top of this file if you are using the Prime31 StoreKit plugin for iOS
+{
+    public bool logging = false;
+    // Uncomment the #define at the top of this file if you are using the Prime31 StoreKit plugin for iOS
 #if UNITY_IOS && USING_PRIME31_IOS
 	public static bool debugOutput = false;
 

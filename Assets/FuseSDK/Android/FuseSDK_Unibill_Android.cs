@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
  */
 
@@ -11,10 +11,10 @@ using System.Collections.Generic;
 using System.Globalization;
 
 public class FuseSDK_Unibill_Android : MonoBehaviour
-{	
-	public bool logging = false;
-	// Uncomment the #define at the top of this file if you are using the Prime31 StoreKit plugin for iOS
-	#if UNITY_ANDROID && USING_UNIBILL_ANDROID
+{
+    public bool logging = false;
+    // Uncomment the #define at the top of this file if you are using the Prime31 StoreKit plugin for iOS
+#if UNITY_ANDROID && USING_UNIBILL_ANDROID
 	public static bool debugOutput = false;
 	
 	public static bool ActionsRegistered = false;

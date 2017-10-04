@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
  */
 
@@ -18,47 +18,47 @@ using Debug = UnityEngine.Debug;
 #pragma warning disable
 public class FuseSDKEditorSession
 {
-	#region EVENTS
-	//Session
-	public static event Action SessionStartReceived = delegate { };
-	public static event Action<FuseError> SessionLoginError = delegate { };
+    #region EVENTS
+    //Session
+    public static event Action SessionStartReceived = delegate { };
+    public static event Action<FuseError> SessionLoginError = delegate { };
 
-	//Game configuration
-	public static event Action GameConfigurationReceived = delegate { };
+    //Game configuration
+    public static event Action GameConfigurationReceived = delegate { };
 
-	//Social
-	public static event Action<AccountType, string> AccountLoginComplete;
-	public static event Action<string, string> AccountLoginError;
+    //Social
+    public static event Action<AccountType, string> AccountLoginComplete;
+    public static event Action<string, string> AccountLoginError;
 
-	//Notifications
-	public static event Action<string> NotificationAction;
-	public static event Action NotificationWillClose;
+    //Notifications
+    public static event Action<string> NotificationAction;
+    public static event Action NotificationWillClose;
 
-	//Friends
-	public static event Action<string, FuseError> FriendAdded;
-	public static event Action<string, FuseError> FriendRemoved;
-	public static event Action<string, FuseError> FriendAccepted;
-	public static event Action<string, FuseError> FriendRejected;
-	public static event Action<string, FuseError> FriendsMigrated;
-	public static event Action<List<Friend>> FriendsListUpdated;
-	public static event Action<FuseError> FriendsListError;
+    //Friends
+    public static event Action<string, FuseError> FriendAdded;
+    public static event Action<string, FuseError> FriendRemoved;
+    public static event Action<string, FuseError> FriendAccepted;
+    public static event Action<string, FuseError> FriendRejected;
+    public static event Action<string, FuseError> FriendsMigrated;
+    public static event Action<List<Friend>> FriendsListUpdated;
+    public static event Action<FuseError> FriendsListError;
 
-	//IAP
-	public static event Action<int, string, string> PurchaseVerification;
+    //IAP
+    public static event Action<int, string, string> PurchaseVerification;
 
-	//Ads
-	public static event Action<bool, FuseError> AdAvailabilityResponse;
-	public static event Action AdWillClose;
-	public static event Action AdFailedToDisplay;
-	public static event Action<int, int> AdDidShow;
-	public static event Action<RewardedInfo> RewardedAdCompletedWithObject;
-	public static event Action<IAPOfferInfo> IAPOfferAcceptedWithObject;
-	public static event Action<VGOfferInfo> VirtualGoodsOfferAcceptedWithObject;
-	public static event Action AdDeclined;
+    //Ads
+    public static event Action<bool, FuseError> AdAvailabilityResponse;
+    public static event Action AdWillClose;
+    public static event Action AdFailedToDisplay;
+    public static event Action<int, int> AdDidShow;
+    public static event Action<RewardedInfo> RewardedAdCompletedWithObject;
+    public static event Action<IAPOfferInfo> IAPOfferAcceptedWithObject;
+    public static event Action<VGOfferInfo> VirtualGoodsOfferAcceptedWithObject;
+    public static event Action AdDeclined;
 
-	//Misc
-	public static event Action<DateTime> TimeUpdated;
-	#endregion
+    //Misc
+    public static event Action<DateTime> TimeUpdated;
+    #endregion
 
 #if(FUSE_SESSION_IN_EDITOR && UNITY_EDITOR) || (FUSE_SESSION_IN_STANDALONE && UNITY_STANDALONE)
 	private static string sessionID;
@@ -105,9 +105,9 @@ public class FuseSDKEditorSession
 ]";
 #endif
 
-	#region Session
-	public static void StartSession(string gameID)
-	{
+    #region Session
+    public static void StartSession(string gameID)
+    {
 #if(FUSE_SESSION_IN_EDITOR && UNITY_EDITOR) || (FUSE_SESSION_IN_STANDALONE && UNITY_STANDALONE)
 		gameConfig = new Dictionary<string, string>();
 		string query = requestQuery + Convert.ToBase64String(
@@ -178,106 +178,106 @@ public class FuseSDKEditorSession
 
 		ParseXML(xml);
 #endif
-	}
-	#endregion
+    }
+    #endregion
 
-	#region Purchase Tracking
-	public static void RegisterAndroidInAppPurchase(IAPState purchaseState, string purchaseToken, string productId, string orderId, DateTime purchaseTime, string developerPayload, double price, string currency) { }
-	public static void RegisterVirtualGoodsPurchase(int virtualgoodID, int currencyAmount, int currencyID) { }
-	#endregion
+    #region Purchase Tracking
+    public static void RegisterAndroidInAppPurchase(IAPState purchaseState, string purchaseToken, string productId, string orderId, DateTime purchaseTime, string developerPayload, double price, string currency) { }
+    public static void RegisterVirtualGoodsPurchase(int virtualgoodID, int currencyAmount, int currencyID) { }
+    #endregion
 
-	#region Ads
-	public static bool IsAdAvailableForZoneID(string zoneId) { return false; }
-	public static bool ZoneHasRewarded(string zoneId) { return false; }
-	public static bool ZoneHasIAPOffer(string zoneId) { return false; }
-	public static bool ZoneHasVirtualGoodsOffer(string zoneId) { return false; }
-	public static RewardedInfo GetRewardedInfoForZone(string zonId) { return default(RewardedInfo); }
-	public static VGOfferInfo GetVGOfferInfoForZone(string zonId) { return default(VGOfferInfo); }
-	public static IAPOfferInfo GetIAPOfferInfoForZone(string zonId) { return default(IAPOfferInfo); }
-	public static void ShowAdForZoneID(String zoneId, Dictionary<string, string> options = null) { }
-	public static void PreloadAdForZoneID(string zoneId) { }
-	public static void DisplayMoreGames() { }
-	public static void SetRewardedVideoUserID(string userID) { }
-	#endregion
+    #region Ads
+    public static bool IsAdAvailableForZoneID(string zoneId) { return false; }
+    public static bool ZoneHasRewarded(string zoneId) { return false; }
+    public static bool ZoneHasIAPOffer(string zoneId) { return false; }
+    public static bool ZoneHasVirtualGoodsOffer(string zoneId) { return false; }
+    public static RewardedInfo GetRewardedInfoForZone(string zonId) { return default(RewardedInfo); }
+    public static VGOfferInfo GetVGOfferInfoForZone(string zonId) { return default(VGOfferInfo); }
+    public static IAPOfferInfo GetIAPOfferInfoForZone(string zonId) { return default(IAPOfferInfo); }
+    public static void ShowAdForZoneID(String zoneId, Dictionary<string, string> options = null) { }
+    public static void PreloadAdForZoneID(string zoneId) { }
+    public static void DisplayMoreGames() { }
+    public static void SetRewardedVideoUserID(string userID) { }
+    #endregion
 
-	#region Notifications
-	public static void DisplayNotifications() { }
-	public static bool IsNotificationAvailable() { return false; }
-	#endregion
+    #region Notifications
+    public static void DisplayNotifications() { }
+    public static bool IsNotificationAvailable() { return false; }
+    #endregion
 
-	#region User Info
-	public static void RegisterGender(Gender gender) { }
-	public static void RegisterAge(int age) { }
-	public static void RegisterBirthday(int year, int month, int day) { }
-	public static void RegisterLevel(int level) { }
-	public static bool RegisterCurrency(int currencyType, int balance) { return false; }
-	public static void RegisterParentalConsent(bool consentGranted) { }
-	public static bool RegisterCustomEvent(int eventNumber, string value) { return false; }
-	public static bool RegisterCustomEvent(int eventNumber, int value) { return false; }
-	#endregion
+    #region User Info
+    public static void RegisterGender(Gender gender) { }
+    public static void RegisterAge(int age) { }
+    public static void RegisterBirthday(int year, int month, int day) { }
+    public static void RegisterLevel(int level) { }
+    public static bool RegisterCurrency(int currencyType, int balance) { return false; }
+    public static void RegisterParentalConsent(bool consentGranted) { }
+    public static bool RegisterCustomEvent(int eventNumber, string value) { return false; }
+    public static bool RegisterCustomEvent(int eventNumber, int value) { return false; }
+    #endregion
 
-	#region Account Login
-	public static string GetFuseId() { return string.Empty; }
-	public static string GetOriginalAccountAlias() { return string.Empty; }
-	public static string GetOriginalAccountId() { return string.Empty; }
-	public static AccountType GetOriginalAccountType() { return AccountType.NONE; }
-	public static void GameCenterLogin() { }
-	public static void FacebookLogin(string facebookId, string name, string accessToken) { }
-	public static void TwitterLogin(string twitterId, string alias) { }
-	public static void FuseLogin(string fuseId, string alias) { }
-	public static void EmailLogin(string email, string alias) { }
-	public static void DeviceLogin(string alias) { }
-	public static void GooglePlayLogin(string alias, string token) { }
-	#endregion
+    #region Account Login
+    public static string GetFuseId() { return string.Empty; }
+    public static string GetOriginalAccountAlias() { return string.Empty; }
+    public static string GetOriginalAccountId() { return string.Empty; }
+    public static AccountType GetOriginalAccountType() { return AccountType.NONE; }
+    public static void GameCenterLogin() { }
+    public static void FacebookLogin(string facebookId, string name, string accessToken) { }
+    public static void TwitterLogin(string twitterId, string alias) { }
+    public static void FuseLogin(string fuseId, string alias) { }
+    public static void EmailLogin(string email, string alias) { }
+    public static void DeviceLogin(string alias) { }
+    public static void GooglePlayLogin(string alias, string token) { }
+    #endregion
 
-	#region Miscellaneous
-	public static int GamesPlayed() { return -1; }
-	public static string LibraryVersion() { return string.Empty; }
-	public static bool Connected() { return false; }
-	public static void UTCTimeFromServer() { }
-	public static void FuseLog(string str) { }
-	#endregion
+    #region Miscellaneous
+    public static int GamesPlayed() { return -1; }
+    public static string LibraryVersion() { return string.Empty; }
+    public static bool Connected() { return false; }
+    public static void UTCTimeFromServer() { }
+    public static void FuseLog(string str) { }
+    #endregion
 
-	#region Data Opt In/Out
-	public static void EnableData() { }
-	public static void DisableData() { }
-	public static bool DataEnabled() { return false; }
-	#endregion
+    #region Data Opt In/Out
+    public static void EnableData() { }
+    public static void DisableData() { }
+    public static bool DataEnabled() { return false; }
+    #endregion
 
-	#region Friend List
-	public static void UpdateFriendsListFromServer() { }
-	public static List<Friend> GetFriendsList() { return null; }
-	public static void AddFriend(string fuseId) { }
-	public static void RemoveFriend(string fuseId) { }
-	public static void AcceptFriend(string fuseId) { }
-	public static void RejectFriend(string fuseId) { }
-	public static void MigrateFriends(string fuseId) { }
-	#endregion
+    #region Friend List
+    public static void UpdateFriendsListFromServer() { }
+    public static List<Friend> GetFriendsList() { return null; }
+    public static void AddFriend(string fuseId) { }
+    public static void RemoveFriend(string fuseId) { }
+    public static void AcceptFriend(string fuseId) { }
+    public static void RejectFriend(string fuseId) { }
+    public static void MigrateFriends(string fuseId) { }
+    #endregion
 
-	#region User-User Push Notifications
-	public static void UserPushNotification(string fuseId, string message) { }
-	public static void FriendsPushNotification(string message) { }
-	#endregion
+    #region User-User Push Notifications
+    public static void UserPushNotification(string fuseId, string message) { }
+    public static void FriendsPushNotification(string message) { }
+    #endregion
 
-	#region Game Configuration
-	public static string GetGameConfigurationValue(string key)
-	{
+    #region Game Configuration
+    public static string GetGameConfigurationValue(string key)
+    {
 #if(FUSE_SESSION_IN_EDITOR && UNITY_EDITOR) || (FUSE_SESSION_IN_STANDALONE && UNITY_STANDALONE)
 		if(gameConfig.ContainsKey(key))
 			return gameConfig[key];
 #endif
-		return null;
-	}
+        return null;
+    }
 
-	public static Dictionary<String, String> GetGameConfiguration()
-	{
+    public static Dictionary<String, String> GetGameConfiguration()
+    {
 #if(FUSE_SESSION_IN_EDITOR && UNITY_EDITOR) || (FUSE_SESSION_IN_STANDALONE && UNITY_STANDALONE)
 		return gameConfig;
 #else
-		return null;
+        return null;
 #endif
-	}
-	#endregion
+    }
+    #endregion
 
 
 #if(FUSE_SESSION_IN_EDITOR && UNITY_EDITOR) || (FUSE_SESSION_IN_STANDALONE && UNITY_STANDALONE)

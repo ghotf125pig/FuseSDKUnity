@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
  */
 
@@ -16,7 +16,7 @@ using Prime31;
 
 public class FuseSDK_Prime31_IAB : MonoBehaviour
 {
-	public bool logging = false;
+    public bool logging = false;
 #if UNITY_ANDROID && USING_PRIME31_ANDROID
 	
 	public static bool debugOutput = false;
