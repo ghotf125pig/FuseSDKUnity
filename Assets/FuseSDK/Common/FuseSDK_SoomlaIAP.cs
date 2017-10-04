@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
  */
 
@@ -90,4 +90,4 @@ public class FuseSDK_SoomlaIAP : MonoBehaviour
 	}
 
 #endif
-	}
+}
