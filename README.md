@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.9.3.0
+Version: 2.9.4.0
 
-Released: October 4th, 2017
+Released: December 12th, 2017
 
 ## Update Instructions
 Before updating, please remove all Fuse files from Assets/Plugins/Android, Assets/Plugins/iOS and the entire Assets/FuseSDK folder.  
@@ -29,6 +29,12 @@ Please review the [integration instructions](https://wiki.fusepowered.com/index.
 * [Documentation] (http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.9.4.0
+December 12th, 2017
+* Video player bug fixes
+* Bug fixes for gradle builds
+* JarResolver updated to 1.2.59
 
 ### 2.9.3.0
 October 4th, 2017
