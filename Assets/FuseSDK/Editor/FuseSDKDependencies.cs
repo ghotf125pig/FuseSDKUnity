@@ -1,4 +1,4 @@
-﻿// <copyright file="GPGSDependencies.cs" company="Google Inc.">
+// <copyright file="GPGSDependencies.cs" company="Google Inc.">
 // Copyright (C) 2015 Google Inc. All Rights Reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,7 +60,12 @@ public class FuseSDKDependencies : AssetPostprocessor
     [MenuItem("FuseSDK/Resolve Google Dependencies", false, 3)]
     public static void RunResolver()
     {
-        GooglePlayServices.PlayServicesResolver.Resolver.DoResolution(svcSupport, "Assets/Plugins/Android", (oldDep, newDep) => true);
+        RunResolver(null);
+    }
+
+    public static void RunResolver(System.Action<bool> resolveCompleted)
+    {
+        GooglePlayServices.PlayServicesResolver.Resolve(forceResolution: true, resolutionCompleteWithResult: resolveCompleted);
     }
 }
 #endif

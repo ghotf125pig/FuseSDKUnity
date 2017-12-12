@@ -92,7 +92,7 @@ public class FuseSDKEditor : Editor
                     "\t\t<!-- GCM -->",
                     "\t\t<activity",
                     "            android:name=\"com.upsight.mediation.unity.GCMJava\"",
-                    "            android:label=\"@string/app_name\" >",
+                    "            android:label=\"{{productName}}\" >",
                     "\t\t</activity>",
                     "\t\t<receiver",
                     "            android:name=\"com.upsight.mediation.unity.FuseUnityGCMReceiver\"",
@@ -925,7 +925,7 @@ public class FuseSDKEditor : Editor
                     {
                         //Manifest doesn't contain the GCM Receiver entries
                         foreach(var l in MANIFEST_GCM_RECEIVER_ENTRY)
-                            newManifest.Add(l.Replace("{{timestamp}}", tsNow).Replace("{{packageId}}", packageName));
+                            newManifest.Add(l.Replace("{{timestamp}}", tsNow).Replace("{{packageId}}", packageName).Replace("{{productName}}", PlayerSettings.productName));
                     }
                     else
                     {
