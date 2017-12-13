@@ -16,7 +16,7 @@ Please use the links below to download the FuseSDK.
 
 
 ## To Download
-[Unity Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.9.3.0/FuseUnitySDK.unitypackage)  
+[Unity Package](https://github.com/fusepowered/FuseSDKUnity/releases/download/v2.9.4.0/FuseUnitySDK.unitypackage)  
 Once the package has been imported into your project, you will be able to update the FuseSDK Wrapper through the Unity Editor.
 
 ## Getting Started
