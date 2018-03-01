@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.10.0.0
+Version: 2.10.0.1
 
-Released: February 6th, 2018
+Released: March 1st, 2018
 
 ## Update Instructions
 Before updating, please remove the entire Assets/FuseSDK folder.  
@@ -25,6 +25,10 @@ Review the [integration instructions](https://wiki.fusepowered.com/index.php?tit
 * [Documentation](http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.10.0.1
+March 1st, 2018
+* Bug fixes
 
 ### 2.10.0.0
 February 6th, 2018
