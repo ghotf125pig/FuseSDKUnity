@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['emaillogin',['EmailLogin',['../class_fuse_s_d_k.html#a12d8e2aad2a1af0d3f52b26d2194c557',1,'FuseSDK']]],
-  ['enabledata',['EnableData',['../class_fuse_s_d_k.html#a8d124b6830028bdba9c9489f2d4eed1d',1,'FuseSDK']]]
+  ['facebooklogin',['FacebookLogin',['../class_fuse_s_d_k.html#a2bd4636238e64261d6ceda29cd0df0b1',1,'FuseSDK']]],
+  ['fuselog',['FuseLog',['../class_fuse_s_d_k.html#afcbe467047fd92b81922b1a3289e4594',1,'FuseSDK']]],
+  ['fuselogin',['FuseLogin',['../class_fuse_s_d_k.html#afd25766f1ca4fd5c9d611a50110f33f6',1,'FuseSDK']]]
 ];

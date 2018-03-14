@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['purchaseverification',['PurchaseVerification',['../class_fuse_s_d_k.html#a32ab598715dff864236f4e2f4acead2a',1,'FuseSDK']]]
+  ['rewardedadcompletedwithobject',['RewardedAdCompletedWithObject',['../class_fuse_s_d_k.html#a1dde342f4c6165fc3f6c04e71410a2e3',1,'FuseSDK']]]
 ];

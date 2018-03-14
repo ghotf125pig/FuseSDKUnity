@@ -12,8 +12,6 @@ var searchData=
   ['registerparentalconsent',['RegisterParentalConsent',['../class_fuse_s_d_k.html#a015b536fe41f834a80a8a2a5a4d02238',1,'FuseSDK']]],
   ['registerunibillpurchase',['RegisterUnibillPurchase',['../class_fuse_s_d_k.html#ad61a1466c30aa812ab4b05e31e53a44e',1,'FuseSDK']]],
   ['registervirtualgoodspurchase',['RegisterVirtualGoodsPurchase',['../class_fuse_s_d_k.html#a8f03166a3759637df6965dbb3cc02768',1,'FuseSDK']]],
-  ['rejectfriend',['RejectFriend',['../class_fuse_s_d_k.html#a5a4fd0894e2e3b1abc5bae22c671a992',1,'FuseSDK']]],
-  ['removefriend',['RemoveFriend',['../class_fuse_s_d_k.html#a362ae7eb7548398eaae0fe971e446170',1,'FuseSDK']]],
   ['request_5ffailed',['REQUEST_FAILED',['../namespace_fuse_misc.html#ac5f3da519b00a22cde3e6a9b48cf45b2a2333db45aee5d71859a9667940be39b4',1,'FuseMisc']]],
   ['rewardamount',['RewardAmount',['../struct_fuse_misc_1_1_rewarded_info.html#a90c1ec43b15528ba4f8c38628218c845',1,'FuseMisc::RewardedInfo']]],
   ['rewardedadcompletedwithobject',['RewardedAdCompletedWithObject',['../class_fuse_s_d_k.html#a1dde342f4c6165fc3f6c04e71410a2e3',1,'FuseSDK']]],

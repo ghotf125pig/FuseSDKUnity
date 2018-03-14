@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['currencyid',['CurrencyID',['../struct_fuse_misc_1_1_v_g_offer_info.html#a6a6e65bf83c629e48670539fd7fa3f1c',1,'FuseMisc::VGOfferInfo']]]
+  ['endtime',['EndTime',['../struct_fuse_misc_1_1_i_a_p_offer_info.html#a90c4ff673a78b09bd2f9ba2a8d9b91b0',1,'FuseMisc.IAPOfferInfo.EndTime()'],['../struct_fuse_misc_1_1_v_g_offer_info.html#a4240bd827692e9d538f2fac6682a0718',1,'FuseMisc.VGOfferInfo.EndTime()']]]
 ];

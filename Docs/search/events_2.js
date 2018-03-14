@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gameconfigurationreceived',['GameConfigurationReceived',['../class_fuse_s_d_k.html#a2eb2ac4424a8432a4963d7777841d2c3',1,'FuseSDK']]]
+  ['iapofferacceptedwithobject',['IAPOfferAcceptedWithObject',['../class_fuse_s_d_k.html#a7a47c11d4378f1a8f72836542deef02d',1,'FuseSDK']]]
 ];
