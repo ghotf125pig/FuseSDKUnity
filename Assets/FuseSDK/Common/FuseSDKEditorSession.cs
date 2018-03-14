@@ -34,15 +34,6 @@ public class FuseSDKEditorSession
     public static event Action<string> NotificationAction;
     public static event Action NotificationWillClose;
 
-    //Friends
-    public static event Action<string, FuseError> FriendAdded;
-    public static event Action<string, FuseError> FriendRemoved;
-    public static event Action<string, FuseError> FriendAccepted;
-    public static event Action<string, FuseError> FriendRejected;
-    public static event Action<string, FuseError> FriendsMigrated;
-    public static event Action<List<Friend>> FriendsListUpdated;
-    public static event Action<FuseError> FriendsListError;
-
     //IAP
     public static event Action<int, string, string> PurchaseVerification;
 
@@ -67,7 +58,7 @@ public class FuseSDKEditorSession
 
 	//private static readonly string stagingURL = "http://api-staging.fusepowered.com/analytics.php";
 	private static readonly string productionURL = "http://api.fusepowered.com/analytics.php";
-	private static readonly string requestQuery = "api_ver=2.5.3&d=";
+	private static readonly string requestQuery = "api_ver=2.10.0&d=";
 
 	private static readonly string startSessionJSON = @"[
 {
@@ -242,21 +233,6 @@ public class FuseSDKEditorSession
     public static void EnableData() { }
     public static void DisableData() { }
     public static bool DataEnabled() { return false; }
-    #endregion
-
-    #region Friend List
-    public static void UpdateFriendsListFromServer() { }
-    public static List<Friend> GetFriendsList() { return null; }
-    public static void AddFriend(string fuseId) { }
-    public static void RemoveFriend(string fuseId) { }
-    public static void AcceptFriend(string fuseId) { }
-    public static void RejectFriend(string fuseId) { }
-    public static void MigrateFriends(string fuseId) { }
-    #endregion
-
-    #region User-User Push Notifications
-    public static void UserPushNotification(string fuseId, string message) { }
-    public static void FriendsPushNotification(string message) { }
     #endregion
 
     #region Game Configuration

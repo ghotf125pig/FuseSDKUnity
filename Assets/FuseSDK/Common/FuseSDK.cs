@@ -57,50 +57,6 @@ public partial class FuseSDK : MonoBehaviour
     /// </summary>
     public static event Action NotificationWillClose;
 
-    //--------------------------------------------------------Friends
-
-    /// <summary>
-    /// Called after a player is added to the user's friend list. Error specifies whether an error occured.
-    /// Listener signature: void FriendAccepted(string fuseID, FuseError error)
-    /// </summary>
-    public static event Action<string, FuseError> FriendAdded;
-
-    /// <summary>
-    /// Called after a player is removed from the user's friend list. Error specifies whether an error occured.
-    /// Listener signature: void FriendRemoved(string fuseID, FuseError error)
-    /// </summary>
-    public static event Action<string, FuseError> FriendRemoved;
-
-    /// <summary>
-    /// Called after a player is accepted to the user's friend list. Error specifies whether an error occured.
-    /// Listener signature: void FriendAccepted(string fuseID, FuseError error)
-    /// </summary>
-    public static event Action<string, FuseError> FriendAccepted;
-
-    /// <summary>
-    /// Called after a player is rejected from the user's friend list. Error specifies whether an error occured.
-    /// Listener signature: void FriendRemoved(string fuseID, FuseError error)
-    /// </summary>
-    public static event Action<string, FuseError> FriendRejected;
-
-    /// <summary>
-    /// Called after a friend list is migrated. Error specifies whether an error occured.
-    /// Listener signature: void FriendsMigrated(string fuseID, FuseError error)
-    /// </summary>
-    public static event Action<string, FuseError> FriendsMigrated;
-
-    /// <summary>
-    /// Called after a player is removed from the user's friend list.
-    /// Listener signature: void FriendsListUpdated(List&lt;Friend&gt; friends)
-    /// </summary>
-    public static event Action<List<Friend>> FriendsListUpdated;
-
-    /// <summary>
-    /// Called when an error occurs while fetching a friends list from the server.
-    /// Listener signature: void FriendsListError(FuseError error)
-    /// </summary>
-    public static event Action<FuseError> FriendsListError;
-
     //--------------------------------------------------------IAP
 
     /// <summary>
@@ -168,15 +124,7 @@ public partial class FuseSDK : MonoBehaviour
     /// Listener signature: void TimeUpdated(System.DateTime time)
     /// </summary>
     public static event Action<DateTime> TimeUpdated;
-
-    //--------------------------------------------------------Deprected
-
-    [Obsolete("Game data is deprecated and will be removed from future releases.")]
-    public static event Action<int, FuseError> GameDataError;
-    [Obsolete("Game data is deprecated and will be removed from future releases.")]
-    public static event Action<int> GameDataSetAcknowledged;
-    [Obsolete("Game data is deprecated and will be removed from future releases.")]
-    public static event Action<int, string, string, Dictionary<string, string>> GameDataReceived;
+    
     #endregion
 
     //PUBLIC FUNCTIONS
@@ -604,8 +552,7 @@ public partial class FuseSDK : MonoBehaviour
     /// <remarks>
     /// After a user has registered a login for one of the supported services (i.e. Facebook, Twitter, etc),
     /// a 9-digit 'Fuse ID' is generated that uniquely identifies the user.
-    /// This ID can be passed between users as a public ID for the Fuse system so that users can interact
-    /// (i.e. invite as friends, etc.) without exposing confidential account information.
+    /// This ID can be passed between users as a public ID for the Fuse system so that users can interact without exposing confidential account information.
     /// </remarks>
     /// <returns>The 9-digit Fuse ID. This ID is strictly comprised of integers, it is NOT SAFE to cast this value to an int/long.</returns>
     public static string GetFuseId()
@@ -791,123 +738,7 @@ public partial class FuseSDK : MonoBehaviour
     }
     #endregion
 
-    #region Friend List
-
-    /// <summary>Get a the user's friends list.</summary>
-    /// <remarks>
-    /// Once a user has signed in with one of the supported account services, they will have
-    /// a friends list which is retrievable from the server. This list is composed of any friends that
-    /// they have invited.
-    /// This call is asynchronous, <see cref="FuseSDK.FriendsListUpdated"/> will be called with the result, when the list is retrieved.
-    /// <see cref="FriendsListError"/> is called if an error occurs while fetching the list.
-    /// </remarks>
-    public static void UpdateFriendsListFromServer()
-    {
-        FuseLog("UpdateFriendsListFromServer()");
-        FuseSDKEditorSession.UpdateFriendsListFromServer();
-    }
-
-    /// <summary>Returns the local friends list of the logged in user.</summary>
-    /// <remarks>This method merely returns the local copy of the friends list. The local version of the list can differ from the server.</remarks>
-    /// <returns>The local friends list of the logged in user.</returns>
-    public static List<Friend> GetFriendsList()
-    {
-        FuseLog("GetFriendsList()");
-        return FuseSDKEditorSession.GetFriendsList();
-    }
-
-    /// <summary>This method is used to invite (add) a friend to the user's friends list.</summary>
-    /// <remarks>
-    /// A friend is not added right away to the inviting user's list.
-    /// Instead, there is a mechanism whereby the invited user needs to agree to the invite before both users are shown in each others list.
-    /// <see cref="FuseSDK.FriendAccepted"/> or <see cref="FuseSDK.FriendRejected"/> are called depending on the outcome.
-    /// </remarks>
-    /// <param name="fuseId">The Fuse ID of the player to add.</param>
-    public static void AddFriend(string fuseId)
-    {
-        FuseLog("AddFriend(" + fuseId + ")");
-        FuseSDKEditorSession.AddFriend(fuseId);
-    }
-
-    /// <summary>This method is used to delete a friend from the user's friends list.</summary>
-    /// <remarks>
-    /// Once a friend is removed by a user, both the target and source user will not show in each other's friends list.
-    /// When complete, <see cref="FuseSDK.FriendRemoved"/> will be called.
-    /// </remarks>
-    /// <param name="fuseId">The Fuse ID of the player to remove.</param>
-    public static void RemoveFriend(string fuseId)
-    {
-        FuseLog("RemoveFriend(" + fuseId + ")");
-        FuseSDKEditorSession.RemoveFriend(fuseId);
-    }
-
-    /// <summary>This method is used to accept a friend request</summary>
-    /// <remarks>
-    /// The inviting of a friend is a two-step process.
-    /// The first step is to actually invite the user (source user) using <see cref="FuseSDK.AddFriend"/>,
-    /// and the second step is the acceptance by the target user using this method.
-    /// When complete, <see cref="FuseSDK.FriendAdded"/> is called.
-    /// </remarks>
-    /// <param name="fuseId">The Fuse ID of the player to accept.</param>
-    public static void AcceptFriend(string fuseId)
-    {
-        FuseLog("AcceptFriend(" + fuseId + ")");
-        FuseSDKEditorSession.AcceptFriend(fuseId);
-    }
-
-    /// <summary>This method is used to reject a friend request</summary>
-    /// <remarks>
-    /// The inviting of a friend is a two-step process.
-    /// The first step is to actually invite the user (source user) using <see cref="FuseSDK.AddFriend"/>
-    /// This method is user to reject an add invitation.
-    /// </remarks>
-    /// <param name="fuseId">The Fuse ID of the player to reject.</param>
-    public static void RejectFriend(string fuseId)
-    {
-        FuseLog("RejectFriend(" + fuseId + ")");
-        FuseSDKEditorSession.RejectFriend(fuseId);
-    }
-
-    /// <summary></summary>
-    /// <param name="fuseId"></param>
-    public static void MigrateFriends(string fuseId)
-    {
-        FuseLog("MigrateFriends(" + fuseId + ")");
-        FuseSDKEditorSession.MigrateFriends(fuseId);
-    }
-    #endregion
-
-
-    #region User-to-User Push Notifications
-
-    /// <summary>Send a push notification to another user.</summary>
-    /// <remarks>
-    /// Use this method to send a push notification to another user.
-    /// The message is sent to each device that is logged in using the specified Fuse ID.
-    /// This system is dependent upon both the sender and the recipient being logged in.
-    /// This system would most likely be used in conjunction with another social tool, such as the friend's list,
-    /// <see cref="FuseSDK.GetFriendsList"/> where a list of users and their associated Fuse IDs would be known.
-    /// Messages can be no longer than 256 characters in length.
-    /// </remarks>
-    /// <param name="fuseId">The fuse ID where the message should be sent.</param>
-    /// <param name="message">The message to send.</param>
-    public static void UserPushNotification(string fuseId, string message)
-    {
-        FuseLog("UserPushNotification(" + fuseId + "," + message + ")");
-        FuseSDKEditorSession.UserPushNotification(fuseId, message);
-    }
-
-    /// <summary>Send a push notification to a user's entire friends list.</summary>
-    /// <remarks>Similar to UserPushNotification, this method sends the same message to each user in the source user's friends list.</remarks>
-    /// <param name="message">The message to send.</param>
-    public static void FriendsPushNotification(string message)
-    {
-        FuseLog("FriendsPushNotification(" + message + ")");
-        FuseSDKEditorSession.FriendsPushNotification(message);
-    }
-    #endregion
-
-
+    
     #region Game Configuration Data
 
     /// <summary>Returns a single server configuration value.</summary>
@@ -936,30 +767,6 @@ public partial class FuseSDK : MonoBehaviour
     }
     #endregion
 
-
-    #region Game Data
-
-    [Obsolete("Game data is deprecated and will be removed from future releases.")]
-    public static int SetGameData(Dictionary<string, string> data, string fuseId = "", string key = "")
-    {
-        FuseLog("SetGameData()");
-        return -1;
-    }
-
-    [Obsolete("Game data is deprecated and will be removed from future releases.")]
-    public static int GetGameData(params string[] keys)
-    {
-        FuseLog("GetGameData()");
-        return -1;
-    }
-
-    [Obsolete("Game data is deprecated and will be removed from future releases.")]
-    public static int GetGameDataForFuseId(string fuseId, string key, params string[] keys)
-    {
-        FuseLog("GetGameDataForFuseId()");
-        return -1;
-    }
-    #endregion
 
     #region Initialization
 
@@ -1010,15 +817,6 @@ public partial class FuseSDK : MonoBehaviour
         //Notifications
         FuseSDKEditorSession.NotificationAction += OnNotificationAction;
         FuseSDKEditorSession.NotificationWillClose += OnNotificationWillClose;
-
-        //Friends
-        FuseSDKEditorSession.FriendAdded += (id, e) => OnFriendAdded(id, (int)e);
-        FuseSDKEditorSession.FriendRemoved += (id, e) => OnFriendRemoved(id, (int)e);
-        FuseSDKEditorSession.FriendAccepted += (id, e) => OnFriendAccepted(id, (int)e);
-        FuseSDKEditorSession.FriendRejected += (id, e) => OnFriendRejected(id, (int)e);
-        FuseSDKEditorSession.FriendsMigrated += (id, e) => OnFriendsMigrated(id, (int)e);
-        FuseSDKEditorSession.FriendsListUpdated += fl => OnFriendsListUpdated(fl);
-        FuseSDKEditorSession.FriendsListError += e => OnFriendsListError((int)e);
 
         //IAP
         FuseSDKEditorSession.PurchaseVerification += OnPurchaseVerification;
@@ -1208,62 +1006,6 @@ public partial class FuseSDK : MonoBehaviour
         }
     }
 
-    static private void OnFriendAdded(string fuseId, int error)
-    {
-        if(FriendAdded != null)
-        {
-            FriendAdded(fuseId, error < (int)FuseError.UNDEFINED ? (FuseError)error : FuseError.UNDEFINED);
-        }
-    }
-
-    static private void OnFriendRemoved(string fuseId, int error)
-    {
-        if(FriendRemoved != null)
-        {
-            FriendRemoved(fuseId, error < (int)FuseError.UNDEFINED ? (FuseError)error : FuseError.UNDEFINED);
-        }
-    }
-
-    static private void OnFriendAccepted(string fuseId, int error)
-    {
-        if(FriendAccepted != null)
-        {
-            FriendAccepted(fuseId, error < (int)FuseError.UNDEFINED ? (FuseError)error : FuseError.UNDEFINED);
-        }
-    }
-
-    static private void OnFriendRejected(string fuseId, int error)
-    {
-        if(FriendRejected != null)
-        {
-            FriendRejected(fuseId, error < (int)FuseError.UNDEFINED ? (FuseError)error : FuseError.UNDEFINED);
-        }
-    }
-
-    static private void OnFriendsMigrated(string fuseId, int error)
-    {
-        if(FriendsMigrated != null)
-        {
-            FriendsMigrated(fuseId, error < (int)FuseError.UNDEFINED ? (FuseError)error : FuseError.UNDEFINED);
-        }
-    }
-
-    static private void OnFriendsListUpdated(List<Friend> friends)
-    {
-        if(FriendsListUpdated != null)
-        {
-            FriendsListUpdated(friends);
-        }
-    }
-
-    static private void OnFriendsListError(int error)
-    {
-        if(FriendsListError != null)
-        {
-            FriendsListError(error < (int)FuseError.UNDEFINED ? (FuseError)error : FuseError.UNDEFINED);
-        }
-    }
-
     static private void OnGameConfigurationReceived()
     {
         if(GameConfigurationReceived != null)
@@ -1271,31 +1013,5 @@ public partial class FuseSDK : MonoBehaviour
             GameConfigurationReceived();
         }
     }
-
-#pragma warning disable
-    static private void OnGameDataError(int error, int requestId)
-    {
-        if(GameDataError != null)
-        {
-            GameDataError(requestId, error < (int)FuseError.UNDEFINED ? (FuseError)error : FuseError.UNDEFINED);
-        }
-    }
-
-    static private void OnGameDataSetAcknowledged(int requestId)
-    {
-        if(GameDataSetAcknowledged != null)
-        {
-            GameDataSetAcknowledged(requestId);
-        }
-    }
-
-    static private void OnGameDataReceived(string fuseId, string dataKey, Dictionary<string, string> data, int requestId)
-    {
-        if(GameDataReceived != null)
-        {
-            GameDataReceived(requestId, fuseId, dataKey, data);
-        }
-    }
-#pragma warning restore
     #endregion
 }

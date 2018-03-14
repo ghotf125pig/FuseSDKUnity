@@ -49,6 +49,7 @@ public class FuseSDKEditor : Editor
         "JavaScriptCore",
         "UserNotifications",
         "SafariServices",
+        "WatchConnectivity",
     };
 
     private static readonly string[] DELETED_FILES = new string[] {
@@ -80,6 +81,10 @@ public class FuseSDKEditor : Editor
         "/FuseSDK/FuseMisc.cs",
         "/FuseSDK/Editor/Ionic.Zip.dll",
         "/FuseSDK/Common/FusePostProcess.cs",
+        "/FuseSDK/NativeLibs/iOS/FuseUnitySDK.h",
+        "/FuseSDK/NativeLibs/iOS/FuseUnitySDK.m",
+        "/FuseSDK/NativeLibs/iOS/NSData-Base64.h",
+        "/FuseSDK/NativeLibs/iOS/NSData-Base64.m",
     };
 
     private const string MANIFEST_PERMISSION_COARSE_LOCATION = "    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />";

@@ -54,6 +54,7 @@ public static class FusePostProcess
             "Social.framework",
             "StoreKit.framework",
             "SafariServices.framework",
+            "WatchConnectivity.framework",
         };
 
 
@@ -82,10 +83,10 @@ public static class FusePostProcess
         Directory.CreateDirectory(buildPath + "/FrameworkRes");
         foreach(string frameworkPath in Directory.GetDirectories(Application.dataPath + FuseSDKEditor.IOS_NATIVE_LIBS, "*.embeddedframework", SearchOption.AllDirectories))
         {
-            if(!Directory.Exists(frameworkPath + "/Resources"))
+            if(!Directory.Exists(frameworkPath + "/.Resources"))
                 continue;
 
-            RecursiveDirCopy(frameworkPath + "/Resources", buildPath + "/FrameworkRes");
+            RecursiveDirCopy(frameworkPath + "/.Resources", buildPath + "/FrameworkRes");
 
             //Don't iterate recursively.
             //Instead add all files and folders in the topmost directory as files.
