@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Copyright (C) 2017 Upsight, Inc. All rights reserved.
  */
 
@@ -458,65 +458,6 @@ public partial class FuseSDK
 	}
 #endregion
 
-#region Friend List
-
-	public static void UpdateFriendsListFromServer()
-	{
-		FuseLog("UpdateFriendsListFromServer()");
-		_fuseUnityPlugin.CallStatic("updateFriendsListFromServer");
-	}
-
-	public static List<Friend> GetFriendsList()
-	{
-		FuseLog("GetFriendsList()");
-		return DeserializeFriendsList(_fuseUnityPlugin.CallStatic<string[]>("getFriendsList"));
-	}
-
-	public static void AddFriend(string fuseId)
-	{
-		FuseLog("AddFriend(" + fuseId + ")");
-		_fuseUnityPlugin.CallStatic("addFriend", fuseId);
-	}
-
-	public static void RemoveFriend(string fuseId)
-	{
-		FuseLog("RemoveFriend(" + fuseId + ")");
-		_fuseUnityPlugin.CallStatic("removeFriend", fuseId);
-	}
-
-	public static void AcceptFriend(string fuseId)
-	{
-		FuseLog("AcceptFriend(" + fuseId + ")");
-		_fuseUnityPlugin.CallStatic("acceptFriend", fuseId);
-	}
-
-	public static void RejectFriend(string fuseId)
-	{
-		FuseLog("RejectFriend(" + fuseId + ")");
-		_fuseUnityPlugin.CallStatic("rejectFriend", fuseId);
-	}
-
-	public static void MigrateFriends(string fuseId)
-	{
-		FuseLog("MigrateFriends(" + fuseId + ")");
-		_fuseUnityPlugin.CallStatic("migrateFriends", fuseId);
-	}
-#endregion
-
-#region User-to-User Push Notifications
-	public static void UserPushNotification(string fuseId, string message)
-	{
-		FuseLog("UserPushNotification(" + fuseId + "," + message + ")");
-		_fuseUnityPlugin.CallStatic("userPushNotification", fuseId, message);
-	}
-
-	public static void FriendsPushNotification(string message)
-	{
-		FuseLog("FriendsPushNotification(" + message + ")");
-		_fuseUnityPlugin.CallStatic("friendsPushNotification", message);
-	}
-#endregion
-
 #region Game Configuration Data
 	public static string GetGameConfigurationValue(string key)
 	{
@@ -551,38 +492,6 @@ public partial class FuseSDK
 		AndroidJNI.PopLocalFrame(IntPtr.Zero);
 		FuseLog("Got " + gameConfig.Count + " game config values");
 		return gameConfig;
-	}
-#endregion
-
-#region Game Data
-
-	[Obsolete("Game data is deprecated and will be removed from future releases.")]
-	public static int SetGameData(Dictionary<string, string> data, string fuseId = "", string key = "")
-	{
-		FuseLog ("SetGameData(" + key + ", [data]," + fuseId + ")");
-
-		if(string.IsNullOrEmpty(fuseId))
-			fuseId = GetFuseId();
-
-		if(data == null)
-			data = new Dictionary<string,string>();
-
-		var varKeys = data.Keys.ToArray();
-		var varValues = data.Values.ToArray();
-		return _fuseUnityPlugin.CallStatic<int>("setGameData", fuseId, key, varKeys, varValues);
-	}
-
-	[Obsolete("Game data is deprecated and will be removed from future releases.")]
-	public static int GetGameData(params string[] keys)
-	{
-		return GetGameDataForFuseId("", "", keys);
-	}
-
-	[Obsolete("Game data is deprecated and will be removed from future releases.")]
-	public static int GetGameDataForFuseId(string fuseId, string key, params string[] keys)
-	{
-		FuseLog ("GetGameData(" + fuseId + "," + key + ",[keys])");
-		return _fuseUnityPlugin.CallStatic<int>("getGameData", fuseId, key, keys == null ? new string[0] : keys);
 	}
 #endregion
 
@@ -744,179 +653,10 @@ public partial class FuseSDK
 			Debug.LogError("FuseSDK: Parsing error in _TimeUpdated");
 	}
 
-	private void _FriendAdded(string param)
-	{
-		int error;
-
-		var pars = param.Split(',');
-		if(pars.Length == 2 && int.TryParse(pars[1], out error))
-			OnFriendAdded(pars[0], error);
-		else
-			Debug.LogError("FuseSDK: Parsing error in _FriendAdded");
-	}
-
-	private void _FriendRemoved(string param)
-	{
-		int error;
-
-		var pars = param.Split(',');
-		if(pars.Length == 2 && int.TryParse(pars[1], out error))
-			OnFriendRemoved(pars[0], error);
-		else
-			Debug.LogError("FuseSDK: Parsing error in _FriendAdded");
-	}
-
-	private void _FriendAccepted(string param)
-	{
-		int error;
-
-		var pars = param.Split(',');
-		if(pars.Length == 2 && int.TryParse(pars[1], out error))
-			OnFriendAccepted(pars[0], error);
-		else
-			Debug.LogError("FuseSDK: Parsing error in _FriendAdded");
-	}
-
-	private void _FriendRejected(string param)
-	{
-		int error;
-
-		var pars = param.Split(',');
-		if(pars.Length == 2 && int.TryParse(pars[1], out error))
-			OnFriendRejected(pars[0], error);
-		else
-			Debug.LogError("FuseSDK: Parsing error in _FriendAdded");
-	}
-
-	private void _FriendsMigrated(string param)
-	{
-		int error;
-
-		var pars = param.Split(',');
-		if(pars.Length == 2 && int.TryParse(pars[1], out error))
-			OnFriendsMigrated(pars[0], error);
-		else
-			Debug.LogError("FuseSDK: Parsing error in _FriendsMigrated");
-	}
-
-	private static List<Friend> DeserializeFriendsList(string[] friendList)
-	{
-		List<Friend> retList = new List<Friend>();
-
-		if(friendList == null)
-		{
-			Debug.LogWarning("FuseSDK: NULL FriendsList.");
-			return retList;
-		}
-
-		foreach(var line in friendList)
-		{
-			var parts = line.Split(',');
-			if(parts.Length == 4)
-			{
-				Friend friend = new Friend();
-				friend.FuseId = parts[0];
-				friend.AccountId = parts[1];
-				friend.Alias = parts[2];
-				friend.Pending = parts[3] != "0";
-
-				retList.Add(friend);
-			}
-			else
-			{
-				Debug.LogError("FuseSDK: Error reading FriendsList data. Invalid line: " + line);
-			}
-		}
-
-		return retList;
-	}
-
-	private void _FriendsListUpdated(string _)
-	{
-		FuseLog("FriendsListUpdated()");
-		OnFriendsListUpdated(GetFriendsList());
-	}
-
-	private void _FriendsListError(string error)
-	{
-		FuseLog("FriendsListError(" + error + ")");
-
-		int e;
-		if(int.TryParse(error, out e))
-			OnFriendsListError(e);
-		else
-			Debug.LogError("FuseSDK: Parsing error in _FriendsListError");
-	}
-
 	private void _GameConfigurationReceived(string _)
 	{
 		FuseLog("GameConfigurationReceived()");
 		OnGameConfigurationReceived();
-	}
-
-	private void _GameDataSetAcknowledged(string requestId)
-	{
-		FuseLog("GameDataSetAcknowledged(" + requestId + ")");
-		int rId;
-
-		if(int.TryParse(requestId, out rId))
-			OnGameDataSetAcknowledged(rId);
-		else
-			Debug.LogError("FuseSDK: Parsing error in _GameDataSetAcknowledged");
-	}
-
-	private void _GameDataError(string param)
-	{
-		FuseLog("GameDataError(" + param + ")");
-
-		int error, requestId;
-
-		var pars = param.Split(',');
-		if(pars.Length == 2 && int.TryParse(pars[0], out error) && int.TryParse(pars[1], out requestId))
-			OnGameDataError(error, requestId);
-		else
-			Debug.LogError("FuseSDK: Parsing error in _GameDataError");
-	}
-
-	private void _GameDataReceived(string param)
-	{
-		FuseLog("GameDataReceived(" + param + ")");
-
-		int requestId = -1;
-		string fuseId = "";
-
-		var pars = param.Split(',');
-		if(pars.Length == 2)
-		{
-			fuseId = pars[1];
-			if(!int.TryParse(pars[0], out requestId))
-				Debug.LogError("FuseSDK: Parsing error in _GameDataReceived");
-		}
-
-		Dictionary<string, string> gameData = new Dictionary<string, string>();
-
-		int pageSize = 100;
-		int offset = 0;
-		AndroidJNI.AttachCurrentThread();
-		AndroidJNI.PushLocalFrame(0);
-		string[] keys = _fuseUnityPlugin.CallStatic<string[]>("getGameDataKeys", offset, pageSize);
-		while (keys != null && keys.Length > 0)
-		{
-			FuseLog("Getting gameData: Offset = " + offset + ", keys.Length = " + keys.Length);
-			for(int i = 0; i < keys.Length; i++)
-			{
-				gameData.Add(keys[i], _fuseUnityPlugin.CallStatic<string>("getGameDataKey", keys[i]));
-			}
-			offset += pageSize;
-			AndroidJNI.PopLocalFrame(IntPtr.Zero);
-			AndroidJNI.PushLocalFrame(0);
-
-			keys = _fuseUnityPlugin.CallStatic<string[]>("getGameDataKeys", offset, pageSize);
-		}
-		AndroidJNI.PopLocalFrame(IntPtr.Zero);
-		FuseLog("Got " + gameData.Count + " game data values");
-		
-		OnGameDataReceived(fuseId, "", gameData, requestId);
 	}
 
 	private static bool __AdWillCloseCalled = true;

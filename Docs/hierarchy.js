@@ -1,7 +1,6 @@
 var hierarchy =
 [
     [ "FuseMisc.Constants", "class_fuse_misc_1_1_constants.html", null ],
-    [ "FuseMisc.Friend", "struct_fuse_misc_1_1_friend.html", null ],
     [ "FuseMisc.FuseExtensions", "class_fuse_misc_1_1_fuse_extensions.html", null ],
     [ "FuseMisc.IAPOfferInfo", "struct_fuse_misc_1_1_i_a_p_offer_info.html", null ],
     [ "MonoBehaviour", null, [

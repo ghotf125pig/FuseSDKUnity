@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.10.0.1
+Version: 2.11.0.0
 
-Released: March 1st, 2018
+Released: March 15th, 2018
 
 ## Update Instructions
 Before updating, please remove the entire Assets/FuseSDK folder.  
@@ -25,6 +25,16 @@ Review the [integration instructions](https://wiki.fusepowered.com/index.php?tit
 * [Documentation](http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.11.0.0
+March 15th, 2018
+* Removed Friends and Game Data functionality
+* Update dialog theme to use device default
+* Permanently enable SSL
+* Compile iOS bridge into static library
+* Added new ad provider
+* Ad provider updates
+* Stability improvements and bug fixes
 
 ### 2.10.0.1
 March 1st, 2018

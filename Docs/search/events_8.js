@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['timeupdated',['TimeUpdated',['../class_fuse_s_d_k.html#ad0c3842fca49d31ab6868cdee3f437cd',1,'FuseSDK']]]
+  ['virtualgoodsofferacceptedwithobject',['VirtualGoodsOfferAcceptedWithObject',['../class_fuse_s_d_k.html#a17e9dd3bbac1402a8dc6f26c31745c1c',1,'FuseSDK']]]
 ];
