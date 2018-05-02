@@ -2,21 +2,21 @@
 
 ## Current Version
 
-Version: 2.11.0.0
+Version: 2.11.4.0
 
-Released: March 15th, 2018
+Released: May 2nd, 2018
 
 ## Update Instructions
 Before updating, please remove the entire Assets/FuseSDK folder.  
 The FuseSDK uses the [JarResolver](https://github.com/googlesamples/unity-jar-resolver) library to manage Google Play Services dependencies.
-If your project has any play services or support jars that you included manually you could encounter some conflicts.  
+If your project has any play services or support jars that you included manually you could encounter some conflicts.
 [See here](https://wiki.fusepowered.com/index.php?title=Unity#Using_JarResolver) for more information.  
 Please use the links below to download the FuseSDK.
 
 
 ## Getting Started
 
-Download the SDK from the [releases tab](https://github.com/fusepowered/FuseSDKUnity/releases)
+Download the SDK from the [releases tab](https://github.com/fusepowered/FuseSDKUnity/releases).  
 Review the [integration instructions](https://wiki.fusepowered.com/index.php?title=Unity) for more information on integrating the Fuse SDK.
 
 ## References
@@ -25,6 +25,10 @@ Review the [integration instructions](https://wiki.fusepowered.com/index.php?tit
 * [Documentation](http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.11.4.0
+May 2nd, 2018
+* Ad provider bug fixes
 
 ### 2.11.0.0
 March 15th, 2018
