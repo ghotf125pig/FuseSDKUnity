@@ -242,6 +242,12 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>RegisterEvent<
 <tr class="memitem:a0d900a54959afd323f46ee9c7a8713a4"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#a0d900a54959afd323f46ee9c7a8713a4">DataEnabled</a> ()</td></tr>
 <tr class="memdesc:a0d900a54959afd323f46ee9c7a8713a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether data is being collected by the SDK.. <a href="#a0d900a54959afd323f46ee9c7a8713a4">More...</a><br /></td></tr>
 <tr class="separator:a0d900a54959afd323f46ee9c7a8713a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab58c87e1b7a10b484e6a143cbe4259cb"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#ab58c87e1b7a10b484e6a143cbe4259cb">SetGDPRState</a> (<a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5c">GDPRState</a> state)</td></tr>
+<tr class="memdesc:ab58c87e1b7a10b484e6a143cbe4259cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opts a user in to data being collected by the SDK. <a href="#ab58c87e1b7a10b484e6a143cbe4259cb">More...</a><br /></td></tr>
+<tr class="separator:ab58c87e1b7a10b484e6a143cbe4259cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07d92f84e8cb4844bd402dc5dcf98e19"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5c">GDPRState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#a07d92f84e8cb4844bd402dc5dcf98e19">GetGDPRState</a> ()</td></tr>
+<tr class="memdesc:a07d92f84e8cb4844bd402dc5dcf98e19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opts a user out of data being collected by the SDK. <a href="#a07d92f84e8cb4844bd402dc5dcf98e19">More...</a><br /></td></tr>
+<tr class="separator:a07d92f84e8cb4844bd402dc5dcf98e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba3884417a7cd4c5892198050ce10b0b"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#aba3884417a7cd4c5892198050ce10b0b">GetGameConfigurationValue</a> (string key)</td></tr>
 <tr class="memdesc:aba3884417a7cd4c5892198050ce10b0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a single server configuration value. <a href="#aba3884417a7cd4c5892198050ce10b0b">More...</a><br /></td></tr>
 <tr class="separator:aba3884417a7cd4c5892198050ce10b0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -275,9 +281,9 @@ Events</h2></td></tr>
 <tr class="memitem:a32ab598715dff864236f4e2f4acead2a"><td class="memItemLeft" align="right" valign="top">static Action&lt; int, string, string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#a32ab598715dff864236f4e2f4acead2a">PurchaseVerification</a></td></tr>
 <tr class="memdesc:a32ab598715dff864236f4e2f4acead2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after reporting an in app purchase to Fuse Listener signature: void PurchaseVerification(int verified, string transactionId, string originalTransactionId) verified: -1 - Could not verify, 0 - Not verified, 1 - Verified transactionId: Id of the transaction as recieved from Google Play/App Store original: The original transactionId if this purchase was made previously and is being restored.  <a href="#a32ab598715dff864236f4e2f4acead2a">More...</a><br /></td></tr>
 <tr class="separator:a32ab598715dff864236f4e2f4acead2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acab59f827bec3d0c091b3febbbb02056"><td class="memItemLeft" align="right" valign="top">static Action&lt; bool, <a class="el" href="namespace_fuse_misc.html#ac5f3da519b00a22cde3e6a9b48cf45b2">FuseError</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#acab59f827bec3d0c091b3febbbb02056">AdAvailabilityResponse</a></td></tr>
-<tr class="memdesc:acab59f827bec3d0c091b3febbbb02056"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called some time after calling <a class="el" href="class_fuse_s_d_k.html#a8ce8d3dccc86f2632209aa491c49e068" title="Used to fetch an ad, offer, or rewarded video from the given zone and prepare it to be shown...">PreloadAdForZoneID(string zoneId)</a> to report if an ad is available or not Listener signature: void AdAvailabilityResponse(bool available, FuseError error)  <a href="#acab59f827bec3d0c091b3febbbb02056">More...</a><br /></td></tr>
-<tr class="separator:acab59f827bec3d0c091b3febbbb02056"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad73f16069a2d450fa1f8688b7ceaff11"><td class="memItemLeft" align="right" valign="top">static Action&lt; bool, string, <a class="el" href="namespace_fuse_misc.html#ac5f3da519b00a22cde3e6a9b48cf45b2">FuseError</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#ad73f16069a2d450fa1f8688b7ceaff11">AdAvailabilityResponse</a></td></tr>
+<tr class="memdesc:ad73f16069a2d450fa1f8688b7ceaff11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called some time after calling <a class="el" href="class_fuse_s_d_k.html#a8ce8d3dccc86f2632209aa491c49e068" title="Used to fetch an ad, offer, or rewarded video from the given zone and prepare it to be shown...">PreloadAdForZoneID(string zoneId)</a> to report if an ad is available or not Listener signature: void AdAvailabilityResponse(bool available, string zoneId, FuseError error)  <a href="#ad73f16069a2d450fa1f8688b7ceaff11">More...</a><br /></td></tr>
+<tr class="separator:ad73f16069a2d450fa1f8688b7ceaff11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f3d4680bbc1911b8749a8a6c7786779"><td class="memItemLeft" align="right" valign="top">static Action&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#a8f3d4680bbc1911b8749a8a6c7786779">AdWillClose</a></td></tr>
 <tr class="memdesc:a8f3d4680bbc1911b8749a8a6c7786779"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after ShowAdForZoneID(String zoneId) when the ad is closed, or if Fuse is unable to show an ad within the 3 second timeout  <a href="#a8f3d4680bbc1911b8749a8a6c7786779">More...</a><br /></td></tr>
 <tr class="separator:a8f3d4680bbc1911b8749a8a6c7786779"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -302,6 +308,9 @@ Events</h2></td></tr>
 <tr class="memitem:ad0c3842fca49d31ab6868cdee3f437cd"><td class="memItemLeft" align="right" valign="top">static Action&lt; DateTime &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#ad0c3842fca49d31ab6868cdee3f437cd">TimeUpdated</a></td></tr>
 <tr class="memdesc:ad0c3842fca49d31ab6868cdee3f437cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after the current UTC timestamp is received from the server Listener signature: void TimeUpdated(System.DateTime time)  <a href="#ad0c3842fca49d31ab6868cdee3f437cd">More...</a><br /></td></tr>
 <tr class="separator:ad0c3842fca49d31ab6868cdee3f437cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13079c9a503974f32c9f8c069c31740c"><td class="memItemLeft" align="right" valign="top">static Action&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_fuse_s_d_k.html#a13079c9a503974f32c9f8c069c31740c">RequestGDPRConsent</a></td></tr>
+<tr class="memdesc:a13079c9a503974f32c9f8c069c31740c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when consent is needed from the user in order to collect data. Once the user is prompted, <a class="el" href="class_fuse_s_d_k.html#ab58c87e1b7a10b484e6a143cbe4259cb" title="Opts a user in to data being collected by the SDK.">FuseSDK.SetGDPRState</a> should be called with the result. Listener signature: void <a class="el" href="class_fuse_s_d_k.html#a13079c9a503974f32c9f8c069c31740c" title="Called when consent is needed from the user in order to collect data. Once the user is prompted...">RequestGDPRConsent()</a>  <a href="#a13079c9a503974f32c9f8c069c31740c">More...</a><br /></td></tr>
+<tr class="separator:a13079c9a503974f32c9f8c069c31740c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="afc17d188e2668854667e9cd3c04a29ed"></a>
@@ -809,6 +818,33 @@ Events</h2></td></tr>
 
 </div>
 </div>
+<a id="a07d92f84e8cb4844bd402dc5dcf98e19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07d92f84e8cb4844bd402dc5dcf98e19">&#9670;&nbsp;</a></span>GetGDPRState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5c">GDPRState</a> FuseSDK.GetGDPRState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Opts a user out of data being collected by the SDK.</p>
+
+</div>
+</div>
 <a id="aeffc98fdf2f75c080b1034c5a8382340"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeffc98fdf2f75c080b1034c5a8382340">&#9670;&nbsp;</a></span>GetIAPOfferInfoForZone()</h2>
 
@@ -1197,7 +1233,7 @@ Events</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Used to fetch an ad, offer, or rewarded video from the given zone and prepare it to be shown.</p>
-<p>This method is optional and is used to help ensure that an ad is shown in a timely manner. If the zone is not ready to display an ad, this will start loading an appropriate ad but will not show it until <a class="el" href="class_fuse_s_d_k.html#ae70751220b36f2978737baea6f78a547" title="Displays an ad, rewarded video, or offer for a given zone. Zone contents can be configured via the Fu...">FuseSDK.ShowAdForZoneID</a> is called. If an ad is ready to be displayed, it does nothing. <a class="el" href="class_fuse_s_d_k.html#acab59f827bec3d0c091b3febbbb02056" title="Called some time after calling PreloadAdForZoneID(string zoneId) to report if an ad is available or n...">FuseSDK.AdAvailabilityResponse</a> is always called after this function. <br />
+<p>This method is optional and is used to help ensure that an ad is shown in a timely manner. If the zone is not ready to display an ad, this will start loading an appropriate ad but will not show it until <a class="el" href="class_fuse_s_d_k.html#ae70751220b36f2978737baea6f78a547" title="Displays an ad, rewarded video, or offer for a given zone. Zone contents can be configured via the Fu...">FuseSDK.ShowAdForZoneID</a> is called. If an ad is ready to be displayed, it does nothing. <a class="el" href="class_fuse_s_d_k.html#ad73f16069a2d450fa1f8688b7ceaff11" title="Called some time after calling PreloadAdForZoneID(string zoneId) to report if an ad is available or n...">FuseSDK.AdAvailabilityResponse</a> is always called after this function. <br />
  Downloading an ad could take several seconds, depending on the size of the ad and connection speed. For best results, you should allot ample time to the ad to finish loading before attempting to show it. For example: when a game has a level completed screen and wants to show an ad when the user chooses to start the next level, you should call PreloadAdForZoneID as soon as the level is completed and ShowAdForZoneID when the next level button is pressed. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -1904,6 +1940,34 @@ Events</h2></td></tr>
 
 </div>
 </div>
+<a id="ab58c87e1b7a10b484e6a143cbe4259cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab58c87e1b7a10b484e6a143cbe4259cb">&#9670;&nbsp;</a></span>SetGDPRState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool FuseSDK.SetGDPRState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5c">GDPRState</a>&#160;</td>
+          <td class="paramname"><em>state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Opts a user in to data being collected by the SDK.</p>
+
+</div>
+</div>
 <a id="ad7815efce226f9700bca53f25f8b9e85"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad7815efce226f9700bca53f25f8b9e85">&#9670;&nbsp;</a></span>SetRewardedVideoUserID()</h2>
 
@@ -2248,8 +2312,8 @@ Events</h2></td></tr>
 
 </div>
 </div>
-<a id="acab59f827bec3d0c091b3febbbb02056"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acab59f827bec3d0c091b3febbbb02056">&#9670;&nbsp;</a></span>AdAvailabilityResponse</h2>
+<a id="ad73f16069a2d450fa1f8688b7ceaff11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad73f16069a2d450fa1f8688b7ceaff11">&#9670;&nbsp;</a></span>AdAvailabilityResponse</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2258,7 +2322,7 @@ Events</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Action&lt;bool, <a class="el" href="namespace_fuse_misc.html#ac5f3da519b00a22cde3e6a9b48cf45b2">FuseError</a>&gt; FuseSDK.AdAvailabilityResponse</td>
+          <td class="memname">Action&lt;bool, string, <a class="el" href="namespace_fuse_misc.html#ac5f3da519b00a22cde3e6a9b48cf45b2">FuseError</a>&gt; FuseSDK.AdAvailabilityResponse</td>
         </tr>
       </table>
   </td>
@@ -2268,7 +2332,7 @@ Events</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Called some time after calling <a class="el" href="class_fuse_s_d_k.html#a8ce8d3dccc86f2632209aa491c49e068" title="Used to fetch an ad, offer, or rewarded video from the given zone and prepare it to be shown...">PreloadAdForZoneID(string zoneId)</a> to report if an ad is available or not Listener signature: void AdAvailabilityResponse(bool available, FuseError error) </p>
+<p>Called some time after calling <a class="el" href="class_fuse_s_d_k.html#a8ce8d3dccc86f2632209aa491c49e068" title="Used to fetch an ad, offer, or rewarded video from the given zone and prepare it to be shown...">PreloadAdForZoneID(string zoneId)</a> to report if an ad is available or not Listener signature: void AdAvailabilityResponse(bool available, string zoneId, FuseError error) </p>
 
 </div>
 </div>
@@ -2489,6 +2553,30 @@ Events</h2></td></tr>
 
 </div>
 </div>
+<a id="a13079c9a503974f32c9f8c069c31740c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13079c9a503974f32c9f8c069c31740c">&#9670;&nbsp;</a></span>RequestGDPRConsent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Action FuseSDK.RequestGDPRConsent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when consent is needed from the user in order to collect data. Once the user is prompted, <a class="el" href="class_fuse_s_d_k.html#ab58c87e1b7a10b484e6a143cbe4259cb" title="Opts a user in to data being collected by the SDK.">FuseSDK.SetGDPRState</a> should be called with the result. Listener signature: void <a class="el" href="class_fuse_s_d_k.html#a13079c9a503974f32c9f8c069c31740c" title="Called when consent is needed from the user in order to collect data. Once the user is prompted...">RequestGDPRConsent()</a> </p>
+
+</div>
+</div>
 <a id="a1dde342f4c6165fc3f6c04e71410a2e3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1dde342f4c6165fc3f6c04e71410a2e3">&#9670;&nbsp;</a></span>RewardedAdCompletedWithObject</h2>
 
@@ -2617,7 +2705,7 @@ Events</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_fuse_s_d_k.html">FuseSDK</a></li>
-    <li class="footer">Generated on Wed May 2 2018 09:39:17 for FuseUnitySDK by
+    <li class="footer">Generated on Fri May 18 2018 19:06:31 for FuseUnitySDK by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

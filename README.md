@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.11.4.0
+Version: 2.12.0.0
 
-Released: May 2nd, 2018
+Released: May 18th, 2018
 
 ## Update Instructions
 Before updating, please remove the entire Assets/FuseSDK folder.  
@@ -25,6 +25,13 @@ Review the [integration instructions](https://wiki.fusepowered.com/index.php?tit
 * [Documentation](http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.12.0.0
+May 18th, 2018
+* Added support for GDPR Data Privacy Consent
+* Added FuseSDK.RequestGDPRConsent event
+* Added FuseSDK.SetGDPRState and FuseSDK.GetGDPRState methods
+* Ad provider updates
 
 ### 2.11.4.0
 May 2nd, 2018

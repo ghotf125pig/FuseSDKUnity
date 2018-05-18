@@ -90,7 +90,7 @@ public partial class FuseSDK
 			Debug.LogError("FuseSDK instance not initialized. Awake may not have been called.");
 	}
 
-	private static void _StartSession(string gameId, bool handleAdURLs)
+	private static void _StartSession(string gameId, bool handleAdURLs, Dictionary<string, string> options = null)
 	{
 		if(_sessionStarted)
 		{
@@ -104,9 +104,11 @@ public partial class FuseSDK
 			return;
 		}
 
+        string jsonOptions = options == null ? null : JSONObject.Create(options).ToString();
+
 		_sessionStarted = true;
 		FuseLog("StartSession(" + gameId + ")");
-		_fuseUnityPlugin.CallStatic("startSession", gameId, handleAdURLs);
+		_fuseUnityPlugin.CallStatic("startSession", gameId, handleAdURLs, jsonOptions);
 	}
 #endregion
 
@@ -458,6 +460,20 @@ public partial class FuseSDK
 	}
 #endregion
 
+#region GDPR Management
+    public static bool SetGDPRState(GDPRState state)
+    {
+		FuseLog("SetGDPRState()");
+		return _fuseUnityPlugin.CallStatic<bool>("setGDPRState", (int)state);
+    }
+ 
+    public static GDPRState GetGDPRState()
+    {
+        FuseLog("GetGDPRState()");
+        return (GDPRState) _fuseUnityPlugin.CallStatic<int>("getGDPRState");
+    }
+#endregion
+
 #region Game Configuration Data
 	public static string GetGameConfigurationValue(string key)
 	{
@@ -545,8 +561,8 @@ public partial class FuseSDK
 		int error;
 
 		var pars = param.Split(',');
-		if(pars.Length == 2 && int.TryParse(pars[0], out available) && int.TryParse(pars[1], out error))
-			OnAdAvailabilityResponse(available, error);
+		if(pars.Length == 3 && int.TryParse(pars[0], out available) && int.TryParse(pars[1], out error))
+			OnAdAvailabilityResponse(available, pars[2], error);
 		else
 			Debug.LogError("FuseSDK: Parsing error in _AdAvailabilityResponse");
 	}
@@ -659,6 +675,12 @@ public partial class FuseSDK
 		OnGameConfigurationReceived();
 	}
 
+	private void _RequestGDPRConsent(string _)
+	{
+		FuseLog("RequestGDPRConsent()");
+		OnRequestGDPRConsent();
+	}
+
 	private static bool __AdWillCloseCalled = true;
 	private static void __AdWillCloseMoneybackGuaranteeR()
 	{
@@ -703,12 +725,12 @@ public partial class FuseSDK
 	/// <c>adClickedWithURLHandler</c>'s parameter.
 	/// </remarks>
 	/// <param name="adClickedWithURLHandler">The function to be called when certain ad types are clicked.</param>
-	public static void StartSession(System.Action<string> adClickedWithURLHandler)
+	public static void StartSession(System.Action<string> adClickedWithURLHandler, Dictionary<string, string> options = null)
 	{
 		if(_instance != null)
 		{
 			_adClickedwithURL = adClickedWithURLHandler;
-			_StartSession(_instance.AndroidAppID, true);
+			_StartSession(_instance.AndroidAppID, adClickedWithURLHandler != null, options);
 		}
 		else Debug.LogError("FuseSDK instance not initialized. Awake may not have been called.");
 	}
