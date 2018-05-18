@@ -5,6 +5,7 @@ var searchData=
   ['getfuseid',['GetFuseId',['../class_fuse_s_d_k.html#a88b25cbb10ee4166ebc82813c1bdb26a',1,'FuseSDK']]],
   ['getgameconfiguration',['GetGameConfiguration',['../class_fuse_s_d_k.html#abc96540d7a4a9a6dcdd7708725daed83',1,'FuseSDK']]],
   ['getgameconfigurationvalue',['GetGameConfigurationValue',['../class_fuse_s_d_k.html#aba3884417a7cd4c5892198050ce10b0b',1,'FuseSDK']]],
+  ['getgdprstate',['GetGDPRState',['../class_fuse_s_d_k.html#a07d92f84e8cb4844bd402dc5dcf98e19',1,'FuseSDK']]],
   ['getiapofferinfoforzone',['GetIAPOfferInfoForZone',['../class_fuse_s_d_k.html#aeffc98fdf2f75c080b1034c5a8382340',1,'FuseSDK']]],
   ['getoriginalaccountalias',['GetOriginalAccountAlias',['../class_fuse_s_d_k.html#a766c8ff1d053fba76c1dcf63fc692a50',1,'FuseSDK']]],
   ['getoriginalaccountid',['GetOriginalAccountId',['../class_fuse_s_d_k.html#abf6cdcf7c43a2d98c49d1eb294e08eda',1,'FuseSDK']]],

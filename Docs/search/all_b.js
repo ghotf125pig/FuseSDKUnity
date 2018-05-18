@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['pending_5fconsent',['PENDING_CONSENT',['../namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5ca25e33a94ca2f8b2f86aac5e0c7b82100',1,'FuseMisc']]],
   ['preloadadforzoneid',['PreloadAdForZoneID',['../class_fuse_s_d_k.html#a8ce8d3dccc86f2632209aa491c49e068',1,'FuseSDK']]],
   ['prerollmessage',['PreRollMessage',['../struct_fuse_misc_1_1_rewarded_info.html#aa2431565319f0ceb5ac47f652e148d09',1,'FuseMisc::RewardedInfo']]],
   ['price',['Price',['../struct_fuse_misc_1_1_product.html#a124349b15b63355638063a7734899ff4',1,'FuseMisc::Product']]],
