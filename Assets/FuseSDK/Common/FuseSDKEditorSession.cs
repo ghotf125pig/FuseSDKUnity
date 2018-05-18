@@ -38,7 +38,7 @@ public class FuseSDKEditorSession
     public static event Action<int, string, string> PurchaseVerification;
 
     //Ads
-    public static event Action<bool, FuseError> AdAvailabilityResponse;
+    public static event Action<bool, string, FuseError> AdAvailabilityResponse;
     public static event Action AdWillClose;
     public static event Action AdFailedToDisplay;
     public static event Action<int, int> AdDidShow;
@@ -49,6 +49,7 @@ public class FuseSDKEditorSession
 
     //Misc
     public static event Action<DateTime> TimeUpdated;
+    public static event Action RequestGDPRConsent;
     #endregion
 
 #if(FUSE_SESSION_IN_EDITOR && UNITY_EDITOR) || (FUSE_SESSION_IN_STANDALONE && UNITY_STANDALONE)
@@ -233,6 +234,11 @@ public class FuseSDKEditorSession
     public static void EnableData() { }
     public static void DisableData() { }
     public static bool DataEnabled() { return false; }
+    #endregion
+
+    #region GDPR Management
+    public static bool SetGDPRState(GDPRState state) { return false; }
+    public static GDPRState GetGDPRState() { return GDPRState.UNDEFINED; }
     #endregion
 
     #region Game Configuration

@@ -153,6 +153,17 @@ Enumerations</h2></td></tr>
  }<tr class="memdesc:ad19b8d0d00683835cb494d66d7007f7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of account the player signed in with. <a href="namespace_fuse_misc.html#ad19b8d0d00683835cb494d66d7007f7e">More...</a><br /></td></tr>
 </td></tr>
 <tr class="separator:ad19b8d0d00683835cb494d66d7007f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1522e6baabd8018e5f0c9e34f63e5e5c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5c">GDPRState</a> { <br />
+&#160;&#160;<a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5ca0db45d2a4141101bdfe48e3314cfbca3">GDPRState.UNDEFINED</a> = 0, 
+<a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5ca4b3ea16f78b5e9b2541b86e1a68ac235">GDPRState.NON_GDPR</a>, 
+<a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5ca25e33a94ca2f8b2f86aac5e0c7b82100">GDPRState.PENDING_CONSENT</a>, 
+<a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5ca2da1ba9f953e8f827b4a4ae0598f7f6d">GDPRState.CONSENT_GIVEN</a>, 
+<br />
+&#160;&#160;<a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5ca5d0feebedcf2daa52c247891fb33c670">GDPRState.CONSENT_WITHDRAWN</a>
+<br />
+ }<tr class="memdesc:a1522e6baabd8018e5f0c9e34f63e5e5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error codes returned by the Fuse SDK. <a href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5c">More...</a><br /></td></tr>
+</td></tr>
+<tr class="separator:a1522e6baabd8018e5f0c9e34f63e5e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="ad19b8d0d00683835cb494d66d7007f7e"></a>
@@ -221,6 +232,42 @@ Enumerations</h2></td></tr>
 
 </div>
 </div>
+<a id="a1522e6baabd8018e5f0c9e34f63e5e5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1522e6baabd8018e5f0c9e34f63e5e5c">&#9670;&nbsp;</a></span>GDPRState</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespace_fuse_misc.html#a1522e6baabd8018e5f0c9e34f63e5e5c">FuseMisc.GDPRState</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Error codes returned by the Fuse SDK.</p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1522e6baabd8018e5f0c9e34f63e5e5ca0db45d2a4141101bdfe48e3314cfbca3"></a>UNDEFINED&#160;</td><td class="fielddoc"><p>Default state. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a1522e6baabd8018e5f0c9e34f63e5e5ca4b3ea16f78b5e9b2541b86e1a68ac235"></a>NON_GDPR&#160;</td><td class="fielddoc"><p>The user was deemed to be outside the European Union therefore NOT subject to GDPR restrictions. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a1522e6baabd8018e5f0c9e34f63e5e5ca25e33a94ca2f8b2f86aac5e0c7b82100"></a>PENDING_CONSENT&#160;</td><td class="fielddoc"><p>The user was deemed to be from the European Union therefore subject to GDPR restrictions. The user should be prompted for consent. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a1522e6baabd8018e5f0c9e34f63e5e5ca2da1ba9f953e8f827b4a4ae0598f7f6d"></a>CONSENT_GIVEN&#160;</td><td class="fielddoc"><p>The user has explicitly given consent according to the GDPR rules. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a1522e6baabd8018e5f0c9e34f63e5e5ca5d0feebedcf2daa52c247891fb33c670"></a>CONSENT_WITHDRAWN&#160;</td><td class="fielddoc"><p>The user has refused or withdrawn consent to data collection. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <a id="a9c87ed8ba8a1e2ebdf76523920b9ee64"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9c87ed8ba8a1e2ebdf76523920b9ee64">&#9670;&nbsp;</a></span>Gender</h2>
 
@@ -275,7 +322,7 @@ Enumerations</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_fuse_misc.html">FuseMisc</a></li>
-    <li class="footer">Generated on Wed May 2 2018 09:39:17 for FuseUnitySDK by
+    <li class="footer">Generated on Fri May 18 2018 19:06:31 for FuseUnitySDK by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

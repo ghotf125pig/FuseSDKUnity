@@ -72,9 +72,9 @@ public partial class FuseSDK : MonoBehaviour
 
     /// <summary>
     /// Called some time after calling <see cref="PreloadAdForZoneID(string zoneId)"/> to report if an ad is available or not
-    /// Listener signature: void AdAvailabilityResponse(bool available, FuseError error)
+    /// Listener signature: void AdAvailabilityResponse(bool available, string zoneId, FuseError error)
     /// </summary>
-    public static event Action<bool, FuseError> AdAvailabilityResponse;
+    public static event Action<bool, string, FuseError> AdAvailabilityResponse;
 
     /// <summary>
     /// Called after <see cref="ShowAdForZoneID(String zoneId)"/> when the ad is closed, or if Fuse is unable to show an ad within the 3 second timeout
@@ -124,7 +124,14 @@ public partial class FuseSDK : MonoBehaviour
     /// Listener signature: void TimeUpdated(System.DateTime time)
     /// </summary>
     public static event Action<DateTime> TimeUpdated;
-    
+
+    /// <summary>
+    /// Called when consent is needed from the user in order to collect data.
+    /// Once the user is prompted, FuseSDK.SetGDPRState should be called with the result.
+    /// Listener signature: void RequestGDPRConsent()
+    /// </summary>
+    public static event Action RequestGDPRConsent;
+
     #endregion
 
     //PUBLIC FUNCTIONS
@@ -738,7 +745,25 @@ public partial class FuseSDK : MonoBehaviour
     }
     #endregion
 
-    
+
+    #region GDPR Management
+
+    /// <summary>Opts a user in to data being collected by the SDK.</summary>
+    public static bool SetGDPRState(GDPRState state)
+    {
+        FuseLog("SetGDPRState()");
+        return FuseSDKEditorSession.SetGDPRState(state);
+    }
+
+    /// <summary>Opts a user out of data being collected by the SDK.</summary>
+    public static GDPRState GetGDPRState()
+    {
+        FuseLog("GetGDPRState()");
+        return FuseSDKEditorSession.GetGDPRState();
+    }
+    #endregion
+
+
     #region Game Configuration Data
 
     /// <summary>Returns a single server configuration value.</summary>
@@ -822,7 +847,7 @@ public partial class FuseSDK : MonoBehaviour
         FuseSDKEditorSession.PurchaseVerification += OnPurchaseVerification;
 
         //Ads
-        FuseSDKEditorSession.AdAvailabilityResponse += (b, e) => OnAdAvailabilityResponse(b ? 1 : 0, (int)e);
+        FuseSDKEditorSession.AdAvailabilityResponse += (b, s, e) => OnAdAvailabilityResponse(b ? 1 : 0, s, (int)e);
         FuseSDKEditorSession.AdWillClose += OnAdWillClose;
         FuseSDKEditorSession.AdFailedToDisplay += OnAdFailedToDisplay;
         FuseSDKEditorSession.AdDidShow += OnAdDidShow;
@@ -894,11 +919,11 @@ public partial class FuseSDK : MonoBehaviour
         }
     }
 
-    static private void OnAdAvailabilityResponse(int available, int error)
+    static private void OnAdAvailabilityResponse(int available, string zoneId, int error)
     {
         if(AdAvailabilityResponse != null)
         {
-            AdAvailabilityResponse(available != 0, error < (int)FuseError.UNDEFINED ? (FuseError)error : FuseError.UNDEFINED);
+            AdAvailabilityResponse(available != 0, zoneId, error < (int)FuseError.UNDEFINED ? (FuseError)error : FuseError.UNDEFINED);
         }
     }
 
@@ -1011,6 +1036,14 @@ public partial class FuseSDK : MonoBehaviour
         if(GameConfigurationReceived != null)
         {
             GameConfigurationReceived();
+        }
+    }
+
+    static private void OnRequestGDPRConsent()
+    {
+        if(RequestGDPRConsent != null)
+        {
+            RequestGDPRConsent();
         }
     }
     #endregion

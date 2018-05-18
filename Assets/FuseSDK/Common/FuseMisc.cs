@@ -315,6 +315,26 @@ namespace FuseMisc
         GOOGLE_PLAY = 8,
     }
 
+    /// <summary>Error codes returned by the Fuse SDK.</summary>
+    public enum GDPRState
+    {
+        /// Default state.
+        UNDEFINED = 0,
+
+        /// The user was deemed to be outside the European Union therefore NOT subject to GDPR restrictions.
+        NON_GDPR,
+
+        /// The user was deemed to be from the European Union therefore subject to GDPR restrictions.
+        /// The user should be prompted for consent.
+        PENDING_CONSENT,
+
+        /// The user has explicitly given consent according to the GDPR rules.
+        CONSENT_GIVEN,
+
+        /// The user has refused or withdrawn consent to data collection.
+        CONSENT_WITHDRAWN,
+    }
+
     /// <summary>Helpful extension functions.</summary>
     public static class FuseExtensions
     {

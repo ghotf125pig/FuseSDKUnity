@@ -17,7 +17,7 @@ public partial class FuseSDK
 
 #region Extern definitions
 	[DllImport("__Internal")]
-	private static extern void Native_StartSession(string gameId, bool registerForPush, bool handleAdURLs, bool enableCrashDetection);
+	private static extern void Native_StartSession(string gameId, bool registerForPush, bool handleAdURLs, string options);
 	[DllImport("__Internal")]
 	private static extern void Native_RegisterPushToken(byte[] token, int size);
 	[DllImport("__Internal")]
@@ -120,6 +120,11 @@ public partial class FuseSDK
 	private static extern void Native_DisableData();
 	[DllImport("__Internal")]
 	private static extern bool Native_DataEnabled();
+ 
+	[DllImport("__Internal")]
+	private static extern bool Native_SetGDPRState(int state);
+	[DllImport("__Internal")]
+	private static extern int Native_GetGDPRState();
 
 	[DllImport("__Internal")]
 	private static extern string Native_GetGameConfigurationValue(string key);
@@ -154,7 +159,7 @@ public partial class FuseSDK
 	{
 		if(!string.IsNullOrEmpty(iOSAppID) && StartAutomatically)
 		{
-			_StartSession(iOSAppID, registerForPushNotifications, false, true);
+			_StartSession(iOSAppID, registerForPushNotifications, false);
 		}
 	}
 #endregion
@@ -182,12 +187,12 @@ public partial class FuseSDK
 	public static void StartSession()
 	{
 		if(_instance != null)
-			_StartSession(_instance.iOSAppID, _instance.registerForPushNotifications, false, true);
+			_StartSession(_instance.iOSAppID, _instance.registerForPushNotifications, false);
 		else
 			Debug.LogError("FuseSDK instance not initialized. Awake may not have been called.");
 	}
 
-	private static void _StartSession(string gameId, bool registerForPush, bool handleAdURLs, bool enableCrashDetection)
+	private static void _StartSession(string gameId, bool registerForPush, bool handleAdURLs, Dictionary<string, string> options = null)
 	{
 		if(_sessionStarted)
 		{
@@ -206,10 +211,12 @@ public partial class FuseSDK
 			FuseSDK me = GameObject.FindObjectOfType<FuseSDK>();
 			me.StartCoroutine(me.SetupPushNotifications());
 		}
+ 
+        string jsonOptions = options == null ? null : JSONObject.Create(options).ToString();
 
 		_sessionStarted = true;
 		FuseLog("StartSession(" + gameId + ")");
-		Native_StartSession(gameId, registerForPush, handleAdURLs, enableCrashDetection);
+		Native_StartSession(gameId, registerForPush, handleAdURLs, jsonOptions);
 	}
 #endregion
 
@@ -647,6 +654,20 @@ public partial class FuseSDK
 	}
 #endregion
 
+#region GDPR Management
+    public static bool SetGDPRState(GDPRState state)
+    {
+		FuseLog("SetGDPRState()");
+		return Native_SetGDPRState((int)state);
+    }
+ 
+    public static GDPRState GetGDPRState()
+    {
+        FuseLog("GetGDPRState()");
+		return (GDPRState) Native_GetGDPRState();
+    }
+#endregion
+
 #region Game Configuration Data
 
 	public static string GetGameConfigurationValue(string key)
@@ -733,8 +754,8 @@ public partial class FuseSDK
 		int error;
 
 		var pars = param.Split(',');
-		if(pars.Length == 2 && int.TryParse(pars[0], out available) && int.TryParse(pars[1], out error))
-			OnAdAvailabilityResponse(available, error);
+		if(pars.Length == 3 && int.TryParse(pars[0], out available) && int.TryParse(pars[1], out error))
+			OnAdAvailabilityResponse(available, pars[2], error);
 		else
 			Debug.LogError("FuseSDK: Parsing error in _AdAvailabilityResponse");
 	}
@@ -869,12 +890,18 @@ public partial class FuseSDK
 
 		OnGameConfigurationReceived();
 	}
+
+	private void _CB_RequestGDPRConsent(string _)
+	{
+		FuseLog("RequestGDPRConsent()");
+		OnRequestGDPRConsent();
+	}
 #endregion
 
 #if !DOXYGEN_IGNORE
-	public static void Internal_StartSession(string appID, bool registerForPush, bool enableCrashDetection = true)
+	public static void Internal_StartSession(string appID, bool registerForPush)
 	{
-		_StartSession(appID, registerForPush, false, enableCrashDetection);
+		_StartSession(appID, registerForPush, false);
 	}
 
 	/// <summary>Start a session manually providing and adClickHandler.</summary>
@@ -884,12 +911,12 @@ public partial class FuseSDK
 	/// <c>adClickedWithURLHandler</c>'s parameter.
 	/// </remarks>
 	/// <param name="adClickedWithURLHandler">The function to be called when certain ad types are clicked.</param>
-	public static void StartSession(System.Action<string> adClickedWithURLHandler)
+	public static void StartSession(System.Action<string> adClickedWithURLHandler, Dictionary<string, string> options = null)
 	{
 		if(_instance != null)
 		{
 			_adClickedwithURL = adClickedWithURLHandler;
-			_StartSession(_instance.iOSAppID, _instance.registerForPushNotifications, true, true);
+			_StartSession(_instance.iOSAppID, _instance.registerForPushNotifications, adClickedWithURLHandler != null, options);
 		}
 		else Debug.LogError("FuseSDK instance not initialized. Awake may not have been called.");
 	}
