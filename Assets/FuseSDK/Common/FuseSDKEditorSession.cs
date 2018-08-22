@@ -16,6 +16,7 @@ using Debug = UnityEngine.Debug;
 #endif
 
 #pragma warning disable
+//This allows you to start a Fuse Session in the Unity Editor
 public class FuseSDKEditorSession
 {
     #region EVENTS
