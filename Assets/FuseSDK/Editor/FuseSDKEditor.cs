@@ -17,10 +17,9 @@ using System;
 [CustomEditor(typeof(FuseSDK))]
 public class FuseSDKEditor : Editor
 {
-    public const string ANNOUNCEMENT_KEY = "FuseSDKAnnouncement";
     public const string ICON_PATH = "/Plugins/Android/FuseUnityBridge/res/drawable/ic_launcher.png";
     public const string MANIFEST_PATH = "/Plugins/Android/FuseUnityBridge/AndroidManifest.xml";
-    public const string VERSION_PATH = "Assets/FuseSDK/version";
+    public const string VERSION_PATH = "/FuseSDK/version";
     public const string IOS_NATIVE_LIBS = "/FuseSDK/NativeLibs/iOS/";
     public const string ANDROID_NATIVE_LIBS = "/FuseSDK/NativeLibs/Android/";
     public const int ICON_HEIGHT = 72;
@@ -31,6 +30,8 @@ public class FuseSDKEditor : Editor
 
     private const string IOS_PLUGIN_M_FLAGS = "-fno-objc-arc";
     private const string IOS_PLUGIN_A_FLAGS = "-ObjC";
+
+    //Don't forget to also add frameworks to FusePostProcess
     private static readonly string[] IOS_PLUGIN_A_FRAMEWORKS = new string[] {
         "CoreTelephony",
         "AdSupport",
@@ -52,6 +53,9 @@ public class FuseSDKEditor : Editor
         "WatchConnectivity",
     };
 
+    //List of files that existed in previous versions but have since been removed.
+    //Importing a unitypackage only overwrites files and doesn't delete anything.
+    //This way we can remove our old files that may cause conflicts
     private static readonly string[] DELETED_FILES = new string[] {
         "/Plugins/FuseSDK.NET-Stub.dll",
         "/Plugins/FuseSDK.NET.dll",
@@ -80,6 +84,7 @@ public class FuseSDKEditor : Editor
         "/FuseSDK/JSONObject.cs",
         "/FuseSDK/FuseMisc.cs",
         "/FuseSDK/Editor/Ionic.Zip.dll",
+        "/FuseSDK/Editor/FuseSDKUpdater.cs",
         "/FuseSDK/Common/FusePostProcess.cs",
         "/FuseSDK/NativeLibs/iOS/FuseUnitySDK.h",
         "/FuseSDK/NativeLibs/iOS/FuseUnitySDK.m",
@@ -90,9 +95,11 @@ public class FuseSDKEditor : Editor
     private const string MANIFEST_PERMISSION_COARSE_LOCATION = "    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />";
     private const string MANIFEST_PERMISSION_FINE_LOCATION = "    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />";
 
+    //Used to check if permissions exist in manifest
     private const string MANIFEST_PERMISSION_COARSE_LOCATION_REGEX = @"\s*(?<comment><!--\s*)?<\s*uses-permission\s+android:name\s*=\s*""android.permission.ACCESS_COARSE_LOCATION""\s*/>.*";
     private const string MANIFEST_PERMISSION_FINE_LOCATION_REGEX = @"\s*(?<comment><!--\s*)?<\s*uses-permission\s+android:name\s*=\s*""android.permission.ACCESS_FINE_LOCATION""\s*/>.*";
 
+    //Manifest entry for push that is written into the manifest
     private static readonly string[] MANIFEST_GCM_RECEIVER_ENTRY = new string[] { "\t\t<meta-data android:name=\"com.upsight.mediation.replace.gcmReceiver\" android:value=\"{{timestamp}}\" />",
                     "\t\t<!-- GCM -->",
                     "\t\t<activity",
@@ -117,6 +124,7 @@ public class FuseSDKEditor : Editor
                     "\t\t<!-- end -->",
     };
 
+    //Another push manifest entry that's written into the manifest
     private static readonly string[] MANIFEST_GCM_PERMISSIONS_ENTRY = new string[] { "\t<meta-data android:name=\"com.upsight.mediation.replace.gcmPermissions\" android:value=\"{{timestamp}}\" />",
                     "\t<!-- Permissions for GCM -->",
                     "\t<!-- Keeps the processor from sleeping when a message is received. -->",
@@ -445,19 +453,6 @@ public class FuseSDKEditor : Editor
 
         GUILayout.Space(4);
 
-        GUILayout.BeginVertical();
-
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-        if(GUILayout.Button("Open Preferences"))
-        {
-            FuseSDKPrefs.Init();
-        }
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-
-        GUILayout.EndVertical();
-
         if(GUI.changed)
         {
             EditorUtility.SetDirty(target);
@@ -507,6 +502,7 @@ public class FuseSDKEditor : Editor
         return _idRegex.Match(id).Success ? 0 : -100;
     }
 
+    //Check if the C# class exists. Used to check for dependencies before enabling classes that could cause compilation errors.
     private bool DoClassesExist(params string[] classes)
     {
         var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies()
@@ -536,6 +532,51 @@ public class FuseSDKEditor : Editor
         }
     }
 
+    //Read the version number from /Assets/FuseSDK/version
+    private string ReadVersionFile()
+    {
+        try
+        {
+            var versionFile = System.IO.File.ReadAllText(Application.dataPath + VERSION_PATH);
+            var sp = versionFile.Split('#');
+            return (sp.Length < 1) ? string.Empty : sp[0];
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    //Parse string version into an int array
+    private int[] ParseVersion(string version)
+    {
+        var ver = version.Split(new char[] { '.' }, 5);
+
+        if (ver.Length < 4)
+            return null;
+
+        int[] verInfo = new int[4];
+        if (int.TryParse(ver[0], out verInfo[0])
+           && int.TryParse(ver[1], out verInfo[1])
+           && int.TryParse(ver[2], out verInfo[2])
+           && int.TryParse(ver[3], out verInfo[3]))
+            return verInfo;
+        else
+            return null;
+    }
+
+    //Compare two version arrays to determine which is newer, return value which version number they differ on.
+    private int HowOldIsVersion(int[] localVersion, int[] latestVersion)
+    {
+        for (int i = 0; i < localVersion.Length; i++)
+            if (localVersion[i] < latestVersion[i])
+                return i;
+            else if (localVersion[i] > latestVersion[i])
+                return -1;
+        return -1;
+    }
+
+    //Check if anything in the unity project needs to be updated. If true you should probably run UpdateAllSettings().
     private bool DoSettingsNeedUpdate()
     {
         foreach(var file in DELETED_FILES)
@@ -551,18 +592,17 @@ public class FuseSDKEditor : Editor
         if(!PlayerSettings.Android.forceSDCardPermission || !PlayerSettings.Android.forceInternetPermission)
             return true;
 
-        string currentVersion, metaVersion, bundleId;
-        if(!FuseSDKUpdater.ReadVersionFile(out currentVersion, out metaVersion))
+        string currentVersion = ReadVersionFile();
+        if (currentVersion == null)
             return true;
 
-        var versionMeta = AssetImporter.GetAtPath(VERSION_PATH);
+        var versionMeta = AssetImporter.GetAtPath("Assets" + VERSION_PATH);
         var sp = (versionMeta.userData ?? string.Empty).Split('#');
-        metaVersion = (sp.Length < 1) ? string.Empty : sp[0];
-        bundleId = (sp.Length < 2) ? string.Empty : sp[1];
-
-        string _ = null;
-        int[] actualVer = FuseSDKUpdater.ParseVersion(currentVersion, ref _);
-        int[] metaVer = FuseSDKUpdater.ParseVersion(metaVersion, ref _);
+        string metaVersion = (sp.Length < 1) ? string.Empty : sp[0];
+        string bundleId = (sp.Length < 2) ? string.Empty : sp[1];
+        
+        int[] actualVer = ParseVersion(currentVersion);
+        int[] metaVer = ParseVersion(metaVersion);
 
         //If there are different bundleIds for Android and iOS this will cause settings to update everytime the target is changed
         string currentBundleId =
@@ -571,7 +611,7 @@ public class FuseSDKEditor : Editor
 #else
         PlayerSettings.bundleIdentifier;
 #endif
-        if(metaVer == null || bundleId != currentBundleId || FuseSDKUpdater.HowOldIsVersion(metaVer, actualVer) >= 0)
+        if(metaVer == null || bundleId != currentBundleId || HowOldIsVersion(metaVer, actualVer) >= 0)
             return true;
 
         List<PluginImporter> iosPlugins =
@@ -587,6 +627,7 @@ public class FuseSDKEditor : Editor
             .Where(plugin => plugin != null)
             );
 
+        //Make sure all ios files have the correct options set
         foreach(var plugin in iosPlugins)
         {
             if(!plugin.GetCompatibleWithPlatform(BuildTarget.iOS))
@@ -626,10 +667,11 @@ public class FuseSDKEditor : Editor
         PlayerSettings.Android.forceSDCardPermission = true;
         PlayerSettings.Android.forceInternetPermission = true;
 
-        string currentVersion, _;
-        if(!FuseSDKUpdater.ReadVersionFile(out currentVersion, out _))
+        string currentVersion = ReadVersionFile();
+        if(currentVersion == null)
             return;
 
+        //Delete all old native ios version
         foreach(var dir in Directory.GetDirectories(Application.dataPath + IOS_NATIVE_LIBS))
         {
             try
@@ -644,6 +686,7 @@ public class FuseSDKEditor : Editor
             { }
         }
 
+        //Delete all old native Android versions
         foreach(var dir in Directory.GetDirectories(Application.dataPath + ANDROID_NATIVE_LIBS))
         {
             try
@@ -671,6 +714,7 @@ public class FuseSDKEditor : Editor
             .Where(plugin => plugin != null)
             );
 
+        //Set all required options on native ios files
         foreach(var plugin in iosPlugins)
         {
             plugin.SetCompatibleWithAnyPlatform(false);
@@ -701,7 +745,7 @@ public class FuseSDKEditor : Editor
         UpdateAndroidManifest();
 
         //If there are different bundleIds for Android and iOS this will cause settings to update everytime the target is changed
-        var versionMeta = AssetImporter.GetAtPath(VERSION_PATH);
+        var versionMeta = AssetImporter.GetAtPath("Assets" + VERSION_PATH);
 #if UNITY_5_6_OR_NEWER
         versionMeta.userData = currentVersion + "#" + PlayerSettings.applicationIdentifier;
 #else
@@ -710,132 +754,8 @@ public class FuseSDKEditor : Editor
         versionMeta.SaveAndReimport();
     }
 
-#if !FUSE_DISABLE_INTERNAL_ANALYTICS
-    [PostProcessBuild]
-    public static void SendAnalytics(BuildTarget target, string path)
-    {
-        if(Application.isPlaying)
-            return;
-        try
-        {
-            string appID = "", bundleID = "", prodName, compName, gameVer, unityVer, isPro, targetPlat;
-            string url = "http://api.fusepowered.com/unity/buildstats.php";
-            string baseJson = @"{
-							""game_id"" : ""{{game_id}}"",
-							""bundle_id"" : ""{{bundle_id}}"",
-							""product_name"" : ""{{product_name}}"",
-							""company_name"" : ""{{company_name}}"",
-							""game_ver"" : ""{{game_ver}}"",
-							""platform"": 
-								{
-									""version"": ""{{version}}"",
-									""is_pro"": ""{{is_pro}}"",
-									""target"": ""{{target}}""
-								}
-							}";
-
-            //App ID
-            var fuse = LoadAsset<FuseSDK>("Assets/FuseSDK/FuseSDK.prefab");
-            if(fuse != null)
-            {
-#if UNITY_IOS
-				appID = fuse.iOSAppID;
-#elif UNITY_ANDROID
-                appID = fuse.AndroidAppID;
-#endif
-            }
-
-            //Bundle ID of currently selected platform
-#if UNITY_5_6_OR_NEWER
-            bundleID = PlayerSettings.applicationIdentifier;
-#else
-            bundleID = PlayerSettings.bundleIdentifier;
-#endif
-
-            //Product name
-            prodName = PlayerSettings.productName;
-
-            //Company Name
-            compName = PlayerSettings.companyName;
-
-            //Game Ver
-            gameVer = PlayerSettings.bundleVersion;
-
-            //Unity version
-            unityVer = Application.unityVersion;
-
-            //Unity Pro
-            isPro = PlayerSettings.advancedLicense ? "1" : "0";
-
-            //Target platform
-            targetPlat = target.ToString();
-
-            //Fill out json
-            string json = System.Text.RegularExpressions.Regex.Replace(baseJson, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1")
-                .Replace("{{game_id}}", appID)
-                .Replace("{{bundle_id}}", bundleID)
-                .Replace("{{product_name}}", prodName)
-                .Replace("{{company_name}}", compName)
-                .Replace("{{game_ver}}", gameVer)
-                .Replace("{{version}}", unityVer)
-                .Replace("{{is_pro}}", isPro)
-                .Replace("{{target}}", targetPlat);
-
-            string query = "d=" + Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
-
-            WebRequest request = WebRequest.Create(url);
-            var creds = new CredentialCache();
-            creds.Add(new Uri(url), "Basic", new NetworkCredential("jimmyjimmyjango", "awP2yTECEbXErKcn")); //oh noes, you gots our passw0rds
-            request.Credentials = creds;
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = query.Length;
-            request.Timeout = 500;
-
-            Stream dataStream = request.GetRequestStream();
-            byte[] data = Encoding.UTF8.GetBytes(query);
-            dataStream.Write(data, 0, data.Length);
-            dataStream.Close();
-
-            request.BeginGetResponse(new AsyncCallback(_ => { }), null);
-        }
-        catch { }
-    }
-#endif
-
-    public static void CheckForAnnouncements()
-    {
-        var stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Reset();
-        stopwatch.Start();
-
-        try
-        {
-            using(WWW req = new WWW(FuseSDKUpdater.ANNOUNCEMENT_URL))
-            {
-                while(!req.isDone && string.IsNullOrEmpty(req.error) && stopwatch.ElapsedMilliseconds < (FuseSDKUpdater.TIMEOUT / 2)) ;
-                if(req.isDone && string.IsNullOrEmpty(req.error))
-                {
-                    int id;
-                    string message;
-                    string fileContent = req.text;
-                    var parts = fileContent.Split(new char[] { ':' }, 2);
-                    if(parts.Length != 2 || !int.TryParse(parts[0], out id) || string.IsNullOrEmpty(message = parts[1]))
-                        return;
-
-                    int lastSeenMessage = EditorPrefs.GetInt(ANNOUNCEMENT_KEY, -1);
-                    if(lastSeenMessage < id)
-                    {
-                        Debug.Log("Fuse Announcement: " + message);
-                        EditorPrefs.SetInt(ANNOUNCEMENT_KEY, id);
-                    }
-                }
-            }
-        }
-        catch { }
-        stopwatch.Stop();
-    }
-
+    //Recreated the prefab Assets/FuseSDK/FuseSDK.prefab.
+    //This prefab stores all the users keys and SDK settings. Only the game IDs are copied over. 
     [MenuItem("FuseSDK/Regenerate Prefab", false, 0)]
     static void RegeneratePrefab()
     {
@@ -875,7 +795,6 @@ public class FuseSDKEditor : Editor
         AssetDatabase.SaveAssets();
     }
 
-    //FusePostProcess.OnPostProcessScene calls this by the menu name
     [MenuItem("FuseSDK/Update Android Manifest", false, 1)]
     public static void UpdateAndroidManifest()
     {
@@ -902,6 +821,8 @@ public class FuseSDKEditor : Editor
 
         string tsNow = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds.ToString("F0");
 
+        //Go though the manifest, adding the required entries, writing to newManifest.
+
         if(manifest.Length > 0)
         {
             for(int i = 0; i < manifest.Length; i++)
@@ -914,18 +835,20 @@ public class FuseSDKEditor : Editor
                 if((match = multiLineMetaDataRegex.Match(manifest[i])).Success && !manifest[i].Contains("/>"))
                 {
                     string metaLine = manifest[i].TrimEnd();
-                    for(i++; i < manifest.Length; i++)
+                    for(i++; i < manifest.Length; i++) //<<< NOTE we increment 'i' here
                     {
                         metaLine += " " + manifest[i].Trim();
                         if(manifest[i].Contains("/>"))
                             break;
                     }
 
-                    manifest[i] = metaLine;
+                    manifest[i] = metaLine; //Store in manifest for now, at the end of this iteration we copy it to newManifest.
                 }
 
                 if((match = gcmReceiverRegex.Match(manifest[i])).Success && !string.IsNullOrEmpty(captured = match.Groups["time"].Value) && long.TryParse(captured, out time))
                 {
+                    //Check for GCM reciever entries (push reciever)
+
                     if(time == 0)
                     {
                         //Manifest doesn't contain the GCM Receiver entries
@@ -941,6 +864,8 @@ public class FuseSDKEditor : Editor
                 }
                 else if((match = gcmPermissionsRegex.Match(manifest[i])).Success && !string.IsNullOrEmpty(captured = match.Groups["time"].Value) && long.TryParse(captured, out time))
                 {
+                    //Check for GCM permission entries (push permission)
+
                     if(time == 0)
                     {
                         //Manifest doesn't contain the GCM Permissions entries
@@ -955,6 +880,8 @@ public class FuseSDKEditor : Editor
                 }
                 else if((match = packageIdRegex.Match(manifest[i])).Success && !string.IsNullOrEmpty(captured = match.Groups["id"].Value) && captured != packageName)
                 {
+                    //Update packageId 
+
                     //Found pre-existing entries, update them
                     newManifest.Add(manifest[i].Replace(captured, packageName));
                     i++;
@@ -1004,14 +931,10 @@ public class FuseSDKEditor : Editor
     [MenuItem("FuseSDK/Open GitHub Project", false, 21)]
     static void GoToGitHub()
     {
-        Application.OpenURL(FuseSDKUpdater.LATEST_SDK_URL);
+        Application.OpenURL(@"https://github.com/fusepowered/FuseSDKUnity");
     }
 
-    [MenuItem("FuseSDK/Check For Updates", false, 40)]
-    static void CheckForUpdate()
-    {
-        FuseSDKUpdater.CheckForUpdates(true);
-    }
+    //Helpers for functions that changed in between Unity versions
 
     internal static T LoadAsset<T>(string path) where T : UnityEngine.Object
     {
@@ -1064,52 +987,6 @@ public class FuseSDKEditor : Editor
 #else
                 PlayerSettings.bundleIdentifier = value;
 #endif
-        }
-    }
-}
-
-public class FuseSDKPrefs : EditorWindow
-{
-    public enum DownloadType
-    {
-        AutoDownloadAndImport = 0,
-        AutoDownloadAndPromptForImport = 1,
-        AutoDownloadOnly = 2,
-        GoToWebsite = 3,
-        AskEverytime = 4,
-    }
-
-    enum UpdateType
-    {
-        Never = 0,
-        MajorReleases = 1,
-        RegularReleases = 2,
-        Bugfixes = 3,
-    }
-
-    [MenuItem("FuseSDK/Preferences", false, 60)]
-    public static void Init()
-    {
-        GetWindowWithRect<FuseSDKPrefs>(new Rect(0, 0, 400, 50), true, "Fuse SDK Preferences").ShowUtility();
-    }
-
-    void OnGUI()
-    {
-        UpdateType updateStream = (UpdateType)Mathf.Min(EditorPrefs.GetInt(FuseSDKUpdater.AUTOUPDATE_KEY, 4) + 1, (int)UpdateType.Bugfixes);
-        DownloadType autoDL = (DownloadType)EditorPrefs.GetInt(FuseSDKUpdater.AUTODOWNLOAD_KEY, 1);
-
-        UpdateType newStream = (UpdateType)EditorGUILayout.EnumPopup("Auto Update Checking", updateStream);
-
-        if(updateStream != newStream)
-            EditorPrefs.SetInt(FuseSDKUpdater.AUTOUPDATE_KEY, ((int)newStream) - 1);
-
-        if(newStream != UpdateType.Never)
-        {
-            EditorGUILayout.Space();
-            DownloadType newDL = (DownloadType)EditorGUILayout.EnumPopup("'Download now' action", autoDL);
-
-            if(newDL != autoDL)
-                EditorPrefs.SetInt(FuseSDKUpdater.AUTODOWNLOAD_KEY, (int)newDL);
         }
     }
 }
