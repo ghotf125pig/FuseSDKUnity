@@ -2,9 +2,9 @@
 
 ## Current Version
 
-Version: 2.12.1.0
+Version: 2.12.2.0
 
-Released: Aug 22nd, 2018
+Released: Oct 2nd, 2018
 
 ## Update Instructions
 Before updating, please remove the entire Assets/FuseSDK folder.  
@@ -25,6 +25,12 @@ Review the [integration instructions](https://wiki.fusepowered.com/index.php?tit
 * [Documentation](http://fusepowered.github.io/FuseSDKUnity/)
 
 ## Release Notes
+
+### 2.12.2.0
+Oct 2nd, 2018
+* Android - Fixed several rare concurrency crashes in vast and adLoader
+* iOS - Mraid Video player fix for when videos fail to load/play.
+* Ad provider updates
 
 ### 2.12.1.0
 Aug 22nd, 2018
